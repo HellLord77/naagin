@@ -1,0 +1,9 @@
+# proxy
+mitmproxy
+cryptography
+rich
+
+# server
+uvicorn==0.19
+fastapi
+httpx
