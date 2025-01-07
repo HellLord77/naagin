@@ -7,6 +7,6 @@ class ItemConsumeNegativeResponseModel(BaseModel):
 
     model_config = ConfigDict(
         json_schema_extra={
-            "examples": [[]],
+            "examples": [{"item_negative_consume_list": []}],
         }
     )
