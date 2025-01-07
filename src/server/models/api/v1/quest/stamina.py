@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class QuestStaminaResponseModel(BaseModel):
+class QuestStaminaGetResponseModel(BaseModel):
     quest_girl_stamina_list: list  # TODO
 
     model_config = ConfigDict(

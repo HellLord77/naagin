@@ -9,7 +9,7 @@ class OwnerRoomModel(BaseModel):
     set_no: int
 
 
-class RoomResponseModel(BaseModel):
+class RoomPostResponseModel(BaseModel):
     owner_room: OwnerRoomModel
 
     model_config = ConfigDict(

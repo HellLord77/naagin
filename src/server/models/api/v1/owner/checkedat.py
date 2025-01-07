@@ -26,7 +26,7 @@ class OwnerCheckedAtModel(BaseModel):
     updated_at: datetime
 
 
-class OwnerCheckedAtResponseModel(BaseModel):
+class OwnerCheckedAtGetResponseModel(BaseModel):
     owner_checked_at: OwnerCheckedAtModel
 
     model_config = ConfigDict(

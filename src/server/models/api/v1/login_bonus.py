@@ -15,7 +15,12 @@ class LoginBonusModel(BaseModel):
     updated_at: Optional[datetime]
 
 
-class LoginBonusResponseModel(BaseModel):
+class CompensationCreateGirlModel(BaseModel):
+    posecard_list: list  # TODO
+    photo_spot_list: list  # TODO
+
+
+class LoginBonusGetResponseModel(BaseModel):
     login_bonus_list: list[LoginBonusModel]
 
     model_config = ConfigDict(
@@ -114,6 +119,29 @@ class LoginBonusResponseModel(BaseModel):
                             "updated_at": "2025-01-06 19:05:03",
                         },
                     ]
+                }
+            ],
+        }
+    )
+
+
+class LoginBonusPostResponseModel(BaseModel):
+    login_bonus_reward_list: list  # TODO
+    shared_login_bonus_reward_list: list  # TODO
+    expired_item_list: list  # TODO
+    compensation_create_girl_item_set: CompensationCreateGirlModel
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "login_bonus_reward_list": [],
+                    "shared_login_bonus_reward_list": [],
+                    "expired_item_list": [],
+                    "compensation_create_girl_item_set": {
+                        "posecard_list": [],
+                        "photo_spot_list": [],
+                    },
                 }
             ],
         }

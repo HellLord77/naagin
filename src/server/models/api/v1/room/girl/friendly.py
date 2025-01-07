@@ -10,7 +10,7 @@ class FriendlyValueModel(BaseModel):
     unlock_count: int
 
 
-class RoomGirlFriendlyResponseModel(BaseModel):
+class RoomGirlFriendlyGetResponseModel(BaseModel):
     friendly_value_list: list[FriendlyValueModel]
 
     model_config = ConfigDict(

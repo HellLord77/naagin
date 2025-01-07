@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class OwnerCountLoginResponseModel(BaseModel):
+class OwnerCountLoginGetResponseModel(BaseModel):
     login_count: int
 
     model_config = ConfigDict(

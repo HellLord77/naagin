@@ -13,7 +13,7 @@ class SwimsuitArrageFlagModel(BaseModel):
     updated_at: datetime
 
 
-class SwimsuitArrangeFlagResponseModel(BaseModel):
+class SwimsuitArrangeFlagGetResponseModel(BaseModel):
     swimsuit_arrage_flag_list: list[SwimsuitArrageFlagModel]
 
     model_config = ConfigDict(

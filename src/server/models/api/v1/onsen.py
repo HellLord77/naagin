@@ -25,7 +25,7 @@ class OnsenSlotModel(BaseModel):
     updated_at: datetime
 
 
-class OnsenResponseModel(BaseModel):
+class OnsenGetResponseModel(BaseModel):
     onsen_info_list: list[OnsenInfoModel]
     onsen_slot_list: list[OnsenSlotModel]
     onsen_quality_stash_list: list  # TODO

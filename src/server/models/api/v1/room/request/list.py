@@ -7,7 +7,7 @@ class CustomRoomRequestLogModel(BaseModel):
     clear_rank: int
 
 
-class RoomRequestListResponseModel(BaseModel):
+class RoomRequestListGetResponseModel(BaseModel):
     custom_room_request_log_list: list[CustomRoomRequestLogModel]
 
     model_config = ConfigDict(

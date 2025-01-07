@@ -31,7 +31,7 @@ class OwnerModel(BaseModel):
     created_at: datetime
 
 
-class OwnerResponseModel(BaseModel):
+class OwnerGetResponseModel(BaseModel):
     owner: OwnerModel
 
     model_config = ConfigDict(

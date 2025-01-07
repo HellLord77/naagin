@@ -17,7 +17,7 @@ class WalletModel(BaseModel):
     vip_coin: int
 
 
-class OwnerGuestPointAcceptResponseModel(BaseModel):
+class OwnerGuestPointAcceptPostResponseModel(BaseModel):
     accepted_guest_point: AcceptedGuestPointModel
     wallet_list: list[WalletModel]
 

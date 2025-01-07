@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class PhotoShootTodayCountResponseModel(BaseModel):
+class PhotoShootTodayCountGetResponseModel(BaseModel):
     photo_shoot_today_count: int
     photo_recover_today_count: int
 

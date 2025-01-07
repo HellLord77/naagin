@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class VenusBoardPanelResponseModel(BaseModel):
+class VenusBoardPanelGetResponseModel(BaseModel):
     venus_board_girl_panel_list: list  # TODO
 
     model_config = ConfigDict(

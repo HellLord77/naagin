@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class QuestCheckLicensePointRequestModel(BaseModel):
+class QuestCheckLicensePointPostRequestModel(BaseModel):
     is_adjust: bool
 
     model_config = ConfigDict(
@@ -12,7 +12,7 @@ class QuestCheckLicensePointRequestModel(BaseModel):
     )
 
 
-class QuestCheckLicensePointResponseModel(BaseModel):
+class QuestCheckLicensePointPostResponseModel(BaseModel):
     # TODO
 
     model_config = ConfigDict(

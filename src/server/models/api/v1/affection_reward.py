@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class AffectionRewardResponseModel(BaseModel):
+class AffectionRewardGetResponseModel(BaseModel):
     affection_level_reward_list: list  # TODO
 
     model_config = ConfigDict(

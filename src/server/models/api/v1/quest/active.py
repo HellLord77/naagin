@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class QuestActiveResponseModel(BaseModel):
+class QuestActiveGetResponseModel(BaseModel):
     quest_active: Optional  # TODO
 
     model_config = ConfigDict(

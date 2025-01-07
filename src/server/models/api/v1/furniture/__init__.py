@@ -7,7 +7,7 @@ class ItemFurnitureModel(BaseModel):
     count: int
 
 
-class FurnitureResponseModel(BaseModel):
+class FurnitureGetResponseModel(BaseModel):
     item_furniture_list: list[ItemFurnitureModel]
 
     model_config = ConfigDict(

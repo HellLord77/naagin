@@ -7,7 +7,7 @@ class SubscriptionModel(BaseModel):
     pass_details: list  # TODO
 
 
-class SubscriptionResponseModel(BaseModel):
+class SubscriptionGetResponseModel(BaseModel):
     subscription_list: SubscriptionModel
 
     model_config = ConfigDict(

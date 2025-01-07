@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class MaintenanceResponseModel(BaseModel):
+class MaintenanceGetResponseModel(BaseModel):
     maintenance: bool
 
     model_config = ConfigDict(

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class CasinoGameResponseModel(BaseModel):
+class CasinoGameGetResponseModel(BaseModel):
     casino_game_list: list  # TODO
 
     model_config = ConfigDict(

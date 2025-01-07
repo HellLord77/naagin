@@ -12,7 +12,7 @@ class WalletModel(BaseModel):
     vip_coin: int
 
 
-class WalletResponseModel(BaseModel):
+class WalletGetResponseModel(BaseModel):
     wallet: WalletModel
 
     model_config = ConfigDict(

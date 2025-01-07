@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class ItemConsumeNegativeResponseModel(BaseModel):
+class ItemConsumeNegativeGetResponseModel(BaseModel):
     item_negative_consume_list: list  # TODO
 
     model_config = ConfigDict(

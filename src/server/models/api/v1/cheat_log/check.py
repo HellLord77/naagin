@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class CheatLogCheckResponseModel(BaseModel):
+class CheatLogCheckGetResponseModel(BaseModel):
     count: int
 
     model_config = ConfigDict(

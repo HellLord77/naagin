@@ -13,7 +13,7 @@ class ItemConsumeModel(BaseModel):
     created_at: datetime
 
 
-class ItemConsumeResponseModel(BaseModel):
+class ItemConsumeGetResponseModel(BaseModel):
     item_consume_list: list[ItemConsumeModel]
 
     model_config = ConfigDict(

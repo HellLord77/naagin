@@ -26,7 +26,7 @@ class OwnerCheckedAtModel(BaseModel):
     updated_at: datetime
 
 
-class OwnerCountLoginResponseModel(BaseModel):
+class OwnerCountLoginPostResponseModel(BaseModel):
     giftbox_fetch_list: list  # TODO
     owner_checked_at_list: list[OwnerCheckedAtModel]
 

@@ -17,7 +17,7 @@ class ResourceListModel(BaseModel):
     exe: list[ResourceModel]
 
 
-class ResourceListResponseModel(BaseModel):
+class ResourceListGetResponseModel(BaseModel):
     resource_list: ResourceListModel
 
     model_config = ConfigDict(

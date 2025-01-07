@@ -10,7 +10,7 @@ class QuestLatestTeamModel(BaseModel):
     girl_mid_substitute: int
 
 
-class QuestLatestTeamResponseModel(BaseModel):
+class QuestLatestTeamGetResponseModel(BaseModel):
     quest_latest_team: QuestLatestTeamModel
 
     model_config = ConfigDict(

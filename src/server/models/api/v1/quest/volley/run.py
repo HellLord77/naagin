@@ -11,7 +11,7 @@ class QuestRunModel(BaseModel):
     collect_fes_number: int
 
 
-class QuestVolleyRunResponseModel(BaseModel):
+class QuestVolleyRunGetResponseModel(BaseModel):
     quest_run: QuestRunModel
 
     model_config = ConfigDict(

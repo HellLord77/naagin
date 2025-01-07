@@ -13,7 +13,7 @@ class TutorialModel(BaseModel):
     updated_at: Optional[datetime]
 
 
-class TutorialResponseModel(BaseModel):
+class TutorialGetResponseModel(BaseModel):
     tutorial_list: list[TutorialModel]
 
     model_config = ConfigDict(

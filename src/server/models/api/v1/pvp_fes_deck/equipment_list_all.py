@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class PvpFesDeckEquipmentListAllResponseModel(BaseModel):
+class PvpFesDeckEquipmentListAllGetResponseModel(BaseModel):
     pvp_fes_deck_girl_equipment_full_list: list  # TODO
 
     model_config = ConfigDict(

@@ -12,7 +12,7 @@ class BromideModel(BaseModel):
     created_at: datetime
 
 
-class BromideResponseModel(BaseModel):
+class BromideGetResponseModel(BaseModel):
     bromide_list: list[BromideModel]
 
     model_config = ConfigDict(

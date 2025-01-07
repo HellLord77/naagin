@@ -10,7 +10,7 @@ class DishevelmentSwimsuitModel(BaseModel):
     created_at: datetime
 
 
-class DishevelmentResponseModel(BaseModel):
+class DishevelmentGetResponseModel(BaseModel):
     dishevelment_swimsuit_list: list[DishevelmentSwimsuitModel]
 
     model_config = ConfigDict(

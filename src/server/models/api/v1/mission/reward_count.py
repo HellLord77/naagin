@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class MissionRewardCountResponseModel(BaseModel):
+class MissionRewardCountGetResponseModel(BaseModel):
     mission_reward_count_list: list  # TODO
 
     model_config = ConfigDict(
