@@ -1,6 +1,7 @@
 import base64
 import json
 import logging
+import textwrap
 
 import cryptography.hazmat.primitives.asymmetric.rsa
 import cryptography.hazmat.primitives.serialization
@@ -53,7 +54,7 @@ class DOAXVVProxy:
                 session_key,
                 PKCS1v15(),
             )
-            proxy_encrypt_key = base64.b64encode(proxy_session_key).decode()
+            proxy_encrypt_key = f"{"\r\n".join( textwrap.wrap(base64.b64encode(proxy_session_key).decode(),64))}\r\n"
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
         else:
