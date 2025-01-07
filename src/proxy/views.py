@@ -13,13 +13,13 @@ from mitmproxy.http import Message
 import utils
 
 
-class ViewDOAXVV(View):
+class DOAXVVView(View):
     name = "DOAXVV"
 
     view_json = ViewJSON()
 
     def __init__(self):
-        old_self: Optional[ViewDOAXVV] = mitmproxy.contentviews.get(self.name)
+        old_self: Optional[DOAXVVView] = mitmproxy.contentviews.get(self.name)
         if old_self is not None:
             mitmproxy.contentviews.remove(old_self)
         mitmproxy.contentviews.add(self)

@@ -12,12 +12,12 @@ from cryptography.hazmat.primitives.serialization import PublicFormat
 from mitmproxy.http import HTTPFlow
 
 import utils
-from view import ViewDOAXVV
+from views import DOAXVVView
 
-ViewDOAXVV()
+DOAXVVView()
 
 
-class ProxyDOAXVV:
+class DOAXVVProxy:
     proxy_private_key: RSAPrivateKey
     public_key: RSAPublicKey
 
@@ -81,4 +81,4 @@ class ProxyDOAXVV:
             utils.print_json(self.session_key, flow)
 
 
-addons = [ProxyDOAXVV()]
+addons = [DOAXVVProxy()]
