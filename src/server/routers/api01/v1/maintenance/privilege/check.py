@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
 from ......models.api01.v1.maintenance.privilege.check import (
-    MaintenancePrivilegeCheckResponseModel,
+    MaintenancePrivilegeCheckGetResponseModel,
 )
 
 router = APIRouter(prefix="/check")
 
 
 @router.get("/{steam_id}")
-async def get_steam_id(
+async def get(
     steam_id: int,
-) -> MaintenancePrivilegeCheckResponseModel:
-    return MaintenancePrivilegeCheckResponseModel(result="NG")
+) -> MaintenancePrivilegeCheckGetResponseModel:
+    return MaintenancePrivilegeCheckGetResponseModel(result="NG")

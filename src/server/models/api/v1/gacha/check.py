@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class GachaCheckResponseModel(BaseModel):
+class GachaCheckPostResponseModel(BaseModel):
     # TODO
 
     model_config = ConfigDict(

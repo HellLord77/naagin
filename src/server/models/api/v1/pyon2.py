@@ -10,7 +10,7 @@ class Pyon2RunModel(BaseModel):
     pos_id: int
 
 
-class Pyon2ResponseModel(BaseModel):
+class Pyon2GetResponseModel(BaseModel):
     pyon2_run_list: list[Pyon2RunModel]
 
     model_config = ConfigDict(

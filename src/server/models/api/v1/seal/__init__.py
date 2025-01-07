@@ -15,7 +15,7 @@ class ItemSealModel(BaseModel):
     experience: int
 
 
-class SealResponseModel(BaseModel):
+class SealGetResponseModel(BaseModel):
     item_seal_list: list[ItemSealModel]
 
     model_config = ConfigDict(

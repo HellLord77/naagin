@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class OwnerCheckLoginResponseModel(BaseModel):
+class OwnerCheckLoginGetResponseModel(BaseModel):
     restart_required: bool
 
     model_config = ConfigDict(

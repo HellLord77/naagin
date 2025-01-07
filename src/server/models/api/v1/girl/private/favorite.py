@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class GirlPrivateFavoriteResponseModel(BaseModel):
+class GirlPrivateFavoriteGetResponseModel(BaseModel):
     favorite_private_item_list: list  # TODO
 
     model_config = ConfigDict(

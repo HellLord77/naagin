@@ -10,7 +10,7 @@ class EpisodeListModel(BaseModel):
     created_at: datetime
 
 
-class OwnerEpisodeResponseModel(BaseModel):
+class OwnerEpisodeGetResponseModel(BaseModel):
     episode_list: list[EpisodeListModel]
 
     model_config = ConfigDict(

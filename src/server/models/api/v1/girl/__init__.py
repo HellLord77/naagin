@@ -53,7 +53,7 @@ class GirlModel(BaseModel):
     updated_at: datetime
 
 
-class GirlResponseModel(BaseModel):
+class GirlGetResponseModel(BaseModel):
     girl_list: list[GirlModel]
 
     model_config = ConfigDict(

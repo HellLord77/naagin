@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class CustomRoomRequestModel(BaseModel):
+class CustomRoomGetRequestModel(BaseModel):
     owner_id: int
     request_mid: int
     girl_mid1: int
@@ -16,8 +16,8 @@ class CustomRoomRequestModel(BaseModel):
     end_at: datetime
 
 
-class RoomRequestResponseModel(BaseModel):
-    custom_room_request_list: list[CustomRoomRequestModel]
+class RoomRequestGetResponseModel(BaseModel):
+    custom_room_request_list: list[CustomRoomGetRequestModel]
 
     model_config = ConfigDict(
         json_schema_extra={

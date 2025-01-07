@@ -15,7 +15,7 @@ class CasinoChipModel(BaseModel):
     updated_at: datetime
 
 
-class CasinoChipResponseModel(BaseModel):
+class CasinoChipGetResponseModel(BaseModel):
     casino_chip: CasinoChipModel
 
     model_config = ConfigDict(

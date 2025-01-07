@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class QuestFesInfoResponseModel(BaseModel):
+class QuestFesInfoGetResponseModel(BaseModel):
     open_bonus_fes_list: list  # TODO
     quest_daily_info_list: list  # TODO
 

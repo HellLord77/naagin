@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class GiftboxCountResponseModel(BaseModel):
+class GiftboxCountGetResponseModel(BaseModel):
     giftbox_received_count: int
 
     model_config = ConfigDict(

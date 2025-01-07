@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class GamestartResponseModel(BaseModel):
+class GamestartGetResponseModel(BaseModel):
     gamestart: bool
 
     model_config = ConfigDict(

@@ -11,7 +11,7 @@ class HonorModel(BaseModel):
     created_at: datetime
 
 
-class HonorResponseModel(BaseModel):
+class HonorPostResponseModel(BaseModel):
     honor_list: list[HonorModel]
 
     model_config = ConfigDict(

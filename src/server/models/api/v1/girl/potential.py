@@ -18,7 +18,7 @@ class GirlPotentialModel(BaseModel):
     created_at: datetime
 
 
-class GirlPotentialResponseModel(BaseModel):
+class GirlPotentialGetResponseModel(BaseModel):
     girl_potential_list: list[GirlPotentialModel]
 
     model_config = ConfigDict(

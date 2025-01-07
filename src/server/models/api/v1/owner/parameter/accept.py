@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class OwnerParameterAcceptResponseModel(BaseModel):
+class OwnerParameterAcceptPostResponseModel(BaseModel):
     # TODO
 
     model_config = ConfigDict(

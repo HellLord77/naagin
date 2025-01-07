@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class FriendshipReceivedResponseModel(BaseModel):
+class FriendshipReceivedGetResponseModel(BaseModel):
     friendship_list: list  # TODO
 
     model_config = ConfigDict(

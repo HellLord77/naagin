@@ -16,7 +16,7 @@ class GirlEquipmentModel(BaseModel):
     updated_at: Optional[datetime]
 
 
-class GirlEquipmentResponseModel(BaseModel):
+class GirlEquipmentGetResponseModel(BaseModel):
     girl_equipment_list: list[GirlEquipmentModel]
 
     model_config = ConfigDict(

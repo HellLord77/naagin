@@ -10,7 +10,7 @@ class MaxCombineSwimsuitModel(BaseModel):
     created_at: datetime
 
 
-class MaxCombineResponseModel(BaseModel):
+class MaxCombineGetResponseModel(BaseModel):
     max_combine_swimsuit_list: list[MaxCombineSwimsuitModel]
 
     model_config = ConfigDict(

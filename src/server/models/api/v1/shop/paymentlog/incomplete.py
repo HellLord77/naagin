@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class ShopPaymentLogIncompleteResponseModel(BaseModel):
+class ShopPaymentLogIncompleteGetResponseModel(BaseModel):
     payment_log_list: list  # TODO
 
     model_config = ConfigDict(

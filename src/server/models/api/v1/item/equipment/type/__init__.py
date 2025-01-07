@@ -16,7 +16,7 @@ class ItemEquipmentModel(BaseModel):
     combine_count: int
 
 
-class ItemEquipmentTypeResponseModel(BaseModel):
+class ItemEquipmentTypeGetResponseModel(BaseModel):
     item_equipment_list: list[ItemEquipmentModel]
 
     model_config = ConfigDict(

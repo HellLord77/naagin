@@ -9,7 +9,7 @@ class FurnitureMysetModel(BaseModel):
     rot_y: int
 
 
-class FurnitureMysetResponseModel(BaseModel):
+class FurnitureMysetGetResponseModel(BaseModel):
     furniture_myset_list: list[FurnitureMysetModel]
 
     model_config = ConfigDict(

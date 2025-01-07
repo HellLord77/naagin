@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class DynamicGameParameterResponseModel(BaseModel):
+class DynamicGameParameterGetResponseModel(BaseModel):
     dynamic_game_parameter_list: list  # TODO
 
     model_config = ConfigDict(

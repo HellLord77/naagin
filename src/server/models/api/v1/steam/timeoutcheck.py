@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class SteamTimeoutCheckResponseModel(BaseModel):
+class SteamTimeoutCheckPostResponseModel(BaseModel):
     steam_timeout_check_result: bool
 
     model_config = ConfigDict(

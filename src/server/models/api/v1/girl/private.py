@@ -7,7 +7,7 @@ class PrivateItemModel(BaseModel):
     item_mid: int
 
 
-class GirlPrivateResponseModel(BaseModel):
+class GirlPrivateGetResponseModel(BaseModel):
     private_item_list: list[PrivateItemModel]
 
     model_config = ConfigDict(

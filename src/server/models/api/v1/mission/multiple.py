@@ -12,7 +12,7 @@ class MissionModel(BaseModel):
     param1: int
 
 
-class MissionMultipleRequestModel(BaseModel):
+class MissionMultiplePostRequestModel(BaseModel):
     is_checked_at: bool
     mission_ids: str
 
@@ -28,7 +28,7 @@ class MissionMultipleRequestModel(BaseModel):
     )
 
 
-class MissionMultipleResponseModel(BaseModel):
+class MissionMultiplePostResponseModel(BaseModel):
     mission_list: list[MissionModel]
 
     model_config = ConfigDict(

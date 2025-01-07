@@ -8,7 +8,7 @@ class BgmModel(BaseModel):
     bgm_mid: int
 
 
-class RadioStationBgmResponseModel(BaseModel):
+class RadioStationBgmGetResponseModel(BaseModel):
     bgm_list: list[BgmModel]
 
     model_config = ConfigDict(

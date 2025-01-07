@@ -7,7 +7,7 @@ class SteamCurrencyResultModel(BaseModel):
     currency: int
 
 
-class SteamCurrencyInfoRequestModel(BaseModel):
+class SteamCurrencyInfoPostRequestModel(BaseModel):
     steam_id: str
 
     model_config = ConfigDict(
@@ -17,7 +17,7 @@ class SteamCurrencyInfoRequestModel(BaseModel):
     )
 
 
-class SteamCurrencyInfoResponseModel(BaseModel):
+class SteamCurrencyInfoPostResponseModel(BaseModel):
     steam_currency_result: SteamCurrencyResultModel
 
     model_config = ConfigDict(

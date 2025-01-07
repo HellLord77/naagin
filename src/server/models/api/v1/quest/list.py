@@ -16,7 +16,7 @@ class QuestModel(BaseModel):
     arank_cleared_at: Optional[datetime]
 
 
-class QuestListResponseModel(BaseModel):
+class QuestListGetResponseModel(BaseModel):
     quest_list: list[QuestModel]
     auto_fes_attempts: int
 

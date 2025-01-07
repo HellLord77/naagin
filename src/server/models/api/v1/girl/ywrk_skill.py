@@ -15,7 +15,7 @@ class YwrkSkillModel(BaseModel):
     updated_at: Optional  # TODO
 
 
-class GirlYwrkSkillResponseModel(BaseModel):
+class GirlYwrkSkillGetResponseModel(BaseModel):
     ywrk_skill_list: list[YwrkSkillModel]
 
     model_config = ConfigDict(

@@ -8,7 +8,7 @@ class SealBaseModel(BaseModel):
     sub_base_mid: int
 
 
-class SealBaseResponseModel(BaseModel):
+class SealBaseGetResponseModel(BaseModel):
     seal_base_list: list[SealBaseModel]
 
     model_config = ConfigDict(
