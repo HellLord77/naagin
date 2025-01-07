@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi import FastAPI
 
 from ..... import config
-from .....models.api01.v1.resource.list import ResourceListGetResponseModel
+from .....models.api01.v1.resource.list import ResourceListResponseModel
 
 resource_list = {}
 
@@ -25,6 +25,6 @@ router = APIRouter(prefix="/list", lifespan=lifespan)
 
 
 @router.get("")
-async def get() -> ResourceListGetResponseModel:
+async def get() -> ResourceListResponseModel:
     # noinspection PyTypeChecker
     return resource_list

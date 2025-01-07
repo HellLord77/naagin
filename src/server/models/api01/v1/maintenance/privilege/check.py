@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class MaintenancePrivilegeCheckSteamIdGetResponseModel(BaseModel):
+class MaintenancePrivilegeCheckResponseModel(BaseModel):
     result: str
 
     model_config = ConfigDict(
