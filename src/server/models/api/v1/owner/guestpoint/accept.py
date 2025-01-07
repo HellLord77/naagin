@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
@@ -19,7 +21,7 @@ class WalletModel(BaseModel):
 
 class OwnerGuestPointAcceptPostResponseModel(BaseModel):
     accepted_guest_point: AcceptedGuestPointModel
-    wallet_list: list[WalletModel]
+    wallet_list: Optional[list[WalletModel]] = None
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -37,7 +39,8 @@ class OwnerGuestPointAcceptPostResponseModel(BaseModel):
                             "vip_coin": 242,
                         }
                     ],
-                }
+                },
+                {"accepted_guest_point": {"guest_count": 0, "guest_point": 0}},
             ],
         }
     )
