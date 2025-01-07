@@ -2,6 +2,7 @@ import base64
 import hashlib
 import logging
 import os
+import sys
 import zlib
 
 import cryptography.hazmat.primitives.asymmetric.rsa
@@ -18,6 +19,8 @@ from mitmproxy.http import Message
 from mitmproxy.http import Request
 
 import config
+
+MITMWEB = sys.argv[0].endswith("mitmweb")
 
 
 def dump_private_key(private_key: RSAPrivateKey):
@@ -113,6 +116,8 @@ def print_json(session_key: bytes, flow: HTTPFlow):
             message.headers["Proxy-X-DOAXVV-Encrypted"] = (
                 get_fernet(flow.id).encrypt(session_key).decode()
             )
-        body = decrypt_message(flow.id, message)
-        print(f"[{type(message).__name__.lower()}] {flow.request.path}")
-        rich.print_json(body.decode())
+
+        if not MITMWEB:
+            body = decrypt_message(flow.id, message)
+            print(f"[{type(message).__name__.lower()}] {flow.request.path}")
+            rich.print_json(body.decode())
