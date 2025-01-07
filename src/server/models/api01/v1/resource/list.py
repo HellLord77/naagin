@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class Resource(BaseModel):
+class ResourceModel(BaseModel):
     version: int
     directory: str
     file_name: str
@@ -10,15 +10,15 @@ class Resource(BaseModel):
     hash: str
 
 
-class ResourceList(BaseModel):
-    low: list[Resource]
-    common: list[Resource]
-    high: list[Resource]
-    exe: list[Resource]
+class ResourceListModel(BaseModel):
+    low: list[ResourceModel]
+    common: list[ResourceModel]
+    high: list[ResourceModel]
+    exe: list[ResourceModel]
 
 
-class ResourceListGetResponseModel(BaseModel):
-    resource_list: ResourceList
+class ResourceListResponseModel(BaseModel):
+    resource_list: ResourceListModel
 
     model_config = ConfigDict(
         json_schema_extra={

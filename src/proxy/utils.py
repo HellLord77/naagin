@@ -20,7 +20,7 @@ from mitmproxy.http import Request
 
 import config
 
-MITMWEB = sys.argv[0].endswith("mitmweb")
+MITMWEB = os.path.basename(sys.argv[0]) == "mitmweb"
 
 
 def dump_private_key(private_key: RSAPrivateKey):

@@ -2,11 +2,11 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class GamestartResponseModel(BaseModel):
-    gamestart: bool
+class OwnerCountLoginResponseModel(BaseModel):
+    login_count: int
 
     model_config = ConfigDict(
         json_schema_extra={
-            "examples": [{"gamestart": True}],
-        },
+            "examples": [{"login_count": 38}],
+        }
     )

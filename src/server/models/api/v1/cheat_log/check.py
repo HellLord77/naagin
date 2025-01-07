@@ -2,11 +2,11 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 
 
-class GamestartResponseModel(BaseModel):
-    gamestart: bool
+class CheatLogCheckResponseModel(BaseModel):
+    count: int
 
     model_config = ConfigDict(
         json_schema_extra={
-            "examples": [{"gamestart": True}],
-        },
+            "examples": [{"count": 0}],
+        }
     )
