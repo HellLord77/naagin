@@ -1,3 +1,7 @@
+# dumper
+genson
+datamodel-code-generator
+
 # proxy
 mitmproxy
 cryptography
