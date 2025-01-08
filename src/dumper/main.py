@@ -101,17 +101,17 @@ def schema_to_model(path: Path):
         custom_class_name_generator=class_name_generator,
     )
     parsed_data = parser.parse()
-    parsed_lines = parsed_data.split("\n")[1:]
-    parsed_lines[0] = parsed_lines[1]
-    parsed_lines[1] = "from pydantic import ConfigDict"
+    parsed_lines = parsed_data.split("\n")[2:]
 
-    json_data = json.loads(data)
-    examples = json_data["examples"]
-    json_schema_extra = {"examples": examples}
-    parsed_lines.append(
-        f"    model_config = ConfigDict(json_schema_extra={json_schema_extra})"
-    )
-    parsed_lines.append("")
+    if config.EXAMPLES:
+        parsed_lines.insert(0, "from pydantic import ConfigDict")
+        json_data = json.loads(data)
+        examples = json_data["examples"]
+        json_schema_extra = {"examples": examples}
+        parsed_lines.append(
+            f"    model_config = ConfigDict(json_schema_extra={json_schema_extra})"
+        )
+        parsed_lines.append("")
     model_data = "\n".join(parsed_lines)
 
     relative_path = path.relative_to(config.DATA_DIR / "schema").with_suffix("")
