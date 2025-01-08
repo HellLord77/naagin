@@ -3,6 +3,7 @@ import hashlib
 import logging
 import os
 import sys
+import time
 import zlib
 from pathlib import Path
 
@@ -18,10 +19,14 @@ from cryptography.hazmat.primitives.padding import PKCS7
 from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
 from mitmproxy.http import Request
+from mitmproxy.io import FlowWriter
 
 import config
 
 MITMWEB = Path(sys.argv[0]).name == "mitmweb"
+FLOW_WRITER = FlowWriter(
+    (Path(config.DATA_DIR) / "flows" / f"DOAXVV-{int(time.time())}.flows").open("wb")
+)
 
 
 def get_fernet(password: str) -> Fernet:
@@ -115,6 +120,9 @@ def print_json(session_key: bytes, flow: HTTPFlow):
             message.headers["Proxy-X-DOAXVV-Encrypted"] = (
                 get_fernet(flow.id).encrypt(session_key).decode()
             )
+
+        if flow.response is not None:
+            FLOW_WRITER.add(flow)
 
         if not MITMWEB:
             body = decrypt_message(flow.id, message)
