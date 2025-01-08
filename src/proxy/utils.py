@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 import zlib
+from pathlib import Path
 
 import cryptography.hazmat.primitives.asymmetric.rsa
 import cryptography.hazmat.primitives.serialization
@@ -20,7 +21,7 @@ from mitmproxy.http import Request
 
 import config
 
-MITMWEB = os.path.basename(sys.argv[0]) == "mitmweb"
+MITMWEB = Path(sys.argv[0]).name == "mitmweb"
 
 
 def dump_private_key(private_key: RSAPrivateKey):
@@ -29,19 +30,12 @@ def dump_private_key(private_key: RSAPrivateKey):
         cryptography.hazmat.primitives.serialization.PrivateFormat.PKCS8,
         cryptography.hazmat.primitives.serialization.NoEncryption(),
     )
-    with open(os.path.join(config.DATA_DIR, "private_key.pem"), "wb") as file:
-        file.write(private_key_bytes)
+    (config.DATA_DIR / "private_key.pem").write_bytes(private_key_bytes)
 
 
 def load_private_key() -> RSAPrivateKey:
     try:
-        with open(os.path.join(config.DATA_DIR, "private_key.pem"), "rb") as file:
-            private_key = (
-                cryptography.hazmat.primitives.serialization.load_pem_private_key(
-                    file.read(),
-                    None,
-                )
-            )
+        private_key_bytes = (config.DATA_DIR / "private_key.pem").read_bytes()
     except FileNotFoundError:
         private_key = (
             cryptography.hazmat.primitives.asymmetric.rsa.generate_private_key(
@@ -50,6 +44,11 @@ def load_private_key() -> RSAPrivateKey:
             )
         )
         dump_private_key(private_key)
+    else:
+        private_key = cryptography.hazmat.primitives.serialization.load_pem_private_key(
+            private_key_bytes,
+            None,
+        )
     return private_key
 
 
