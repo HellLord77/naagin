@@ -24,6 +24,10 @@ import config
 MITMWEB = Path(sys.argv[0]).name == "mitmweb"
 
 
+def get_fernet(password: str) -> Fernet:
+    return Fernet(base64.urlsafe_b64encode(hashlib.sha256(password.encode()).digest()))
+
+
 def dump_private_key(private_key: RSAPrivateKey):
     private_key_bytes = private_key.private_bytes(
         cryptography.hazmat.primitives.serialization.Encoding.PEM,
@@ -68,10 +72,6 @@ def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
     decrypted = unpadder.update(decrypted) + unpadder.finalize()
     decrypted = zlib.decompress(decrypted)
     return decrypted
-
-
-def get_fernet(password: str) -> Fernet:
-    return Fernet(base64.urlsafe_b64encode(hashlib.sha256(password.encode()).digest()))
 
 
 def renounce_request(request: Request):

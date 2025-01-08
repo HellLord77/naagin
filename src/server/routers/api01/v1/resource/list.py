@@ -12,11 +12,8 @@ resource_list = {}
 
 @contextlib.asynccontextmanager
 async def lifespan(_: FastAPI):
-    resource_list.update(
-        json.loads(
-            (config.DATA_DIR / "api01" / "v1" / "resource" / "list.json").read_text()
-        )
-    )
+    with (config.DATA_DIR / "api01" / "v1" / "resource" / "list.json").open() as file:
+        resource_list.update(json.load(file))
     yield
     resource_list.clear()
 
