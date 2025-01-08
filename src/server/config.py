@@ -1,3 +1,4 @@
 import os
+from pathlib import Path
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+DATA_DIR: Path = Path(os.getenv("DATA_DIR", Path(__file__).parent / "data"))
