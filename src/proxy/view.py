@@ -36,7 +36,7 @@ class ViewDOAXVVV(View):
             try:
                 decoded_data = decrypted_data.decode()
             except UnicodeDecodeError:
-                return (
+                view_result = (
                     f"[{self.name}] Hex Dump",
                     mitmproxy.contentviews.format_text(decrypted_data.hex()),
                 )
@@ -44,15 +44,16 @@ class ViewDOAXVVV(View):
                 try:
                     json_data = json.loads(decoded_data)
                 except JSONDecodeError:
-                    return (
+                    view_result = (
                         f"[{self.name}] Text",
                         mitmproxy.contentviews.format_text(decoded_data),
                     )
                 else:
-                    return (
+                    view_result = (
                         f"[{self.name}] JSON",
                         mitmproxy.contentviews.json.format_json(json_data),
                     )
+            return view_result
 
     def render_priority(
         self,
