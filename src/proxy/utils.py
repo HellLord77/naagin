@@ -6,6 +6,7 @@ import sys
 import time
 import zlib
 from pathlib import Path
+from typing import Optional
 
 import cryptography.hazmat.primitives.asymmetric.rsa
 import cryptography.hazmat.primitives.serialization
@@ -113,10 +114,10 @@ def decrypt_message(key: str, message: Message) -> bytes:
     )
 
 
-def print_json(session_key: bytes, flow: HTTPFlow):
+def print_json(flow: HTTPFlow, session_key: Optional[bytes] = None):
     message = flow.request if flow.response is None else flow.response
     if is_valid_message(flow.request, message.content):
-        if session_key and "Proxy-X-DOAXVV-Encrypted" not in message.headers:
+        if session_key is not None and "Proxy-X-DOAXVV-Encrypted" not in message.headers:
             message.headers["Proxy-X-DOAXVV-Encrypted"] = (
                 get_fernet(flow.id).encrypt(session_key).decode()
             )

@@ -2,6 +2,7 @@ import base64
 import json
 import logging
 import textwrap
+from typing import Optional
 
 import cryptography.hazmat.primitives.asymmetric.rsa
 import cryptography.hazmat.primitives.serialization
@@ -10,6 +11,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.primitives.serialization import Encoding
 from cryptography.hazmat.primitives.serialization import PublicFormat
+from mitmproxy.addonmanager import Loader
 from mitmproxy.http import HTTPFlow
 
 import utils
@@ -19,9 +21,9 @@ class AddonDOAXVV:
     proxy_private_key: RSAPrivateKey
     public_key: RSAPublicKey
 
-    session_key: bytes = b""
+    session_key: Optional[bytes] = None
 
-    def __init__(self):
+    def load(self, _: Loader):
         self.proxy_private_key = utils.load_private_key()
 
     @staticmethod
@@ -55,7 +57,7 @@ class AddonDOAXVV:
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
         else:
-            utils.print_json(self.session_key, flow)
+            utils.print_json(flow, self.session_key)
 
     def response(self, flow: HTTPFlow):
         if (
@@ -76,7 +78,7 @@ class AddonDOAXVV:
             flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
         else:
-            utils.print_json(self.session_key, flow)
+            utils.print_json(flow, self.session_key)
 
 
 addons = [AddonDOAXVV()]
