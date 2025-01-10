@@ -1,8 +1,10 @@
+import glob
 import json
 import logging
 import shutil
 from datetime import datetime
 from pathlib import Path
+from string import Formatter
 from typing import Any
 from typing import Iterable
 
@@ -16,6 +18,26 @@ from mitmproxy.io import FlowReader
 
 import config
 import utils
+
+VARIABLE_PATHS = (
+    "v1/dishevelment/{owner_id}/{item_mid}",
+    "v1/girl/{girl_mid}",
+    "v1/item/consume/use/{item_mid}",
+    "v1/item/equipment/type/{type}",
+    "v1/max_combine/{owner_id}/{item_mid}",
+    "v1/onsen/{onsen_mid}/item/use/{item_mid}",
+    "v1/onsen/{onsen_mid}/reward",
+    "v1/owner/episode/{episode_mid}",
+    "v1/owner/profile/{owner_id}",
+    "v1/pvp_girl/{girl_mid}",
+    "v1/radio_station/bgm/{scene_mid}",
+    "v1/ranking/border/{ranking_id}",
+    "v1/ranking/finalresult/{ranking_id}",
+    "v1/ranking/score/{ranking_id}",
+    "v1/shop/exchange/{product_mid}",
+    "v1/swimsuit_arrange_flag/{owner_id}",
+    "v1/tutorial/{event_mid}",
+)
 
 
 def iter_messages(flow: HTTPFlow) -> Iterable[Message]:
@@ -39,15 +61,13 @@ def flows_to_json(path: Path):
                 relative_path = flow.request.path.removeprefix("/")
                 path_method = flow.request.method.lower()
                 path_message = type(message).__name__.lower()
-                path_flow = path.stem
-                path_name = f"{flow.id}.json"
+                path_name = f"{path.stem}-{flow.id}.json"
                 json_path = (
                     config.DATA_DIR
                     / "json"
                     / relative_path
                     / path_method
                     / path_message
-                    / path_flow
                     / path_name
                 )
                 logging.warning(f"[JSON] {json_path}")
@@ -175,21 +195,50 @@ def schema_to_model(path: Path):  # TODO datetime, date, time serializer
     model_path.write_text(model_data, "utf-8")
 
 
+def rmtree_empty(path: Path):
+    for child in path.iterdir():
+        if child.is_dir():
+            rmtree_empty(child)
+    if not any(path.iterdir()):
+        path.rmdir()
+
+
 def main():
+    # logging.basicConfig(level=logging.CRITICAL)
+
     shutil.rmtree(config.DATA_DIR / "json", True)
 
     for flows_path in (config.DATA_DIR / "flows").glob("*.flows"):
         if flows_path.is_file():
             flows_to_json(flows_path)
 
+    formatter = Formatter()
+    for variable_path in VARIABLE_PATHS:
+        variables = {parse_result[1] for parse_result in formatter.parse(variable_path)}
+        variable_path_template = str(config.DATA_DIR / "json" / variable_path)
+        variable_path_dst = variable_path_template.format(
+            **{variable: f"_{variable}_" for variable in variables}
+        )
+        for variable_path_src in glob.iglob(
+            variable_path_template.format(
+                **{variable: "[0-9]*" for variable in variables}
+            )
+        ):
+            src_path = Path(variable_path_src)
+            for json_path in src_path.rglob("*.json"):
+                json_path: Path
+                relative_path = json_path.relative_to(src_path)
+                dst_path = variable_path_dst / relative_path
+                dst_path.parent.mkdir(parents=True, exist_ok=True)
+                json_path.rename(dst_path)
+    rmtree_empty(config.DATA_DIR / "json")
+
     shutil.rmtree(config.DATA_DIR / "schema", True)
 
     path_paths = set()
-    for json_path in (config.DATA_DIR / "json").rglob(
-        "*.json"
-    ):  # TODO path.parts[].isdigit()
+    for json_path in (config.DATA_DIR / "json").rglob("*.json"):
         if json_path.is_file():
-            path_paths.add(json_path.parent.parent)
+            path_paths.add(json_path.parent)
     for path_path in path_paths:
         json_to_schema(path_path)
 
@@ -198,6 +247,19 @@ def main():
     for schema_path in (config.DATA_DIR / "schema").rglob("*.schema.json"):
         if schema_path.is_file():
             schema_to_model(schema_path)
+
+    base_path = config.DATA_DIR / "model"
+    path_paths = set()
+    for model_path in base_path.rglob("*.py"):
+        model_path: Path
+        if model_path.is_file():
+            path_path = model_path.relative_to(base_path).parent.parent
+            for part in path_path.parts:
+                if part.isdigit():
+                    path_paths.add(path_path)
+                    break
+    for path_path in sorted(path_paths):
+        logging.error(path_path.as_posix())
 
 
 if __name__ == "__main__":
