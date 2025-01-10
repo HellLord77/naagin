@@ -1,4 +1,5 @@
 # dumper
+frozendict
 genson
 datamodel-code-generator
 
