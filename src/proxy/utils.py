@@ -26,7 +26,7 @@ import config
 
 MITMWEB = Path(sys.argv[0]).name == "mitmweb"
 FLOW_WRITER = FlowWriter(
-    (Path(config.DATA_DIR) / "flows" / f"DOAXVV-{int(time.time())}.flows").open("wb")
+    (config.DATA_DIR / "flows" / f"DOAXVV-{int(time.time())}.flows").open("wb")
 )
 
 
@@ -117,7 +117,10 @@ def decrypt_message(key: str, message: Message) -> bytes:
 def print_json(flow: HTTPFlow, session_key: Optional[bytes] = None):
     message = flow.request if flow.response is None else flow.response
     if is_valid_message(flow.request, message.content):
-        if session_key is not None and "Proxy-X-DOAXVV-Encrypted" not in message.headers:
+        if (
+            session_key is not None
+            and "Proxy-X-DOAXVV-Encrypted" not in message.headers
+        ):
             message.headers["Proxy-X-DOAXVV-Encrypted"] = (
                 get_fernet(flow.id).encrypt(session_key).decode()
             )
