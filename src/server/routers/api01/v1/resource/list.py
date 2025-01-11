@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from fastapi import FastAPI
 
 from ..... import config
-from .....models.api01.v1.resource.list import ResourceListGetResponseModel
+from .....models.api01.v1.resource.list.get.response import ResourceListGetResponseModel
 
 resource_list = {}
 
