@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from . import privilege
-from .....models.api01.v1.maintenance import MaintenanceGetResponseModel
+from .....models.api01.v1.maintenance.get.response import MaintenanceGetResponseModel
 
 router = APIRouter(prefix="/maintenance")
 
