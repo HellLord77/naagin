@@ -1,6 +1,8 @@
 import base64
+import gzip
 import hashlib
 import zlib
+from pathlib import Path
 
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.ciphers import Cipher
@@ -18,10 +20,9 @@ def get_fernet(password: str) -> Fernet:
 def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:
     decryptor = Cipher(algorithm, CBC(initialization_vector)).decryptor()
     unpadder = PKCS7(AES.block_size).unpadder()
-    decrypted = decryptor.update(data) + decryptor.finalize()
-    decrypted = unpadder.update(decrypted) + unpadder.finalize()
-    decrypted = zlib.decompress(decrypted)
-    return decrypted
+    decrypted_data = decryptor.update(data) + decryptor.finalize()
+    unpadded_data = unpadder.update(decrypted_data) + unpadder.finalize()
+    return unpadded_data
 
 
 def is_valid_message(request: Request, content: bytes):
@@ -33,8 +34,20 @@ def is_valid_message(request: Request, content: bytes):
 
 
 def decrypt_message(key: str, message: Message) -> bytes:
-    return decrypt_data(
+    decrypted_data = decrypt_data(
         AES(get_fernet(key).decrypt(message.headers["Proxy-X-DOAXVV-Encrypted"])),
         message.content,
         base64.b64decode(message.headers["X-DOAXVV-Encrypted"]),
     )
+    uncompressed_data = zlib.decompress(decrypted_data)
+    return uncompressed_data
+
+
+def decrypt_file(key: str, path: Path) -> bytes:
+    decrypted_data = decrypt_data(
+        AES(key.encode()),
+        path.read_bytes(),
+        bytes.fromhex(path.name),
+    )
+    uncompressed_data = gzip.decompress(decrypted_data)
+    return uncompressed_data
