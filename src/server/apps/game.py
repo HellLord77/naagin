@@ -19,9 +19,7 @@ app = FastAPI()
 app.mount("/game", StaticFiles(directory=config.DATA_DIR / "game"))
 
 get_async_client = functools.cache(
-    lambda: AsyncClient(
-        base_url=URL(scheme="https", host="game.doaxvv.com"), trust_env=False
-    )
+    lambda: AsyncClient(base_url=URL(scheme="https", host="game.doaxvv.com"))
 )
 get_path_lock = functools.lru_cache(lambda _: Lock())
 
