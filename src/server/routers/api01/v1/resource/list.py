@@ -1,27 +1,14 @@
-import contextlib
-import json
-
+import async_lru
 from fastapi import APIRouter
-from fastapi import FastAPI
 
-from ..... import config
+from ..... import consts
 from .....models.api01.v1.resource.list.get.response import ResourceListGetResponseModel
 
-resource_list = {}
-
-
-@contextlib.asynccontextmanager
-async def lifespan(_: FastAPI):
-    with (config.DATA_DIR / "api01" / "v1" / "resource" / "list.json").open() as file:
-        resource_list.update(json.load(file))
-    yield
-    resource_list.clear()
-
-
-router = APIRouter(prefix="/list", lifespan=lifespan)
+router = APIRouter(prefix="/list")
 
 
 @router.get("")
+@async_lru.alru_cache
 async def get() -> ResourceListGetResponseModel:
-    # noinspection PyTypeChecker
-    return resource_list
+    json_data = await (consts.API01_DIR / "v1" / "resource" / "list.json").read_bytes()
+    return ResourceListGetResponseModel.model_validate_json(json_data)

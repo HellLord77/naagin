@@ -9,7 +9,9 @@ cryptography
 rich
 
 # server
-uvicorn==0.19
-fastapi
-httpx
+async-lru
+aiopath
 pydantic
+httpx
+fastapi
+uvicorn==0.19
