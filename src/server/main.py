@@ -15,12 +15,15 @@ app.add_middleware(GZipMiddleware)
 
 app.include_router(routers.api.router, prefix="/api")
 app.include_router(routers.api01.router, prefix="/api01")
-app.mount("", apps.game.app)
+app.mount("/game", apps.game.app)
 
 
 @app.exception_handler(status.HTTP_404_NOT_FOUND)
-async def not_found(_: Request, __: HTTPException):
-    return JSONResponse(
+async def not_found(request: Request, _: HTTPException):
+    if request.url.path.startswith("/game"):
+        return await apps.game.not_found(request, _)
+    else:
+        return JSONResponse(
         {"code": status.HTTP_404_NOT_FOUND, "message": "not found"},
         status.HTTP_404_NOT_FOUND,
     )
