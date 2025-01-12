@@ -13,6 +13,8 @@ import frozendict
 from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
 from genson import SchemaBuilder
 from genson import TypedSchemaStrategy
+from httpx import Client
+from httpx import URL
 from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
 from mitmproxy.io import FlowReader
@@ -472,7 +474,7 @@ def dump_model():
         logging.error(path_path.as_posix())
 
 
-def dump_csv():
+def game_to_csv():
     shutil.rmtree(config.DATA_DIR / "csv", True)
 
     for master_version, csv_file_list in CSV_FILE_LISTS.items():
@@ -499,11 +501,43 @@ def dump_csv():
                 logging.error(encrypted_path)
 
 
+def get_md5(path: Path) -> str:
+    md5 = hashlib.md5()
+    with path.open("rb") as file:
+        while chunk := file.read(shutil.COPY_BUFSIZE):
+            md5.update(chunk)
+    return md5.hexdigest()
+
+
+def game_to_tmp():
+    base_path = config.DATA_DIR / "game"
+    client = Client(base_url=URL(scheme="https", host="game.doaxvv.com"))
+
+    for path in base_path.rglob("*[!.tmp]"):
+        path: Path
+        if path.is_file():
+            logging.warning("[GAME] %s", path)
+
+            relative_path = path.relative_to(base_path)
+
+            response = client.head(relative_path.as_posix())
+            response.raise_for_status()
+            etag = response.headers["ETag"][1:-1]
+            hash_, _ = etag.split(":")
+
+            if hash_ != get_md5(path):
+                logging.error(path)
+
+                path.rename(path.with_suffix(".tmp"))
+
+
 def main():
     # logging.basicConfig(level=logging.CRITICAL)
 
     dump_model()
-    # dump_csv()
+
+    # game_to_csv()
+    # game_to_tmp()
 
 
 if __name__ == "__main__":
