@@ -2,6 +2,7 @@ import base64
 import json
 import logging
 import textwrap
+from http import HTTPMethod
 from typing import Optional
 
 import cryptography.hazmat.primitives.asymmetric.rsa
@@ -14,6 +15,7 @@ from cryptography.hazmat.primitives.serialization import PublicFormat
 from mitmproxy.addonmanager import Loader
 from mitmproxy.http import HTTPFlow
 
+import consts
 import utils
 
 
@@ -29,19 +31,19 @@ class AddonDOAXVV:
     @staticmethod
     def requestheaders(flow: HTTPFlow):
         match flow.request.pretty_host:
-            case "api.doaxvv.com":
+            case consts.API_HOST:
                 logging.debug("[%s] api %s", flow.request.method, flow.request.path)
                 utils.renounce_request(flow.request)
-            case "api01.doaxvv.com":
+            case consts.API01_HOST:
                 if flow.request.path_components[:3] != ("v1", "johren", "authJohren"):
                     utils.redirect_request(flow.request, "api01")
-            case "game.doaxvv.com":
+            case consts.GAME_HOST:
                 utils.redirect_request(flow.request, "game")
 
     def request(self, flow: HTTPFlow):
         if (
-            flow.request.method == "PUT"
-            and flow.request.pretty_host == "api.doaxvv.com"
+            flow.request.method == HTTPMethod.PUT
+            and flow.request.pretty_host == consts.API_HOST
             and flow.request.path_components == ("v1", "session", "key")
         ):
             encrypt_key = flow.request.json()["encrypt_key"]
@@ -62,8 +64,8 @@ class AddonDOAXVV:
 
     def response(self, flow: HTTPFlow):
         if (
-            flow.request.method == "GET"
-            and flow.request.pretty_host == "api.doaxvv.com"
+            flow.request.method == HTTPMethod.GET
+            and flow.request.pretty_host == consts.API_HOST
             and flow.request.path_components == ("v1", "session", "key")
         ):
             encrypt_key = flow.response.json()["encrypt_key"]
