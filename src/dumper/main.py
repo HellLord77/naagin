@@ -13,8 +13,6 @@ import frozendict
 from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
 from genson import SchemaBuilder
 from genson import TypedSchemaStrategy
-from httpx import Client
-from httpx import URL
 from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
 from mitmproxy.io import FlowReader
@@ -24,6 +22,7 @@ import utils
 
 VARIABLE_PATHS = (
     "v1/dishevelment/{owner_id}/{item_mid}",
+    "v1/friendship/{friend_id}",
     "v1/girl/{girl_mid}",
     "v1/item/consume/use/{item_mid}",
     "v1/item/equipment/type/{type}",
@@ -476,7 +475,6 @@ def dump_model():
 def dump_csv():
     shutil.rmtree(config.DATA_DIR / "csv", True)
 
-    client = Client(base_url=URL(scheme="https", host="game.doaxvv.com"))
     for master_version, csv_file_list in CSV_FILE_LISTS.items():
         file_encrypt_key = csv_file_list.pop("file_encrypt_key")
         md5 = hashlib.md5(file_encrypt_key.encode())
@@ -487,23 +485,18 @@ def dump_csv():
         dst_path = config.DATA_DIR / "csv" / str(master_version)
         for csv_file, initialization_vector in csv_file_list.items():
             encrypted_path = src_path / initialization_vector
-            if not encrypted_path.is_file():
-                response = client.get(f"/production/csv/{master_version}/{initialization_vector}")
-                response.raise_for_status()
+            if encrypted_path.is_file():
+                logging.info(f"[ENCRYPTED] {encrypted_path}")
 
-                logging.warning(f"[ENCRYPTED] {encrypted_path}")
-                encrypted_path.parent.mkdir(parents=True, exist_ok=True)
-                encrypted_path.write_bytes(response.content)
+                data = utils.decrypt_file(key, encrypted_path)
 
-            logging.info(f"[ENCRYPTED] {encrypted_path}")
+                csv_path = dst_path / csv_file
+                logging.warning(f"[CSV] {csv_path}")
 
-            data = utils.decrypt_file(key, encrypted_path)
-
-            csv_path = dst_path / csv_file
-            logging.warning(f"[CSV] {csv_path}")
-
-            csv_path.parent.mkdir(parents=True, exist_ok=True)
-            csv_path.write_bytes(data)
+                csv_path.parent.mkdir(parents=True, exist_ok=True)
+                csv_path.write_bytes(data)
+            else:
+                logging.error(encrypted_path)
 
 
 def main():

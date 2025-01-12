@@ -33,7 +33,8 @@ class AddonDOAXVV:
                 logging.debug("[%s] api %s", flow.request.method, flow.request.path)
                 utils.renounce_request(flow.request)
             case "api01.doaxvv.com":
-                utils.redirect_request(flow.request, "api01")
+                if flow.request.path_components[:3] != ("v1", "johren", "authJohren"):
+                    utils.redirect_request(flow.request, "api01")
             case "game.doaxvv.com":
                 utils.redirect_request(flow.request, "game")
 
