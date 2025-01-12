@@ -10,16 +10,16 @@ from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from httpx import AsyncClient
 from httpx import HTTPStatusError
-from httpx import URL
 
 from .. import config
+from .. import consts
 
 app = FastAPI()
 
-app.mount("/game", StaticFiles(directory=config.DATA_DIR / "game"))
+app.mount("/game", StaticFiles(directory=consts.GAME_DIR))
 
 get_async_client = functools.cache(
-    lambda: AsyncClient(base_url=URL(scheme="https", host="game.doaxvv.com"))
+    lambda: AsyncClient(base_url=consts.GAME_URL, trust_env=not config.NO_PROXY)
 )
 get_path_lock = functools.lru_cache(lambda _: Lock())
 
@@ -27,7 +27,7 @@ get_path_lock = functools.lru_cache(lambda _: Lock())
 @app.exception_handler(status.HTTP_404_NOT_FOUND)
 async def not_found(request: Request, _: HTTPException):
     url_path = request.url.path.removeprefix("/game")
-    path = config.DATA_DIR / "game" / url_path.removeprefix("/")
+    path = consts.GAME_DIR / url_path.removeprefix("/")
     async with get_path_lock(url_path):
         if not path.is_file():
             try:

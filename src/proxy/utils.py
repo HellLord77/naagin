@@ -3,8 +3,6 @@ import gzip
 import hashlib
 import logging
 import os
-import sys
-import time
 import zlib
 from pathlib import Path
 from typing import Optional
@@ -21,15 +19,8 @@ from cryptography.hazmat.primitives.padding import PKCS7
 from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
 from mitmproxy.http import Request
-from mitmproxy.io import FlowWriter
 
-import config
-
-MITMWEB = Path(sys.argv[0]).name == "mitmweb"
-if not MITMWEB:
-    FLOW_WRITER = FlowWriter(
-        (config.DATA_DIR / "flows" / f"DOAXVV-{int(time.time())}.flows").open("wb")
-    )
+import consts
 
 
 def get_fernet(password: str) -> Fernet:
@@ -42,12 +33,12 @@ def dump_private_key(private_key: RSAPrivateKey):
         cryptography.hazmat.primitives.serialization.PrivateFormat.PKCS8,
         cryptography.hazmat.primitives.serialization.NoEncryption(),
     )
-    (config.DATA_DIR / "private_key.pem").write_bytes(private_key_bytes)
+    (consts.CERT_DIR / "naagin-api.pem").write_bytes(private_key_bytes)
 
 
 def load_private_key() -> RSAPrivateKey:
     try:
-        private_key_bytes = (config.DATA_DIR / "private_key.pem").read_bytes()
+        private_key_bytes = (consts.CERT_DIR / "naagin-api.pem").read_bytes()
     except FileNotFoundError:
         private_key = (
             cryptography.hazmat.primitives.asymmetric.rsa.generate_private_key(
@@ -91,16 +82,16 @@ def redirect_request(request: Request, path: str):
     logging.debug("[%s] %s %s", request.method, path, request.path)
 
     pretty_url = request.pretty_url
-    request.scheme = "http"
-    request.host = config.SERVER_HOST
-    request.port = config.SERVER_PORT
+    request.scheme = consts.SERVER_URL.scheme
+    request.host = consts.SERVER_URL.hostname
+    request.port = consts.SERVER_URL.port
     request.path_components = path, *request.path_components
     logging.info("[url] %s -> %s", pretty_url, request.pretty_url)
 
 
 def is_valid_message(request: Request, content: bytes):
     return (
-        request.pretty_host == "api.doaxvv.com"
+        request.pretty_host == consts.API_HOST
         and request.path_components[:2] != ("v1", "session")
         and content
     )
@@ -137,9 +128,9 @@ def print_json(flow: HTTPFlow, session_key: Optional[bytes] = None):
                 get_fernet(flow.id).encrypt(session_key).decode()
             )
 
-        if not MITMWEB:
+        if not consts.MITMWEB:
             if flow.response is not None:
-                FLOW_WRITER.add(flow)
+                consts.FLOW_WRITER.add(flow)
 
             body = decrypt_message(flow.id, message)
             print(f"[{type(message).__name__.lower()}] {flow.request.path}")
