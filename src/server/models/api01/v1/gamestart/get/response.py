@@ -1,12 +1,5 @@
-from pydantic import BaseModel
-from pydantic import ConfigDict
+from ..... import NaaginBaseModel
 
 
-class GamestartGetResponseModel(BaseModel):
+class GamestartGetResponseModel(NaaginBaseModel):
     gamestart: bool
-
-    model_config = ConfigDict(
-        json_schema_extra={
-            "examples": [{"gamestart": True}],
-        },
-    )

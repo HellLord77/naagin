@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ......models.api01.v1.maintenance.privilege.check.get.response import (
+from ......models.api01 import (
     MaintenancePrivilegeCheckGetResponseModel,
 )
 

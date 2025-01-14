@@ -1,12 +1,5 @@
-from pydantic import BaseModel
-from pydantic import ConfigDict
+from ..... import NaaginBaseModel
 
 
-class MaintenanceGetResponseModel(BaseModel):
+class MaintenanceGetResponseModel(NaaginBaseModel):
     maintenance: bool
-
-    model_config = ConfigDict(
-        json_schema_extra={
-            "examples": [{"maintenance": False}],
-        },
-    )
