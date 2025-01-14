@@ -12,6 +12,12 @@ rich
 async-lru
 aiopath
 pydantic
+pydantic-settings
+sqlalchemy
 httpx
 fastapi
 uvicorn==0.19
+
+# driver
+aiosqlite
+aiomysql

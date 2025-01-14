@@ -5,8 +5,7 @@ import textwrap
 from http import HTTPMethod
 from typing import Optional
 
-import cryptography.hazmat.primitives.asymmetric.rsa
-import cryptography.hazmat.primitives.serialization
+import cryptography
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey

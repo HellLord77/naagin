@@ -7,8 +7,7 @@ import zlib
 from pathlib import Path
 from typing import Optional
 
-import cryptography.hazmat.primitives.asymmetric.rsa
-import cryptography.hazmat.primitives.serialization
+import cryptography
 import rich
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
@@ -16,6 +15,9 @@ from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
+from cryptography.hazmat.primitives.serialization import Encoding
+from cryptography.hazmat.primitives.serialization import NoEncryption
+from cryptography.hazmat.primitives.serialization import PrivateFormat
 from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
 from mitmproxy.http import Request
@@ -29,9 +31,9 @@ def get_fernet(password: str) -> Fernet:
 
 def dump_private_key(private_key: RSAPrivateKey):
     private_key_bytes = private_key.private_bytes(
-        cryptography.hazmat.primitives.serialization.Encoding.PEM,
-        cryptography.hazmat.primitives.serialization.PrivateFormat.PKCS8,
-        cryptography.hazmat.primitives.serialization.NoEncryption(),
+        Encoding.PEM,
+        PrivateFormat.PKCS8,
+        NoEncryption(),
     )
     (consts.CERT_DIR / "naagin-api.pem").write_bytes(private_key_bytes)
 
@@ -89,11 +91,11 @@ def redirect_request(request: Request, path: str):
     logging.info("[url] %s -> %s", pretty_url, request.pretty_url)
 
 
-def is_valid_message(request: Request, content: bytes):
-    return (
+def is_valid_message(request: Request, message: Message) -> bool:
+    return bool(
         request.pretty_host == consts.API_HOST
-        and request.path_components[:2] != ("v1", "session")
-        and content
+        and "X-DOAXVV-Encrypted" in message.headers
+        and message.content
     )
 
 
@@ -119,7 +121,7 @@ def decrypt_file(key: str, path: Path) -> bytes:
 
 def print_json(flow: HTTPFlow, session_key: Optional[bytes] = None):
     message = flow.request if flow.response is None else flow.response
-    if is_valid_message(flow.request, message.content):
+    if is_valid_message(flow.request, message):
         if (
             session_key is not None
             and "Proxy-X-DOAXVV-Encrypted" not in message.headers

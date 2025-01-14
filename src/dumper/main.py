@@ -29,8 +29,11 @@ VARIABLE_PATHS = (
     "v1/item/consume/use/{item_mid}",
     "v1/item/equipment/type/{type}",
     "v1/max_combine/{owner_id}/{item_mid}",
+    "v1/onsen/{onsen_mid}/entry/slot",
     "v1/onsen/{onsen_mid}/item/use/{item_mid}",
     "v1/onsen/{onsen_mid}/reward",
+    "v1/onsen/{onsen_mid}/update/quality",
+    "v1/owner/detail/{owner_id}",
     "v1/owner/episode/{episode_mid}",
     "v1/owner/profile/{owner_id}",
     "v1/pvp_girl/{girl_mid}",
@@ -257,7 +260,7 @@ CSV_FILE_LISTS = {
 
 def iter_messages(flow: HTTPFlow) -> Iterable[Message]:
     for message in (flow.request, flow.response):
-        if utils.is_valid_message(flow.request, message.content):
+        if utils.is_valid_message(flow.request, message):
             yield message
 
 

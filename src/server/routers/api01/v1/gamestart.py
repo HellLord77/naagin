@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ....models.api01.v1.gamestart.get.response import GamestartGetResponseModel
+from ....models.api01 import GamestartGetResponseModel
 
 router = APIRouter(prefix="/gamestart")
 

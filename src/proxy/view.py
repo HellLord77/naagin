@@ -64,8 +64,8 @@ class ViewDOAXVVV(View):
         http_message: Optional[Message] = None,
         **unknown_metadata,
     ) -> float:
-        return bool(
-            isinstance(flow, HTTPFlow) and utils.is_valid_message(flow.request, data)
+        return isinstance(flow, HTTPFlow) and utils.is_valid_message(
+            flow.request, http_message
         )
 
 

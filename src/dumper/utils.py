@@ -25,11 +25,11 @@ def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
     return unpadded_data
 
 
-def is_valid_message(request: Request, content: bytes):
-    return (
+def is_valid_message(request: Request, message: Message) -> bool:
+    return bool(
         request.pretty_host == "api.doaxvv.com"
-        and request.path_components[:2] != ("v1", "session")
-        and content
+        and "X-DOAXVV-Encrypted" in message.headers
+        and message.content
     )
 
 
