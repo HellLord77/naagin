@@ -12,7 +12,7 @@ from .schemas import OwnerSchema
 from .schemas import TutorialSchema
 
 
-async def get_session() -> AsyncSession:
+async def provide_session() -> AsyncSession:
     session = settings.database.sessionmaker()
     try:
         yield session
@@ -25,10 +25,10 @@ async def get_session() -> AsyncSession:
         await session.close()
 
 
-async def get_owner_id(
+async def provide_owner_id(
     x_doaxvv_access_token: Optional[str] = Header(None),
     pinksid: Optional[str] = Cookie(None),
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession = Depends(provide_session),
 ) -> int:
     if x_doaxvv_access_token == "XPEACHACCESSTOKEN":
         if pinksid is None:
