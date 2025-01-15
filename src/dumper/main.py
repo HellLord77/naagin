@@ -9,7 +9,10 @@ from string import Formatter
 from typing import Any
 from typing import Iterable
 
+import datamodel_code_generator
 import frozendict
+from datamodel_code_generator import DataModelType
+from datamodel_code_generator import PythonVersion
 from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
 from genson import SchemaBuilder
 from genson import TypedSchemaStrategy
@@ -404,16 +407,25 @@ def custom_class_name_generator(title: str):
     return f"{title.removesuffix("_list")}_model"
 
 
-def schema_to_model(path: Path):  # TODO datetime, date, time serializer
+def schema_to_model(path: Path):
     logging.info(f"[SCHEMA] {path}")
 
     schema_data = path.read_text()
+    data_model_types = datamodel_code_generator.model.get_data_model_types(
+        DataModelType.PydanticV2BaseModel, target_python_version=PythonVersion.PY_313
+    )
     parser = JsonSchemaParser(
         schema_data,
+        data_model_type=data_model_types.data_model,
+        data_model_root_type=data_model_types.root_model,
+        data_model_field_type=data_model_types.field_model,
+        data_type_manager_type=data_model_types.data_type_manager,
+        dump_resolve_reference_action=data_model_types.dump_resolve_reference_action,
+        field_constraints=True,
         use_standard_collections=True,
-        use_title_as_name=True,
         disable_appending_item_suffix=True,
         custom_class_name_generator=custom_class_name_generator,
+        use_title_as_name=True,
     )
     parsed_data = parser.parse()
     parsed_lines = parsed_data.split("\n")

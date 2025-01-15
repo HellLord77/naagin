@@ -1,12 +1,15 @@
 from fastapi import APIRouter
 from sqlalchemy import select
 
+from . import __event_mid__
 from .....models.api import TutorialGetResponseModel
 from .....schemas import TutorialSchema
 from .....types.dependencies import OwnerId
 from .....types.dependencies import Session
 
 router = APIRouter(prefix="/tutorial")
+
+router.include_router(__event_mid__.router)
 
 
 @router.get("")
