@@ -1,1 +1,1 @@
-from ._base_ import NaaginBaseModel
+from .__base__ import NaaginBaseModel
