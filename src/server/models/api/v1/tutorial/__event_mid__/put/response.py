@@ -35,7 +35,7 @@ class TutorialModel(NaaginBaseModel):
     event_mid: int
     flag: int
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[datetime]
 
 
 class TutorialEventMidPutResponseModel(NaaginBaseModel):

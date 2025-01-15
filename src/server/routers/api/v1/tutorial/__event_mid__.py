@@ -1,11 +1,10 @@
 from fastapi import APIRouter
-from sqlalchemy import update
 
 from .....models.api import TutorialEventMidPutRequestModel
 from .....models.api import TutorialEventMidPutResponseModel
 from .....schemas import TutorialSchema
-from .....types.dependencies import OwnerId
-from .....types.dependencies import Session
+from .....types.dependencies import OwnerIdDependency
+from .....types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/{event_mid}")
 
@@ -14,15 +13,11 @@ router = APIRouter(prefix="/{event_mid}")
 async def put(
     event_mid: int,
     request: TutorialEventMidPutRequestModel,
-    session: Session,
-    owner_id: OwnerId,
+    session: SessionDependency,
+    owner_id: OwnerIdDependency,
 ) -> TutorialEventMidPutResponseModel:
-    tutorial = await session.scalar(
-        update(TutorialSchema)
-        .where(
-            TutorialSchema.owner_id == owner_id, TutorialSchema.event_mid == event_mid
-        )
-        .values(flag=request.flag)
-        .returning(TutorialSchema)
-    )
+    tutorial = await session.get_one(TutorialSchema, (owner_id, event_mid))
+    tutorial.flag = request.flag
+    await session.flush()
+    await session.refresh(tutorial)
     return TutorialEventMidPutResponseModel(tutorial_list=[tutorial])
