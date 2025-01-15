@@ -8,13 +8,13 @@ from .base import NaaginBaseSchema
 from .owner import OwnerSchema
 
 
-class TutorialSchema(NaaginBaseSchema):
-    __tablename__ = "tutorial"
+class EpisodeSchema(NaaginBaseSchema):
+    __tablename__ = "episode"
 
     owner_id: Mapped[int] = mapped_column(
         Integer, ForeignKey(OwnerSchema.owner_id, ondelete="CASCADE"), primary_key=True
     )
-    event_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
-    flag: Mapped[int] = mapped_column(Integer, default=0)
+    episode_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
+    count: Mapped[int] = mapped_column(Integer)
 
-    __table_args__ = (CheckConstraint(flag >= 0, "flag_min"),)
+    __table_args__ = (CheckConstraint(count >= 0, "count_min"),)

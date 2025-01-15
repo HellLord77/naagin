@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from .. import NaaginBaseSettings
+from ..base import NaaginBaseSettings
 
 
 class DatabaseSettings(NaaginBaseSettings):
@@ -27,6 +27,8 @@ class DatabaseSettings(NaaginBaseSettings):
     def url(self) -> URL:
         if self.driver == "sqlite":
             self.driver = "sqlite+aiosqlite"
+        elif self.driver == "postgresql":
+            self.driver = "postgresql+asyncpg"
         elif self.driver == "mysql":
             self.driver = "mysql+aiomysql"
         if self.passwd is None:

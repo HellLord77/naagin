@@ -29,7 +29,7 @@ class NaaginBaseSchema(DeclarativeBase):
     )
 
     __table_args__ = (
-        # CheckConstraint(created_at <= func.current_timestamp(), "created_at_lte_now"),
-        # CheckConstraint(updated_at <= func.current_timestamp(), "updated_at_lte_now"),
+        CheckConstraint(created_at <= func.current_timestamp(), "created_at_lte_now"),
+        CheckConstraint(updated_at <= func.current_timestamp(), "updated_at_lte_now"),
         CheckConstraint(created_at <= updated_at, "created_at_lte_updated_at"),
     )  # TODO

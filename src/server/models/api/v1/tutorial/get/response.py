@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from ..... import NaaginBaseModel
+from .....base import NaaginBaseModel
 
 
 class TutorialModel(NaaginBaseModel):

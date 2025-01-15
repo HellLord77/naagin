@@ -16,7 +16,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from . import NaaginBaseSchema
+from .base import NaaginBaseSchema
 from ..types.enums import CheckedLicenseLevelEnum
 from ..types.enums import LicenseLevelEnum
 from ..types.enums import OwnerStatusEnum
@@ -77,13 +77,14 @@ class OwnerSchema(NaaginBaseSchema):
         CheckConstraint(experience >= 0, "experience_min"),
         CheckConstraint(stamina.between(0, 999), "stamina_rng"),
         CheckConstraint(license_point.between(0, 12480), "license_point_rng"),
+        # CheckConstraint(license_level >= checked_license_level, "license_level_gte_checked_license_level"),
+        CheckConstraint(birthday <= func.current_date(), "birthday_lte_today"),
         CheckConstraint(
-            license_level >= checked_license_level,
-            "license_level_gte_checked_license_level",
+            stamina_checked_at <= func.current_timestamp(), "stamina_checked_at_lte_now"
         ),
-        # CheckConstraint(birthday <= func.current_date(), "birthday_lte_today"),
-        # CheckConstraint(stamina_checked_at <= func.current_timestamp(), "stamina_checked_at_lte_now"),
-        # CheckConstraint(last_logged_at <= func.current_timestamp(), "last_logged_at_lte_now"),
+        CheckConstraint(
+            last_logged_at <= func.current_timestamp(), "last_logged_at_lte_now"
+        ),
         CheckConstraint(
             stamina_checked_at >= last_logged_at,
             "stamina_checked_at_gte_last_logged_at",

@@ -1,6 +1,6 @@
 from pydantic_settings import SettingsConfigDict
 
-from . import NaaginBaseSettings
+from .base import NaaginBaseSettings
 
 
 class GameSettings(NaaginBaseSettings):
