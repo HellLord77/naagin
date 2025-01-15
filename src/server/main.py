@@ -11,12 +11,12 @@ from uvicorn import run
 from . import apps
 from . import routers
 from . import settings
-from .schemas import NaaginBaseSchema
+from .schemas.base import NaaginBaseSchema
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    async with settings.database.engine.connect() as connection:
+    async with settings.database.engine.begin() as connection:
         await connection.run_sync(NaaginBaseSchema.metadata.create_all)
     yield
     await settings.database.engine.dispose()

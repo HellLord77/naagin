@@ -1,3 +1,3 @@
-from .__base__ import NaaginBaseSchema
+from .episode import EpisodeSchema
 from .owner import OwnerSchema
 from .tutorial import TutorialSchema

@@ -20,4 +20,5 @@ uvicorn==0.19
 
 # driver
 aiosqlite
+asyncpg
 aiomysql

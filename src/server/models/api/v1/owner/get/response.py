@@ -2,7 +2,7 @@ from datetime import date
 from datetime import datetime
 from typing import Optional
 
-from ..... import NaaginBaseModel
+from .....base import NaaginBaseModel
 
 
 class OwnerModel(NaaginBaseModel):

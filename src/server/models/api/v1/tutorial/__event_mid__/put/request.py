@@ -1,4 +1,4 @@
-from ...... import NaaginBaseModel
+from ......base import NaaginBaseModel
 
 
 class TutorialEventMidPutRequestModel(NaaginBaseModel):
