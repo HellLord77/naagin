@@ -338,7 +338,7 @@ def csv_to_json(path: Path):
             json_path = dst_path / path_name
 
             logging.warning(f"[JSON] {json_path}")
-            json_path.write_text(json.dumps(data))
+            json_path.write_text(json.dumps(data, separators=(",", ":")))
 
 
 def to_model():

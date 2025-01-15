@@ -12,7 +12,7 @@ class TutorialSchema(NaaginBaseSchema):
     __tablename__ = "tutorial"
 
     owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id, ondelete="CASCADE"), primary_key=True
+        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
     )
     event_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
     flag: Mapped[int] = mapped_column(Integer, default=0)

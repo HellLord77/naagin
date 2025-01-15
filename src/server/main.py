@@ -23,7 +23,6 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Naagin", version="0.0.1", lifespan=lifespan)
-# noinspection PyTypeChecker
 app.add_middleware(GZipMiddleware)
 
 app.include_router(routers.api.router, prefix="/api", tags=["api"])
