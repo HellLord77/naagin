@@ -102,7 +102,6 @@ def json_to_schema(path: Path, json_dir: Path, schema_dir: Path):
 
     schema_path.parent.mkdir(parents=True, exist_ok=True)
     with schema_path.open("w") as file:
-        # noinspection PyTypeChecker
         json.dump(schema, file, separators=(",", ":"))
 
 

@@ -24,14 +24,16 @@ router = APIRouter(prefix="/{episode_mid}")
 @router.put("")
 async def put(
     episode_mid: int,
-    request: OwnerEpisodeEpisodeMidPutRequestModel,
+    _: OwnerEpisodeEpisodeMidPutRequestModel,
     session: SessionDependency,
     owner_id: OwnerIdDependency,
 ) -> OwnerEpisodeEpisodeMidPutResponseModel:
-    episode = EpisodeSchema(
-        owner_id=owner_id, episode_mid=episode_mid, count=request.count
-    )
-    session.add(episode)
+    episode = await session.get(EpisodeSchema, (owner_id, episode_mid))
+    if episode is None:
+        episode = EpisodeSchema(owner_id=owner_id, episode_mid=episode_mid)
+        session.add(episode)
+    else:
+        episode.count += 1
     await session.flush()
     await session.refresh(episode)
     return OwnerEpisodeEpisodeMidPutResponseModel(episode_list=[episode])
