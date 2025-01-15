@@ -73,7 +73,7 @@ class OwnerSchema(NaaginBaseSchema):
         CheckConstraint(func.char_length(message).between(1, 20), "message_len_rng"),
         # CheckConstraint(func.trim(message) == message, "message_trm"),
         CheckConstraint(team_id == 0, "team_id_const"),
-        CheckConstraint(level >= 1, "level_min"),
+        CheckConstraint(level.between(1, 300), "level_rng"),
         CheckConstraint(experience >= 0, "experience_min"),
         CheckConstraint(stamina.between(0, 999), "stamina_rng"),
         CheckConstraint(license_point.between(0, 12480), "license_point_rng"),

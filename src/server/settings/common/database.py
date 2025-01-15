@@ -48,4 +48,4 @@ class DatabaseSettings(NaaginBaseSettings):
 
     @cached_property
     def sessionmaker(self) -> async_sessionmaker:
-        return async_sessionmaker(self.engine)
+        return async_sessionmaker(self.engine, autoflush=False)

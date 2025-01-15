@@ -21,3 +21,7 @@ class DataSettings(NaaginBaseSettings):
     @cached_property
     def game_dir(self) -> AsyncPath:
         return AsyncPath(self.data_dir / "game")
+
+    @cached_property
+    def csv_dir(self) -> AsyncPath:
+        return AsyncPath(self.data_dir / "csv")

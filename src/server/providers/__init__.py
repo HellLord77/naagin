@@ -1,15 +1,14 @@
-from typing import Optional
-
-from fastapi import Cookie
 from fastapi import Depends
 from fastapi import HTTPException
-from fastapi import Header
 from fastapi import status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from . import settings
-from .schemas import OwnerSchema
-from .schemas import TutorialSchema
+from . import csv
+from .. import settings
+from ..schemas import OwnerSchema
+from ..schemas import TutorialSchema
+from ..types.cookies import PINKSIDCookie
+from ..types.headers import AccessTokenHeader
 
 
 async def provide_session() -> AsyncSession:
@@ -26,18 +25,18 @@ async def provide_session() -> AsyncSession:
 
 
 async def provide_owner_id(
-    x_doaxvv_access_token: Optional[str] = Header(None),
-    pinksid: Optional[str] = Cookie(None),
+    access_token: AccessTokenHeader,
+    pinksid: PINKSIDCookie,
     session: AsyncSession = Depends(provide_session),
 ) -> int:
-    if x_doaxvv_access_token == "XPEACHACCESSTOKEN":
+    if access_token == "XPEACHACCESSTOKEN":
         if pinksid is None:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED)
     else:
-        if x_doaxvv_access_token is None:
+        if access_token is None:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED)
 
-    owner_id = int(x_doaxvv_access_token)
+    owner_id = int(access_token)
     owner = await session.get(OwnerSchema, owner_id)
     if owner is None:
         owner = OwnerSchema(owner_id=owner_id)
