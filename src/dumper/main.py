@@ -7,8 +7,8 @@ from httpx import Client
 from httpx import URL
 
 import config
+import csv_
 import flows
-import game
 
 
 def get_md5(path: Path) -> str:
@@ -47,7 +47,7 @@ def main():
     flows.to_model()
     exit()
 
-    game.to_model()
+    csv_.to_model()
     exit()
 
     game_to_tmp()
