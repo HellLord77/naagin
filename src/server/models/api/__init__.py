@@ -1,5 +1,7 @@
 from .v1.cheat_log.check.get.response import CheatLogCheckGetResponseModel
 from .v1.csv.list.get.response import CsvListGetResponseModel
+from .v1.owner.birthday.post.request import OwnerBirthdayPostRequestModel
+from .v1.owner.birthday.post.response import OwnerBirthdayPostResponseModel
 from .v1.owner.countlogin.get.response import OwnerCountloginGetResponseModel
 from .v1.owner.episode.__episode_mid__.post.response import (
     OwnerEpisodeEpisodeMidPostResponseModel,
