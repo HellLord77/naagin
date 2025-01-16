@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ......models.api import ShopPaymentlogIncompleteGetResponseModel
+from naagin.models.api import ShopPaymentlogIncompleteGetResponseModel
 
 router = APIRouter(prefix="/incomplete")
 

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from datetime import date
 from datetime import datetime
 from random import randrange
@@ -15,13 +13,13 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.types.enums import CheckedLicenseLevelEnum
+from naagin.types.enums import LicenseLevelEnum
+from naagin.types.enums import OwnerStatusEnum
+from naagin.types.enums.schemas import CheckedLicenseLevelEnumSchema
+from naagin.types.enums.schemas import LicenseLevelEnumSchema
+from naagin.types.enums.schemas import OwnerStatusEnumSchema
 from .base import BaseSchema
-from ..types.enums import CheckedLicenseLevelEnum
-from ..types.enums import LicenseLevelEnum
-from ..types.enums import OwnerStatusEnum
-from ..types.enums.schemas import CheckedLicenseLevelEnumSchema
-from ..types.enums.schemas import LicenseLevelEnumSchema
-from ..types.enums.schemas import OwnerStatusEnumSchema
 
 
 class OwnerSchema(BaseSchema):

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .....models.api import CheatLogCheckGetResponseModel
+from naagin.models.api import CheatLogCheckGetResponseModel
 
 router = APIRouter(prefix="/check")
 

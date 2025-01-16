@@ -2,9 +2,9 @@ from csv import DictReader
 from csv import QUOTE_ALL
 from csv import reader
 
-from .. import settings
-from ..models.csv import EpisodeCSVModel
-from ..types.headers import MasterVersionHeader
+from naagin import settings
+from naagin.models.csv import EpisodeCSVModel
+from naagin.types.headers import MasterVersionHeader
 
 
 async def provide_owner_levels(master_version: MasterVersionHeader) -> list[int]:

@@ -2,21 +2,21 @@ from bisect import bisect
 
 from fastapi import APIRouter
 
-from ......models.api import OwnerEpisodeEpisodeMidPostResponseModel
-from ......models.api import OwnerEpisodeEpisodeMidPutRequestModel
-from ......models.api import OwnerEpisodeEpisodeMidPutResponseModel
-from ......models.api.v1.owner.episode.__episode_mid__.post.response import (
+from naagin.models.api import OwnerEpisodeEpisodeMidPostResponseModel
+from naagin.models.api import OwnerEpisodeEpisodeMidPutRequestModel
+from naagin.models.api import OwnerEpisodeEpisodeMidPutResponseModel
+from naagin.models.api.v1.owner.episode.__episode_mid__.post.response import (
     EpisodeResultModel,
 )
-from ......models.api.v1.owner.episode.__episode_mid__.post.response import (
+from naagin.models.api.v1.owner.episode.__episode_mid__.post.response import (
     EpisodeResultOwnerModel,
 )
-from ......schemas import EpisodeSchema
-from ......schemas import OwnerSchema
-from ......types.dependencies import OwnerIdDependency
-from ......types.dependencies import SessionDependency
-from ......types.dependencies.csv import EpisodesCSVDependency
-from ......types.dependencies.csv import OwnerLevelsCSVDependency
+from naagin.schemas import EpisodeSchema
+from naagin.schemas import OwnerSchema
+from naagin.types.dependencies import OwnerIdDependency
+from naagin.types.dependencies import SessionDependency
+from naagin.types.dependencies.csv import EpisodesCSVDependency
+from naagin.types.dependencies.csv import OwnerLevelsCSVDependency
 
 router = APIRouter(prefix="/{episode_mid}")
 

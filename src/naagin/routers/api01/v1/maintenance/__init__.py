@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
+from naagin.models.api01 import MaintenanceGetResponseModel
 from . import privilege
-from .....models.api01 import MaintenanceGetResponseModel
 
 router = APIRouter(prefix="/maintenance")
 

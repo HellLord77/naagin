@@ -3,13 +3,13 @@ from fastapi import HTTPException
 from fastapi import status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from naagin import settings
+from naagin.schemas import OptionItemAutoLockSchema
+from naagin.schemas import OwnerSchema
+from naagin.schemas import TutorialSchema
+from naagin.types.cookies import PINKSIDCookie
+from naagin.types.headers import AccessTokenHeader
 from . import csv
-from .. import settings
-from ..schemas import OptionItemAutoLockSchema
-from ..schemas import OwnerSchema
-from ..schemas import TutorialSchema
-from ..types.cookies import PINKSIDCookie
-from ..types.headers import AccessTokenHeader
 
 
 async def provide_session() -> AsyncSession:

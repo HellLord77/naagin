@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from .....models.api import OptionItemAutoLockPostRequestModel
-from .....models.api import OptionItemAutoLockPostResponseModel
-from .....schemas import OptionItemAutoLockSchema
-from .....types.dependencies import OwnerIdDependency
-from .....types.dependencies import SessionDependency
+from naagin.models.api import OptionItemAutoLockPostRequestModel
+from naagin.models.api import OptionItemAutoLockPostResponseModel
+from naagin.schemas import OptionItemAutoLockSchema
+from naagin.types.dependencies import OwnerIdDependency
+from naagin.types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/item_auto_lock")
 
