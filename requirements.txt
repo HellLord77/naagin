@@ -8,7 +8,7 @@ mitmproxy
 cryptography
 rich
 
-# server
+# naagin
 async-lru
 aiopath
 pydantic
