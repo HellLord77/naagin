@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import csv
 from .. import settings
+from ..schemas import OptionItemAutoLockSchema
 from ..schemas import OwnerSchema
 from ..schemas import TutorialSchema
 from ..types.cookies import PINKSIDCookie
@@ -40,8 +41,12 @@ async def provide_owner_id(
     owner = await session.get(OwnerSchema, owner_id)
     if owner is None:
         owner = OwnerSchema(owner_id=owner_id)
-        tutorial = TutorialSchema(owner_id=owner_id, event_mid=0)
         session.add(owner)
+        await session.flush()
+
+        tutorial = TutorialSchema(owner_id=owner_id, event_mid=0)
+        option_item_auto_lock = OptionItemAutoLockSchema(owner_id=owner_id)
         session.add(tutorial)
+        session.add(option_item_auto_lock)
         await session.flush()
     return owner_id
