@@ -1,0 +1,107 @@
+from sqlalchemy import CheckConstraint
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+
+from naagin.types.enums import AppealUpEnum
+from naagin.types.enums import BooleanEnum
+from naagin.types.enums.schemas import AppealUpEnumSchema
+from naagin.types.enums.schemas import BooleanEnumSchema
+from .base import BaseSchema
+from .owner import OwnerSchema
+
+
+class GirlSchema(BaseSchema):
+    __tablename__ = "girl"
+
+    owner_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
+    )
+    girl_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
+    mood: Mapped[int] = mapped_column(Integer, default=0)
+    experience: Mapped[int] = mapped_column(Integer, default=0)
+    level: Mapped[int] = mapped_column(Integer, default=1)
+    power: Mapped[int] = mapped_column(Integer)
+    additional_power: Mapped[int] = mapped_column(Integer, default=0)
+    technic: Mapped[int] = mapped_column(Integer)
+    additional_technic: Mapped[int] = mapped_column(Integer, default=0)
+    stamina: Mapped[int] = mapped_column(Integer)
+    additional_stamina: Mapped[int] = mapped_column(Integer, default=0)
+    appeal: Mapped[int] = mapped_column(Integer)
+    appeal_up: Mapped[AppealUpEnum] = mapped_column(
+        AppealUpEnumSchema, default=AppealUpEnum.ZERO
+    )
+    additional_appeal: Mapped[int] = mapped_column(Integer, default=0)
+    hair_item_mid: Mapped[int] = mapped_column(Integer)
+    ring_item_mid: Mapped[int] = mapped_column(Integer, default=0)
+    addition_accessory_item_mid: Mapped[int] = mapped_column(Integer, default=0)
+    swimsuit_item_mid: Mapped[int] = mapped_column(Integer)
+    accessory_head_item_mid: Mapped[int] = mapped_column(Integer, default=0)
+    accessory_face_item_mid: Mapped[int] = mapped_column(Integer, default=0)
+    accessory_arm_item_mid: Mapped[int] = mapped_column(Integer, default=0)
+    visual_state_flag_a: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    visual_state_flag_b: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    visual_state_flag_c: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    visual_state_flag_d: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    sunburn: Mapped[int] = mapped_column(Integer, default=0)
+    wet: Mapped[int] = mapped_column(Integer, default=0)
+    hip_swing: Mapped[int] = mapped_column(Integer, default=0)
+    hip_press: Mapped[int] = mapped_column(Integer, default=0)
+    bust_swing: Mapped[int] = mapped_column(Integer, default=0)
+    bust_press: Mapped[int] = mapped_column(Integer, default=0)
+    hip_swing_lock: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    hip_press_lock: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    bust_swing_lock: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    bust_press_lock: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    panel_experience: Mapped[int] = mapped_column(Integer, default=0)
+    display_coordinate: Mapped[BooleanEnum] = mapped_column(
+        BooleanEnumSchema, default=BooleanEnum.FALSE
+    )
+    affection_level: Mapped[int] = mapped_column(Integer, default=1)
+    affection_point: Mapped[int] = mapped_column(Integer, default=0)
+    venus_memory: Mapped[int] = mapped_column(Integer, default=0)
+    girly: Mapped[int] = mapped_column(Integer, default=0)
+    skin_color: Mapped[int] = mapped_column(Integer, default=0)
+    nail_color: Mapped[int] = mapped_column(Integer, default=0)
+    partner_count: Mapped[int] = mapped_column(Integer, default=0)
+
+    __table_args__ = (
+        CheckConstraint(mood == 0, "mood_const"),
+        CheckConstraint(experience.between(0, 4587309), "experience_range"),
+        CheckConstraint(level.between(1, 90), "level_range"),
+        CheckConstraint(additional_power >= 0, "additional_power_min"),
+        CheckConstraint(additional_technic >= 0, "additional_technic_min"),
+        CheckConstraint(additional_stamina >= 0, "additional_stamina_min"),
+        CheckConstraint(additional_appeal >= 0, "additional_appeal_min"),
+        CheckConstraint(sunburn.between(0, 100), "sunburn_range"),
+        CheckConstraint(sunburn % 10 == 0, "sunburn_mod"),
+        CheckConstraint(wet.between(0, 100), "wet_range"),
+        CheckConstraint(wet % 10 == 0, "wet_mod"),
+        CheckConstraint(hip_swing == 0, "hip_swing_const"),
+        CheckConstraint(hip_press == 0, "hip_press_const"),
+        CheckConstraint(bust_swing == 0, "bust_swing_const"),
+        CheckConstraint(bust_press == 0, "bust_press_const"),
+        CheckConstraint(affection_level.between(1, 140), "affection_level_range"),
+        CheckConstraint(affection_point.between(0, 485000), "affection_point_range"),
+        CheckConstraint(venus_memory >= 0, "venus_memory_min"),
+        CheckConstraint(girly == 0, "girly_const"),
+        CheckConstraint(skin_color == 0, "skin_color_const"),
+        CheckConstraint(nail_color == 0, "nail_color_const"),
+    )
