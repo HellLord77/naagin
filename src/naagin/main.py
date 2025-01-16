@@ -69,7 +69,7 @@ async def method_not_allowed(_: Request, __: HTTPException):
 @app.exception_handler(status.HTTP_500_INTERNAL_SERVER_ERROR)
 async def internal_server_error(_: Request, __: HTTPException):
     return JSONResponse(
-        {"code": -1, "message": "internal naagin error"},
+        {"code": -1, "message": "internal server error"},
         status.HTTP_500_INTERNAL_SERVER_ERROR,
     )
 
