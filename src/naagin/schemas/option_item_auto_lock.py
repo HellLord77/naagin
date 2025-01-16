@@ -3,10 +3,10 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.types.enums import OptionLockEnum
+from naagin.types.enums.schemas import OptionLockEnumSchema
 from .base import BaseSchema
 from .owner import OwnerSchema
-from ..types.enums import OptionLockEnum
-from ..types.enums.schemas import OptionLockEnumSchema
 
 
 class OptionItemAutoLockSchema(BaseSchema):

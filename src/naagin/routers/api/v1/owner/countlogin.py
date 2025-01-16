@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .....models.api import OwnerCountloginGetResponseModel
+from naagin.models.api import OwnerCountloginGetResponseModel
 
 router = APIRouter(prefix="/countlogin")
 

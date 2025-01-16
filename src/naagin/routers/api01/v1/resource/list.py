@@ -1,8 +1,8 @@
 from async_lru import alru_cache
 from fastapi import APIRouter
 
-from ..... import settings
-from .....models.api01 import ResourceListGetResponseModel
+from naagin import settings
+from naagin.models.api01 import ResourceListGetResponseModel
 
 router = APIRouter(prefix="/list")
 

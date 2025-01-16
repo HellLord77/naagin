@@ -2,11 +2,11 @@ from datetime import datetime
 
 from fastapi import APIRouter
 
-from .....models.api import OwnerBirthdayPostRequestModel
-from .....models.api import OwnerBirthdayPostResponseModel
-from .....schemas import OwnerSchema
-from .....types.dependencies import OwnerIdDependency
-from .....types.dependencies import SessionDependency
+from naagin.models.api import OwnerBirthdayPostRequestModel
+from naagin.models.api import OwnerBirthdayPostResponseModel
+from naagin.schemas import OwnerSchema
+from naagin.types.dependencies import OwnerIdDependency
+from naagin.types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/birthday")
 

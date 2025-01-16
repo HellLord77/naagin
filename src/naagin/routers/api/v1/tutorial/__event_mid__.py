@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from .....models.api import TutorialEventMidPutRequestModel
-from .....models.api import TutorialEventMidPutResponseModel
-from .....schemas import TutorialSchema
-from .....types.dependencies import OwnerIdDependency
-from .....types.dependencies import SessionDependency
+from naagin.models.api import TutorialEventMidPutRequestModel
+from naagin.models.api import TutorialEventMidPutResponseModel
+from naagin.schemas import TutorialSchema
+from naagin.types.dependencies import OwnerIdDependency
+from naagin.types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/{event_mid}")
 

@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from httpx import AsyncClient
 from httpx import HTTPStatusError
 
-from .. import settings
+from naagin import settings
 
 app = StaticFiles(directory=settings.data.game_dir)
 

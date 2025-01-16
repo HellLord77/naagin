@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
+from naagin.models.api import OwnerGetResponseModel
+from naagin.models.api import OwnerPutRequestModel
+from naagin.models.api import OwnerPutResponseModel
+from naagin.schemas import OwnerSchema
+from naagin.types.dependencies import OwnerIdDependency
+from naagin.types.dependencies import SessionDependency
 from . import birthday
 from . import countlogin
 from . import episode
-from .....models.api import OwnerGetResponseModel
-from .....models.api import OwnerPutRequestModel
-from .....models.api import OwnerPutResponseModel
-from .....schemas import OwnerSchema
-from .....types.dependencies import OwnerIdDependency
-from .....types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/owner")
 

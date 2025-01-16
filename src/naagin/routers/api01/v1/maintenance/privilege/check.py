@@ -1,8 +1,6 @@
 from fastapi import APIRouter
 
-from ......models.api01 import (
-    MaintenancePrivilegeCheckGetResponseModel,
-)
+from naagin.models.api01 import MaintenancePrivilegeCheckGetResponseModel
 
 router = APIRouter(prefix="/check")
 

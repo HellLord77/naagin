@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ....models.api01 import GamestartGetResponseModel
+from naagin.models.api01 import GamestartGetResponseModel
 
 router = APIRouter(prefix="/gamestart")
 
