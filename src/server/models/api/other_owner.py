@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
+from pydantic import field_validator
+
 from ..base import NaaginBaseModel
 
 
@@ -28,3 +30,8 @@ class OtherOwnerModel(NaaginBaseModel):
     last_logged_at: datetime
     friend_code: str
     created_at: datetime
+
+    @field_validator("birthday", mode="before")
+    @classmethod
+    def birthday_validator(cls, _):
+        return None

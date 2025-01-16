@@ -8,9 +8,11 @@ from .....models.api import OwnerPutResponseModel
 from .....schemas import OwnerSchema
 from .....types.dependencies import OwnerIdDependency
 from .....types.dependencies import SessionDependency
+from . import birthday
 
 router = APIRouter(prefix="/owner")
 
+router.include_router(birthday.router)
 router.include_router(countlogin.router)
 router.include_router(episode.router)
 
