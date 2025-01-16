@@ -10,6 +10,7 @@ from csv import DictWriter
 from io import StringIO
 from pathlib import Path
 
+import httpx
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 
 import config
@@ -241,6 +242,25 @@ CSV_FILE_HEADERS = {
             None,
             None,
         ],
+        "girl_master.csv": [
+            "girl_mid",
+            None,
+            "power",
+            None,
+            "stamina",
+            None,
+            "technic",
+            None,
+            "appeal",
+            None,
+            None,
+            None,
+            "swimsuit_item_mid",
+            None,
+            "hair_item_mid",
+            None,
+            None,
+        ],
         "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
         "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"],
     }
@@ -294,30 +314,36 @@ def game_to_csv():
         dst_path = get_csv_dir() / str(master_version)
         for csv_file, initialization_vector in csv_file_list.items():
             encrypted_path = src_path / initialization_vector
-            if encrypted_path.is_file():
-                logging.info(f"[ENCRYPTED] {encrypted_path}")
+            if not encrypted_path.is_file():
+                logging.warning(f"[DOWNLOAD] {encrypted_path}")
+                response = httpx.get(
+                    f"https://game.doaxvv.com/production/csv/{master_version}/{initialization_vector}"
+                )
+                response.raise_for_status()
+                encrypted_path.parent.mkdir(parents=True, exist_ok=True)
+                temp_path = encrypted_path.with_suffix(".tmp")
+                temp_path.write_bytes(response.content)
+                temp_path.rename(encrypted_path)
 
-                data = decrypt_file(key, encrypted_path)
-                if csv_file in CSV_FILE_HEADERS.get(master_version, {}):
-                    fieldnames = CSV_FILE_HEADERS[master_version][csv_file]
-                    for index in range(len(fieldnames)):
-                        if fieldnames[index] is None:
-                            fieldnames[index] = f"column_{index + 1}"
+            logging.info(f"[ENCRYPTED] {encrypted_path}")
 
-                    string_io = StringIO()
-                    dict_writer = DictWriter(
-                        string_io, fieldnames, quoting=csv.QUOTE_ALL
-                    )
-                    dict_writer.writeheader()
-                    data = string_io.getvalue().encode() + data
+            data = decrypt_file(key, encrypted_path)
+            if csv_file in CSV_FILE_HEADERS.get(master_version, {}):
+                fieldnames = CSV_FILE_HEADERS[master_version][csv_file]
+                for index in range(len(fieldnames)):
+                    if fieldnames[index] is None:
+                        fieldnames[index] = f"column_{index + 1}"
 
-                csv_path = dst_path / csv_file
-                logging.warning(f"[CSV] {csv_path}")
+                string_io = StringIO()
+                dict_writer = DictWriter(string_io, fieldnames, quoting=csv.QUOTE_ALL)
+                dict_writer.writeheader()
+                data = string_io.getvalue().encode() + data
 
-                csv_path.parent.mkdir(parents=True, exist_ok=True)
-                csv_path.write_bytes(data)
-            else:
-                logging.error(encrypted_path)
+            csv_path = dst_path / csv_file
+            logging.warning(f"[CSV] {csv_path}")
+
+            csv_path.parent.mkdir(parents=True, exist_ok=True)
+            csv_path.write_bytes(data)
 
 
 def isint(self: str) -> bool:
