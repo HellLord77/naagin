@@ -1,5 +1,5 @@
-from pydantic import BaseModel
+from ......base import NaaginBaseModel
 
 
-class CheatLogCheckGetResponseModel(BaseModel):
+class CheatLogCheckGetResponseModel(NaaginBaseModel):
     count: int
