@@ -32,10 +32,11 @@ async def post(
     owner = await session.get_one(OwnerSchema, owner_id)
     if request.name is not None:
         owner.name = request.name
-    elif request.island_name is not None:
+    if request.island_name is not None:
         owner.island_name = request.island_name
-    elif request.message is not None:
+    if request.message is not None:
         owner.message = request.message
+    success = owner in session.dirty
     await session.flush()
     await session.refresh(owner)
-    return OwnerPutResponseModel(success=True, owner_list=[owner])
+    return OwnerPutResponseModel(success=success, owner_list=[owner])

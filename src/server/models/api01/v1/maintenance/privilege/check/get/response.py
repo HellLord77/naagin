@@ -1,5 +1,5 @@
-from pydantic import BaseModel
+from .......base import NaaginBaseModel
 
 
-class MaintenancePrivilegeCheckGetResponseModel(BaseModel):
+class MaintenancePrivilegeCheckGetResponseModel(NaaginBaseModel):
     result: str
