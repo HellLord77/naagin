@@ -6,6 +6,7 @@ from . import option
 from . import owner
 from . import shop
 from . import tutorial
+from . import wallet
 
 router = APIRouter(prefix="/v1")
 
@@ -15,3 +16,4 @@ router.include_router(option.router)
 router.include_router(owner.router)
 router.include_router(shop.router)
 router.include_router(tutorial.router)
+router.include_router(wallet.router)
