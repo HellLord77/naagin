@@ -9,7 +9,6 @@ from typing import Optional
 from sqlalchemy import CheckConstraint
 from sqlalchemy import Date
 from sqlalchemy import DateTime
-from sqlalchemy import Enum
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import func
@@ -20,6 +19,9 @@ from .base import NaaginBaseSchema
 from ..types.enums import CheckedLicenseLevelEnum
 from ..types.enums import LicenseLevelEnum
 from ..types.enums import OwnerStatusEnum
+from ..types.enums.schemas import CheckedLicenseLevelEnumSchema
+from ..types.enums.schemas import LicenseLevelEnumSchema
+from ..types.enums.schemas import OwnerStatusEnumSchema
 
 
 class OwnerSchema(NaaginBaseSchema):
@@ -27,7 +29,7 @@ class OwnerSchema(NaaginBaseSchema):
 
     owner_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     status: Mapped[OwnerStatusEnum] = mapped_column(
-        Enum(OwnerStatusEnum), default=OwnerStatusEnum.CREATED
+        OwnerStatusEnumSchema, default=OwnerStatusEnum.CREATED
     )
     name: Mapped[Optional[str]] = mapped_column(String(12), default=None)
     island_name: Mapped[Optional[str]] = mapped_column(String(12), default=None)
@@ -44,10 +46,10 @@ class OwnerSchema(NaaginBaseSchema):
     spot_phase_mid: Mapped[int] = mapped_column(Integer, default=0)
     license_point: Mapped[int] = mapped_column(Integer, default=0)
     license_level: Mapped[LicenseLevelEnum] = mapped_column(
-        Enum(LicenseLevelEnum), default=LicenseLevelEnum.F
+        LicenseLevelEnumSchema, default=LicenseLevelEnum.F
     )
     checked_license_level: Mapped[CheckedLicenseLevelEnum] = mapped_column(
-        Enum(CheckedLicenseLevelEnum), default=CheckedLicenseLevelEnum.F
+        CheckedLicenseLevelEnumSchema, default=CheckedLicenseLevelEnum.F
     )
     birthday: Mapped[Optional[date]] = mapped_column(Date, default=None)
     stamina_checked_at: Mapped[datetime] = mapped_column(
@@ -77,7 +79,11 @@ class OwnerSchema(NaaginBaseSchema):
         CheckConstraint(experience >= 0, "experience_min"),
         CheckConstraint(stamina.between(0, 999), "stamina_rng"),
         CheckConstraint(license_point.between(0, 12480), "license_point_rng"),
-        # CheckConstraint(license_level >= checked_license_level, "license_level_gte_checked_license_level"),
+        CheckConstraint(
+            func.cast(func.cast(license_level, String), Integer)
+            >= func.cast(func.cast(checked_license_level, String), Integer),
+            "license_level_gte_checked_license_level",
+        ),
         CheckConstraint(birthday <= func.current_date(), "birthday_lte_today"),
         CheckConstraint(
             stamina_checked_at <= func.current_timestamp(), "stamina_checked_at_lte_now"

@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import CheckConstraint
 from sqlalchemy import DateTime
 from sqlalchemy import MetaData
 from sqlalchemy import func
@@ -28,8 +27,8 @@ class NaaginBaseSchema(DeclarativeBase):
         DateTime, default=None, onupdate=func.current_timestamp()
     )
 
-    __table_args__ = (
-        CheckConstraint(created_at <= func.current_timestamp(), "created_at_lte_now"),
-        CheckConstraint(updated_at <= func.current_timestamp(), "updated_at_lte_now"),
-        CheckConstraint(created_at <= updated_at, "created_at_lte_updated_at"),
-    )  # TODO
+    # __table_args__ = (
+    #     CheckConstraint(created_at <= func.current_timestamp(), "created_at_lte_now"),
+    #     CheckConstraint(updated_at <= func.current_timestamp(), "updated_at_lte_now"),
+    #     CheckConstraint(created_at <= updated_at, "created_at_lte_updated_at"),
+    # )

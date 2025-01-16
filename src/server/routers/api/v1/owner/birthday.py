@@ -1,10 +1,12 @@
+from datetime import datetime
+
 from fastapi import APIRouter
+
 from .....models.api import OwnerBirthdayPostRequestModel
 from .....models.api import OwnerBirthdayPostResponseModel
+from .....schemas import OwnerSchema
 from .....types.dependencies import OwnerIdDependency
 from .....types.dependencies import SessionDependency
-from datetime import datetime
-from .....schemas import OwnerSchema
 
 router = APIRouter(prefix="/birthday")
 

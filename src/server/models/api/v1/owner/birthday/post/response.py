@@ -1,5 +1,5 @@
-from .....other_owner import OtherOwnerModel
-from .....owner import OwnerModel
+from .....utils import OtherOwnerModel
+from .....utils import OwnerModel
 from ......base import NaaginBaseModel
 
 

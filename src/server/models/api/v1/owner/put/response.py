@@ -1,4 +1,4 @@
-from ....other_owner import OtherOwnerModel
+from ....utils import OtherOwnerModel
 from .....base import NaaginBaseModel
 
 
