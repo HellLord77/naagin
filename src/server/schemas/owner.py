@@ -63,15 +63,15 @@ class OwnerSchema(NaaginBaseSchema):
     )
 
     __table_args__ = (
-        # CheckConstraint(owner_id >= 1, "owner_id_min"),
+        CheckConstraint(owner_id >= 1, "owner_id_min"),
         CheckConstraint(func.char_length(name).between(1, 12), "name_len_rng"),
-        # CheckConstraint(func.trim(name) == name, "name_trm"),
+        CheckConstraint(func.trim(name) == name, "name_trm"),
         CheckConstraint(
             func.char_length(island_name).between(1, 12), "island_name_len_rng"
         ),
-        # CheckConstraint(func.trim(island_name) == island_name, "island_name_trm"),
+        CheckConstraint(func.trim(island_name) == island_name, "island_name_trm"),
         CheckConstraint(func.char_length(message).between(1, 20), "message_len_rng"),
-        # CheckConstraint(func.trim(message) == message, "message_trm"),
+        CheckConstraint(func.trim(message) == message, "message_trm"),
         CheckConstraint(team_id == 0, "team_id_const"),
         CheckConstraint(level.between(1, 300), "level_rng"),
         CheckConstraint(experience >= 0, "experience_min"),

@@ -242,8 +242,13 @@ CSV_FILE_HEADERS = {
             None,
         ],
         "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
+        "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"]
     }
 }
+# item_mid, item
+# 25001, honor
+# 35013, guest_point
+# 35021, free_vstone
 
 
 @functools.cache
