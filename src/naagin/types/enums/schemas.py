@@ -2,19 +2,21 @@ from enum import IntEnum
 
 from sqlalchemy import Enum
 
+from .appeal_up import AppealUpEnum
+from .boolean import BooleanEnum
 from .checked_license_level import CheckedLicenseLevelEnum
 from .license_level import LicenseLevelEnum
-from .option_lock import OptionLockEnum
 from .owner_status import OwnerStatusEnum
 
 
-def values_callable(enum: type[IntEnum]):
-    return list(map(str, enum))
+def values_callable(enum: type[IntEnum]) -> tuple[str, ...]:
+    return tuple(map(str, enum))
 
 
+AppealUpEnumSchema = Enum(AppealUpEnum, values_callable=values_callable)
+BooleanEnumSchema = Enum(BooleanEnum, values_callable=values_callable)
 CheckedLicenseLevelEnumSchema = Enum(
     CheckedLicenseLevelEnum, values_callable=values_callable
 )
 LicenseLevelEnumSchema = Enum(LicenseLevelEnum, values_callable=values_callable)
-OptionLockEnumSchema = Enum(OptionLockEnum, values_callable=values_callable)
 OwnerStatusEnumSchema = Enum(OwnerStatusEnum, values_callable=values_callable)
