@@ -242,7 +242,7 @@ CSV_FILE_HEADERS = {
             None,
         ],
         "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
-        "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"]
+        "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"],
     }
 }
 # item_mid, item
