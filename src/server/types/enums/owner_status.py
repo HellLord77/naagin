@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class OwnerStatusEnum(Enum):
+class OwnerStatusEnum(IntEnum):
     CREATED = 2
     ACTIVE = 3

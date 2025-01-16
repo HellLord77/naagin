@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from . import birthday
 from . import countlogin
 from . import episode
 from .....models.api import OwnerGetResponseModel
@@ -8,7 +9,6 @@ from .....models.api import OwnerPutResponseModel
 from .....schemas import OwnerSchema
 from .....types.dependencies import OwnerIdDependency
 from .....types.dependencies import SessionDependency
-from . import birthday
 
 router = APIRouter(prefix="/owner")
 

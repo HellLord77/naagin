@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class LicenseLevelEnum(Enum):
+class LicenseLevelEnum(IntEnum):
     F = 1
     E = 3
     D = 4
