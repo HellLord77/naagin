@@ -1,0 +1,6 @@
+from .authentication_failed import AuthenticationFailedException
+from .friendship_cant_request import FriendshipCantRequestException
+from .friendship_not_found import FriendshipNotFoundException
+from .internal_server_error import InternalServerErrorException
+from .method_not_allowed import MethodNotAllowedException
+from .not_found import NotFoundException
