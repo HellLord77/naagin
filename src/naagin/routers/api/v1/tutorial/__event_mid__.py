@@ -17,7 +17,9 @@ async def put(
     owner_id: OwnerIdDependency,
 ) -> TutorialEventMidPutResponseModel:
     tutorial = await session.get_one(TutorialSchema, (owner_id, event_mid))
+
     tutorial.flag = request.flag
+
     await session.flush()
     await session.refresh(tutorial)
     return TutorialEventMidPutResponseModel(tutorial_list=[tutorial])
