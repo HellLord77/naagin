@@ -32,6 +32,7 @@ async def post(
     owner_id: OwnerIdDependency,
 ) -> OwnerPutResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
+
     success = True
     if request.name is not None:
         owner.name = request.name
@@ -41,6 +42,7 @@ async def post(
         owner.message = request.message
     else:
         success = False
+
     await session.flush()
     await session.refresh(owner)
     return OwnerPutResponseModel(success=success, owner_list=[owner])
