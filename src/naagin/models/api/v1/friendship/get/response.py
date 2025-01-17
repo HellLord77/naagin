@@ -1,5 +1,5 @@
-from .....base import BaseModel
-from .....utils import FriendshipModel
+from naagin.models.base import BaseModel
+from naagin.models.utils import FriendshipModel
 
 
 class FriendshipGetResponseModel(BaseModel):

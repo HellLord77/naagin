@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from ......base import BaseModel
+from naagin.models.base import BaseModel
 
 
 class CsvFileModel(BaseModel):

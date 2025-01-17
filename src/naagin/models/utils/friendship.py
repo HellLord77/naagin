@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from ..base import BaseModel
+from naagin.models.base import BaseModel
 
 
 class FriendshipModel(BaseModel):

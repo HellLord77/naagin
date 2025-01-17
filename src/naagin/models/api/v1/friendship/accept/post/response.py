@@ -1,6 +1,6 @@
-from ......base import BaseModel
-from ......utils import FriendshipModel
-from ......utils import OtherOwnerModel
+from naagin.models.base import BaseModel
+from naagin.models.utils import FriendshipModel
+from naagin.models.utils import OtherOwnerModel
 
 
 class FriendshipAcceptPostResponseModel(BaseModel):

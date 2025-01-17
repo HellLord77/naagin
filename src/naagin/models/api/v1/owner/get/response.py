@@ -1,5 +1,5 @@
-from .....base import BaseModel
-from .....utils import OwnerModel
+from naagin.models.base import BaseModel
+from naagin.models.utils import OwnerModel
 
 
 class OwnerGetResponseModel(BaseModel):
