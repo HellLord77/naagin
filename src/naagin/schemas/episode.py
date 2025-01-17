@@ -17,4 +17,6 @@ class EpisodeSchema(BaseSchema):
     episode_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
     count: Mapped[int] = mapped_column(Integer, default=0)
 
+    experience_gain: Mapped[int] = mapped_column(Integer)
+
     __table_args__ = (CheckConstraint(count >= 0, "count_min"),)
