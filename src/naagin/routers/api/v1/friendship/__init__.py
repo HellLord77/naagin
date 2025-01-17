@@ -6,11 +6,13 @@ from naagin.schemas import FriendshipSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
 from naagin.types.enums import FriendshipStateEnum
+from . import accept
 from . import received
 from . import sent
 
 router = APIRouter(prefix="/friendship")
 
+router.include_router(accept.router)
 router.include_router(received.router)
 router.include_router(sent.router)
 
