@@ -1,9 +1,8 @@
 from fastapi import Depends
-from fastapi import HTTPException
-from fastapi import status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from naagin import settings
+from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import OptionItemAutoLockSchema
 from naagin.schemas import OwnerSchema
 from naagin.schemas import TutorialSchema
@@ -27,16 +26,16 @@ async def provide_session() -> AsyncSession:
 
 
 async def provide_owner_id(
-    access_token: AccessTokenHeader,
-    pinksid: PINKSIDCookie,
+    access_token: AccessTokenHeader = None,
+    pinksid: PINKSIDCookie = None,
     session: AsyncSession = Depends(provide_session),
 ) -> int:
     if access_token == "XPEACHACCESSTOKEN":
         if pinksid is None:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED)
+            raise AuthenticationFailedException()
     else:
         if access_token is None:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED)
+            raise AuthenticationFailedException()
 
     owner_id = int(access_token)
     owner = await session.get(OwnerSchema, owner_id)
