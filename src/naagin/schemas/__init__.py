@@ -1,4 +1,5 @@
 from .episode import EpisodeSchema
+from .friendship import FriendshipSchema
 from .girl import GirlSchema
 from .honor import HonorSchema
 from .option_item_auto_lock import OptionItemAutoLockSchema
