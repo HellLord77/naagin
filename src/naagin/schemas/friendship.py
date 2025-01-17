@@ -30,6 +30,7 @@ class FriendshipSchema(BaseSchema):
         DateTime, default=func.current_timestamp()
     )
 
-    __table_args__ = (  # TODO MAX sent per owner_id <= 150
+    __table_args__ = (  # TODO MAX FriendshipStateEnum.SENT per owner_id <= 150
+        CheckConstraint(owner_id != friend_id, "owner_id_ne_friend_id"),
         CheckConstraint(sent_at <= func.current_timestamp(), "sent_at_lte_now"),
     )

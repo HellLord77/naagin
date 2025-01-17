@@ -64,7 +64,6 @@ async def internal_server_error_handler(request: Request, _: HTTPException):
 
 @app.exception_handler(BaseException)
 async def base_exception_handler(_: Request, exception: BaseException):
-    # TODO set status if valid
     return JSONResponse(
         ExceptionModel.model_validate(exception).model_dump(),
         exception.code if exception.code in HTTPStatus else HTTPStatus.OK,
