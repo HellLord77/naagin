@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from .......base import BaseModel
-from .......utils import OtherOwnerModel
+from naagin.models.base import BaseModel
+from naagin.models.utils import OtherOwnerModel
 
 
 class EpisodeResultEpisodeModel(BaseModel):

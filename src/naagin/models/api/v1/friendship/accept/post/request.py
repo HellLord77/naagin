@@ -1,4 +1,4 @@
-from ......base import BaseModel
+from naagin.models.base import BaseModel
 
 
 class FriendshipAcceptPostRequestModel(BaseModel):

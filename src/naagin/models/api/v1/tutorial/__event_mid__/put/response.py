@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
-from ......base import BaseModel
-from ......utils import OtherOwnerModel
+from naagin.models.base import BaseModel
+from naagin.models.utils import OtherOwnerModel
 
 
 class TutorialModel(BaseModel):

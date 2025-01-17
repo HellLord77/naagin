@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import field_validator
 
-from ..base import BaseModel
+from naagin.models.base import BaseModel
 
 
 class OtherOwnerModel(BaseModel):
