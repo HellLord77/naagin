@@ -26,8 +26,8 @@ async def provide_session() -> AsyncSession:
 
 
 async def provide_owner_id(
-    access_token: AccessTokenHeader = None,
-    pinksid: PINKSIDCookie = None,
+    access_token: AccessTokenHeader,
+    pinksid: PINKSIDCookie,
     session: AsyncSession = Depends(provide_session),
 ) -> int:
     if access_token == "XPEACHACCESSTOKEN":

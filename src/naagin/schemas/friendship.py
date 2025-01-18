@@ -30,7 +30,16 @@ class FriendshipSchema(BaseSchema):
         DateTime, default=func.current_timestamp()
     )
 
-    __table_args__ = (  # TODO MAX FriendshipStateEnum.SENT per owner_id <= 150
+    __table_args__ = (
         CheckConstraint(owner_id != friend_id, "owner_id_ne_friend_id"),
         CheckConstraint(sent_at <= func.current_timestamp(), "sent_at_lte_now"),
+        # CheckConstraint(
+        #     select(FriendshipSchema)
+        #     .where(
+        #         FriendshipSchema.owner_id == owner_id, state == FriendshipStateEnum.SENT
+        #     )
+        #     .count()
+        #     <= 150,
+        #     "friendship_count_max",
+        # ),
     )
