@@ -1,3 +1,6 @@
+from typing import ClassVar
+
+
 class BaseException(Exception):
-    code: int
-    message: str
+    code: ClassVar[int]
+    message: ClassVar[str]
