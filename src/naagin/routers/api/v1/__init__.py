@@ -5,6 +5,7 @@ from . import csv
 from . import friendship
 from . import girl
 from . import honor
+from . import item
 from . import option
 from . import owner
 from . import shop
@@ -18,6 +19,7 @@ router.include_router(csv.router)
 router.include_router(friendship.router)
 router.include_router(girl.router)
 router.include_router(honor.router)
+router.include_router(item.router)
 router.include_router(option.router)
 router.include_router(owner.router)
 router.include_router(shop.router)
