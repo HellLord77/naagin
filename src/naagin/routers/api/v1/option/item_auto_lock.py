@@ -15,8 +15,11 @@ async def post(
     session: SessionDependency,
     owner_id: OwnerIdDependency,
 ) -> OptionItemAutoLockPostResponseModel:
-    option_item_auto_lock = await session.get_one(OptionItemAutoLockSchema, owner_id)
+    option_item_auto_lock = await session.get(OptionItemAutoLockSchema, owner_id)
 
+    if option_item_auto_lock is None:
+        option_item_auto_lock = OptionItemAutoLockSchema(owner_id=owner_id)
+        session.add(option_item_auto_lock)
     option_item_auto_lock.option_lock_only = request.option_lock_only
     option_item_auto_lock.option_lock_sr = request.option_lock_sr
     option_item_auto_lock.option_lock_ssr = request.option_lock_ssr

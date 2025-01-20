@@ -30,6 +30,7 @@ async def put(
     episodes_csv: EpisodesCSVDependency,
 ) -> OwnerEpisodeEpisodeMidPutResponseModel:
     episode = await session.get(EpisodeSchema, (owner_id, episode_mid))
+
     if episode is None:
         episode_csv = episodes_csv[episode_mid]
         episode = EpisodeSchema(
@@ -40,6 +41,7 @@ async def put(
         session.add(episode)
     else:
         episode.count += 1
+
     await session.flush()
     await session.refresh(episode)
     return OwnerEpisodeEpisodeMidPutResponseModel(episode_list=[episode])

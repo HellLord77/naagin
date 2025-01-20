@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from naagin import settings
 from naagin.exceptions import AuthenticationFailedException
-from naagin.schemas import OptionItemAutoLockSchema
 from naagin.schemas import OwnerSchema
 from naagin.schemas import TutorialSchema
 from naagin.schemas import WalletSchema
@@ -46,8 +45,6 @@ async def provide_owner_id(
 
         tutorial = TutorialSchema(owner_id=owner_id, event_mid=0)
         session.add(tutorial)
-        option_item_auto_lock = OptionItemAutoLockSchema(owner_id=owner_id)
-        session.add(option_item_auto_lock)
         wallet = WalletSchema(owner_id=owner_id)
         session.add(wallet)
         await session.flush()
