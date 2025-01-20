@@ -4,7 +4,7 @@ from enum import IntEnum
 class ItemConsumeTypeEnum(IntEnum):
     GACHA_COUPON = 10
     GACHA_TICKET = 12
-    HAIRSTYLE_OR_EXPRESSION_CARD = 29
+    HAIRSTYLE_OR_EXPRESSION = 29
     FP_REFILL_DRINK = 30
     LESSON_REFRESHMENT = 31
     POSE_CARD = 37

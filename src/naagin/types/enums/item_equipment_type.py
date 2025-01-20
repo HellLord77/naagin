@@ -2,7 +2,7 @@ from enum import IntEnum
 
 
 class ItemEquipmentTypeEnum(IntEnum):
-    OTHER = 0
+    HAIRSTYLE_OR_EXPRESSION = 0
     SWIMSUIT = 1
     HAIRSTYLE = 11
     HEAD = 22
