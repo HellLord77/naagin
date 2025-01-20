@@ -13,6 +13,7 @@ from .v1.friendship.sent.get.response import FriendshipSentGetResponseModel
 from .v1.girl.get.response import GirlGetResponseModel
 from .v1.honor.get.response import HonorGetResponseModel
 from .v1.item.consume.get.response import ItemConsumeGetResponseModel
+from .v1.item.consume.negative.get.response import ItemConsumeNegativeGetResponseModel
 from .v1.item.equipment.type.__type__.get.response import (
     ItemEquipmentTypeTypeGetResponseModel,
 )
