@@ -34,6 +34,9 @@ from .v1.owner.episode.__episode_mid__.put.response import (
 from .v1.owner.get.response import OwnerGetResponseModel
 from .v1.owner.put.request import OwnerPutRequestModel
 from .v1.owner.put.response import OwnerPutResponseModel
+from .v1.pvp_fes_deck.equipment_list_all.get.response import (
+    PvpFesDeckEquipmentListAllGetResponseModel,
+)
 from .v1.quest.check.license_point.post.request import (
     QuestCheckLicensePointPostRequestModel,
 )
