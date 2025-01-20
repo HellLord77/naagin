@@ -12,6 +12,7 @@ from . import apps
 from . import routers
 from . import settings
 from .exceptions import InternalServerErrorException
+from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions import NotFoundException
 from .exceptions.base import BaseException
@@ -55,6 +56,11 @@ async def not_found_handler(request: Request, _: HTTPException):
 @app.exception_handler(HTTPStatus.METHOD_NOT_ALLOWED)
 async def method_not_allowed_handler(request: Request, _: HTTPException):
     return await base_exception_handler(request, MethodNotAllowedException())
+
+
+@app.exception_handler(HTTPStatus.UNPROCESSABLE_CONTENT)
+async def unprocessable_content_handler(request: Request, _: HTTPException):
+    return await base_exception_handler(request, InvalidParameterException())
 
 
 @app.exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR)
