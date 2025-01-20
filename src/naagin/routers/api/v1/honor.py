@@ -18,4 +18,4 @@ async def get(
             select(HonorSchema).where(HonorSchema.owner_id == owner_id)
         )
     ).all()
-    return HonorGetResponseModel(honors=honors)
+    return HonorGetResponseModel(honor_list=honors)

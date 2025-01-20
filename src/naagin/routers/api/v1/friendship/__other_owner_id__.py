@@ -7,17 +7,17 @@ from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
 from naagin.types.enums import FriendshipStateEnum
 
-router = APIRouter(prefix="/{friend_id}")
+router = APIRouter(prefix="/{other_owner_id}")
 
 
 @router.delete("")
 async def delete(
-    friend_id: int, session: SessionDependency, owner_id: OwnerIdDependency
+    other_owner_id: int, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> FriendshipFriendIdDeleteResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
-    other_owner = await session.get_one(OwnerSchema, friend_id)
-    friendship = await session.get_one(FriendshipSchema, owner_id, friend_id)
-    other_friendship = await session.get_one(FriendshipSchema, friend_id, owner_id)
+    other_owner = await session.get_one(OwnerSchema, other_owner_id)
+    friendship = await session.get_one(FriendshipSchema, owner_id, other_owner_id)
+    other_friendship = await session.get_one(FriendshipSchema, other_owner_id, owner_id)
 
     owners = None
     if (
