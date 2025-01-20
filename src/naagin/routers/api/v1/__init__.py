@@ -8,6 +8,7 @@ from . import honor
 from . import item
 from . import option
 from . import owner
+from . import quest
 from . import shop
 from . import tutorial
 from . import wallet
@@ -22,6 +23,7 @@ router.include_router(honor.router)
 router.include_router(item.router)
 router.include_router(option.router)
 router.include_router(owner.router)
+router.include_router(quest.router)
 router.include_router(shop.router)
 router.include_router(tutorial.router)
 router.include_router(wallet.router)
