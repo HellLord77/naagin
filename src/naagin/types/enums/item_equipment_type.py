@@ -8,5 +8,5 @@ class ItemEquipmentTypeEnum(IntEnum):
     HEAD = 22
     FACE = 23
     ARM = 24
-    _MEMBER_6 = 56
+    _VALUE_56 = 56
     EXPRESSION = 82

@@ -1,6 +1,5 @@
 import csv
 import functools
-import gzip
 import hashlib
 import json
 import logging
@@ -11,10 +10,10 @@ from io import StringIO
 from pathlib import Path
 
 import httpx
-from cryptography.hazmat.primitives.ciphers.algorithms import AES
 
 import config
 import utils
+from proxy.utils import decrypt_file
 
 CSV_FILE_LISTS = {
     10: {
@@ -242,6 +241,7 @@ CSV_FILE_HEADERS = {
             None,
             None,
         ],
+        "Equipment_Parameter.csv": ["item_mid", "type", ...],
         "girl_master.csv": [
             "girl_mid",
             None,
@@ -263,12 +263,111 @@ CSV_FILE_HEADERS = {
         ],
         "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
         "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"],
+        "ShopItemDetail.csv": [None, "product_mid", "item_mid", "count"],
     }
 }
+
+# girl_mid, girl
+# 2, Kasumi
+# 3, Honoka
+# 4, Marie
+# 5, Ayane
+# 6, Nyotengu
+# 7, Kokoro
+# 8, Hitomi
+# 9, Momiji
+# 10, Helena
+# 11, Misaki
+# 12, Luna
+# 13, Tamaki
+# 14, Leifang
+# 16, Nagisa
+# 18, Monica
+# 19, Sayuri
+# 22, Lobelia
+# 23, Nanami
+# 25, Koharu
+
 # item_mid, item
 # 25001, honor
 # 35013, guest_point
 # 35021, free_vstone
+# 35030,35031,35032,35033 %upgrade_pow%
+
+# 35001 Upgrade APL Stone (S)
+# 35002 Upgrade APL Stone (M)
+# 35003 Upgrade APL Stone (L)
+# 35004 Unlock APL Stone (M)
+# 35004 Upgrade TEC Stone (M)
+# 35005 Unlock APL Stone (L)
+# 35006 Unlock APL Stone (XL)
+# 35009 Fruit Basket
+# 35010 Banana
+# 35011 Candy
+# 35015 Venus Ticket
+# 35030 Upgrade POW Stone (S)
+# 35031 Upgrade POW Stone (M)
+# 35032 Upgrade POW Stone (L)
+# 35033 Upgrade POW Stone (XL)
+# 35034 Unlock POW Stone (M)
+# 35035 Unlock POW Stone (L)
+# 35036 Unlock POW Stone (XL)
+# 35048 Nostalgic SSR Gacha Coupon (24/10)
+# 35050 SSR Gacha Coupon
+# 35066 Upgrade STM Stone (S)
+# 35067 Upgrade STM Stone (M)
+# 35068 Upgrade STM Stone (L)
+# 35069 Upgrade STM Stone (XL)
+# 35072 FP Refill Drink
+# 35073 Unlock STM Stone (M)
+# 35074 Unlock STM Stone (L)
+# 35075 Unlock STM Stone (XL)
+# 35076 Upgrade TEC Stone (S)
+# 35077 Upgrade TEC Stone (M)
+# 35078 Upgrade TEC Stone (L)
+# 35079 Upgrade TEC Stone (XL)
+# 35080 Unlock TEC Stone (M)
+# 35081 Unlock TEC Stone (L)
+# 35082 Unlock TEC Stone (XL)
+# 35103 Kasumi Coin
+# 35106 Ayane Coin
+# 35109 Hitomi Coin
+# 35110 Momiji Coin
+# 35112 Misaki Coin
+# 35125 Luna Coin
+# 35178 Tamaki Coin
+# 35246 Leifang Coin
+# 35252 Episode Coin
+# 35316 Fiona Coin
+# 35680 POW Accessory Upgrade Material (M)
+# 35681 POW Accessory Upgrade Material (L)
+# 35682 POW Accessory Upgrade Material (XL)
+# 35683 POW Accessory Unlock Material (M)
+# 35684 POW Accessory Unlock Material (L)
+# 35685 POW Accessory Unlock Material (XL)
+# 35690 STM Accessory Unlock Material (M)
+# 35691 STM Accessory Unlock Material (L)
+# 35692 STM Accessory Unlock Material (XL)
+# 35694 TEC Accessory Upgrade Material (M)
+# 35695 TEC Accessory Upgrade Material (L)
+# 35696 TEC Accessory Upgrade Material (XL)
+# 35697 TEC Accessory Unlock Material (M)
+# 35698 TEC Accessory Unlock Material (L)
+# 35699 TEC Accessory Unlock Material (XL)
+# 35828 100 FP Refill Drink
+# 35857 Electrifying Deco-pen
+# 35858 Shiny Deco-pen
+# 35888 Monica Coin
+# 36201 Moisturizing Fan (Momiji)
+# 36629 Weekly Gacha Ticket
+# 37176 Bath Salts (L)
+# 37177 Bath Salts (M)
+# 37178 Bath Salts (S)
+# 38273 Good Luck Bringing Coin
+# 51078 Bathing, Splashing with Feet (Momiji)
+# 52132 "Eyes Closed" Expression Card (Hitomi)
+# 52134 "Eyes Closed" Expression Card (Momiji)
+# 58420 Long 2 (Momiji)
 
 
 @functools.cache
@@ -289,16 +388,6 @@ def get_schema_dir() -> Path:
 @functools.cache
 def get_model_dir() -> Path:
     return config.DATA_DIR / "model" / "csv"
-
-
-def decrypt_file(key: str, path: Path) -> bytes:
-    decrypted_data = utils.decrypt_data(
-        AES(key.encode()),
-        path.read_bytes(),
-        bytes.fromhex(path.name),
-    )
-    uncompressed_data = gzip.decompress(decrypted_data)
-    return uncompressed_data
 
 
 def game_to_csv():

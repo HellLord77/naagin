@@ -1,4 +1,5 @@
 import hashlib
+import json
 import logging
 import shutil
 from pathlib import Path
@@ -9,7 +10,27 @@ from httpx import URL
 import config
 import csv_
 import flows
+from naagin.types.enums import ItemConsumeTypeEnum
 
+
+def consume_to_enum():
+    path = Path(
+        r"D:\Projects\naagin\data\schema\api\v1\item\consume\get\response.schema.json"
+    )
+    with path.open("rb") as file:
+        json_data = json.load(file)
+    examples = json_data["examples"]
+    types = set()
+    for example in examples:
+        for item_consume in example["item_consume_list"]:
+            type_ = item_consume["type"]
+            types.add(type_)
+    for type_ in sorted(types):
+        if type_ in ItemConsumeTypeEnum:
+            item_consume_type = ItemConsumeTypeEnum(type_)
+            print(f"{item_consume_type.name} = {type_}")
+        else:
+            print(f"_VALUE_{type_} = {type_}")
 
 def get_md5(path: Path) -> str:
     md5 = hashlib.md5()
@@ -48,6 +69,9 @@ def main():
     exit()
 
     csv_.to_model()
+    exit()
+
+    consume_to_enum()
     exit()
 
     game_to_tmp()
