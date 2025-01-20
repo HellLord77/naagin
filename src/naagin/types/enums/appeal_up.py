@@ -2,5 +2,5 @@ from enum import IntEnum
 
 
 class AppealUpEnum(IntEnum):
-    ZERO = 0
-    FIVE = 5
+    _VALUE_0 = 0
+    _VALUE_5 = 5

@@ -30,7 +30,7 @@ class GirlSchema(BaseSchema):
     additional_stamina: Mapped[int] = mapped_column(Integer, default=0)
     appeal: Mapped[int] = mapped_column(Integer)
     appeal_up: Mapped[AppealUpEnum] = mapped_column(
-        AppealUpEnumSchema, default=AppealUpEnum.ZERO
+        AppealUpEnumSchema, default=AppealUpEnum._VALUE_0
     )
     additional_appeal: Mapped[int] = mapped_column(Integer, default=0)
     hair_item_mid: Mapped[int] = mapped_column(Integer)

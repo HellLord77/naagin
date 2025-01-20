@@ -1,28 +1,30 @@
-import base64
 import functools
 import glob
-import hashlib
 import logging
 import shutil
-import zlib
 from pathlib import Path
 from string import Formatter
 from typing import Iterable
 
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
-from mitmproxy.http import Request
 from mitmproxy.io import FlowReader
 
 import config
 import utils
+from proxy.utils import decrypt_message
+from proxy.utils import is_valid_message
 
 VARIABLE_PATHS = (
     "v1/dishevelment/{owner_id}/{item_mid}",
-    "v1/friendship/{friend_id}",
+    "v1/friendship/friend_code/{friend_code}",
+    "v1/friendship/{owner_id}",
+    "v1/furniture/layout/{set_no}",
+    "v1/furniture/myset/{owner_id}/list",
+    "v1/girl/private/favorite/{type}",
     "v1/girl/{girl_mid}",
+    "v1/girl/{girl_mid}/head/accessory/switch/{owner_id}",
+    "v1/girl/{girl_mid}/private/favorite/{type}",
     "v1/item/consume/use/{item_mid}",
     "v1/item/equipment/type/{type}",
     "v1/max_combine/{owner_id}/{item_mid}",
@@ -31,6 +33,7 @@ VARIABLE_PATHS = (
     "v1/onsen/{onsen_mid}/reward",
     "v1/onsen/{onsen_mid}/update/quality",
     "v1/owner/detail/{owner_id}",
+    "v1/owner/episode/exchange/{episode_mid}",
     "v1/owner/episode/{episode_mid}",
     "v1/owner/profile/{owner_id}",
     "v1/pvp_girl/{girl_mid}",
@@ -38,6 +41,7 @@ VARIABLE_PATHS = (
     "v1/ranking/border/{ranking_id}",
     "v1/ranking/finalresult/{ranking_id}",
     "v1/ranking/score/{ranking_id}",
+    "v1/room/detail/{owner_id}",
     "v1/shop/exchange/{product_mid}",
     "v1/swimsuit_arrange_flag/{owner_id}",
     "v1/tutorial/{event_mid}",
@@ -59,32 +63,10 @@ def get_model_dir() -> Path:
     return config.DATA_DIR / "model" / "api"
 
 
-def is_valid_message(request: Request, message: Message) -> bool:
-    return bool(
-        request.pretty_host == "api.doaxvv.com"
-        and "X-DOAXVV-Encrypted" in message.headers
-        and message.content
-    )
-
-
 def iter_messages(flow: HTTPFlow) -> Iterable[Message]:
     for message in (flow.request, flow.response):
         if is_valid_message(flow.request, message):
             yield message
-
-
-def get_fernet(password: str) -> Fernet:
-    return Fernet(base64.urlsafe_b64encode(hashlib.sha256(password.encode()).digest()))
-
-
-def decrypt_message(key: str, message: Message) -> bytes:
-    decrypted_data = utils.decrypt_data(
-        AES(get_fernet(key).decrypt(message.headers["Proxy-X-DOAXVV-Encrypted"])),
-        message.content,
-        base64.b64decode(message.headers["X-DOAXVV-Encrypted"]),
-    )
-    uncompressed_data = zlib.decompress(decrypted_data)
-    return uncompressed_data
 
 
 def flows_to_json(path: Path):

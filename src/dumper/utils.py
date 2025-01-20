@@ -6,10 +6,6 @@ from typing import Any
 
 import datamodel_code_generator
 import frozendict
-from cryptography.hazmat.primitives.ciphers import Cipher
-from cryptography.hazmat.primitives.ciphers.algorithms import AES
-from cryptography.hazmat.primitives.ciphers.modes import CBC
-from cryptography.hazmat.primitives.padding import PKCS7
 from datamodel_code_generator import DataModelType
 from datamodel_code_generator import PythonVersion
 from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
@@ -17,14 +13,6 @@ from genson import SchemaBuilder
 from genson import TypedSchemaStrategy
 
 import config
-
-
-def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:
-    decryptor = Cipher(algorithm, CBC(initialization_vector)).decryptor()
-    unpadder = PKCS7(AES.block_size).unpadder()
-    decrypted_data = decryptor.update(data) + decryptor.finalize()
-    unpadded_data = unpadder.update(decrypted_data) + unpadder.finalize()
-    return unpadded_data
 
 
 class AbstractDateTime(TypedSchemaStrategy):
