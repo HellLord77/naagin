@@ -4,19 +4,10 @@ from naagin.types.enums import AppealUpEnum
 from naagin.types.enums import BooleanEnum
 from naagin.types.enums import CheckedLicenseLevelEnum
 from naagin.types.enums import FriendshipStateEnum
+from naagin.types.enums import ItemEquipmentTypeEnum
 from naagin.types.enums import LicenseLevelEnum
 from naagin.types.enums import OwnerStatusEnum
-from naagin.types.enums import ItemEquipmentTypeEnum
 from .utils import values_callable
-from sqlalchemy import Enum
-
-from naagin.types.enums import AppealUpEnum
-from naagin.types.enums import BooleanEnum
-from naagin.types.enums import CheckedLicenseLevelEnum
-from naagin.types.enums import FriendshipStateEnum
-from naagin.types.enums import ItemEquipmentTypeEnum
-from naagin.types.enums import LicenseLevelEnum
-from naagin.types.enums import OwnerStatusEnum
 from .utils import values_callable
 
 AppealUpEnumSchema = Enum(AppealUpEnum, values_callable=values_callable)

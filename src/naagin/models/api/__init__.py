@@ -32,6 +32,12 @@ from .v1.owner.episode.__episode_mid__.put.response import (
 from .v1.owner.get.response import OwnerGetResponseModel
 from .v1.owner.put.request import OwnerPutRequestModel
 from .v1.owner.put.response import OwnerPutResponseModel
+from .v1.quest.check.license_point.post.request import (
+    QuestCheckLicensePointPostRequestModel,
+)
+from .v1.quest.check.license_point.post.response import (
+    QuestCheckLicensePointPostResponseModel,
+)
 from .v1.shop.paymentlog.incomplete.get.response import (
     ShopPaymentlogIncompleteGetResponseModel,
 )
