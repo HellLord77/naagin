@@ -14,9 +14,9 @@ async def get(
     session: SessionDependency,
     owner_id: OwnerIdDependency,
 ) -> GirlEquipmentGetResponseModel:
-    girl_equipments = (
+    girl_equipment_list = (
         await session.scalars(
             select(GirlEquipmentSchema).where(GirlEquipmentSchema.owner_id == owner_id)
         )
     ).all()
-    return GirlEquipmentGetResponseModel(girl_equipment_list=girl_equipments)
+    return GirlEquipmentGetResponseModel(girl_equipment_list=girl_equipment_list)
