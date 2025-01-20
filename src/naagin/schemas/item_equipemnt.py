@@ -31,11 +31,15 @@ class ItemEquipmentSchema(BaseSchema):
     upgrade_count: Mapped[int] = mapped_column(Integer, default=0)
     combine_count: Mapped[int] = mapped_column(Integer, default=0)
 
-    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id))
+    owner_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey(OwnerSchema.owner_id), index=True
+    )
 
     __table_args__ = (
         CheckConstraint(id >= 1, "id_min"),
-        CheckConstraint(type != ItemEquipmentTypeEnum.OTHER, "type_const"),
+        CheckConstraint(
+            type != ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION, "type_const"
+        ),
         CheckConstraint(level.between(1, 90), "level_range"),
         CheckConstraint(experience.between(0, 480000), "experience_range"),
         CheckConstraint(unlock_count.between(0, 4), "unlock_count_range"),

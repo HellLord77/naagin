@@ -14,7 +14,7 @@ router = APIRouter(prefix="/{type}")
 async def get(
     type: ItemEquipmentTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> ItemEquipmentTypeTypeGetResponseModel:
-    if type == ItemEquipmentTypeEnum.OTHER:
+    if type == ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION:
         whereclause = (ItemEquipmentSchema.type == ItemEquipmentTypeEnum.HAIRSTYLE) | (
             ItemEquipmentSchema.type == ItemEquipmentTypeEnum.EXPRESSION
         )
