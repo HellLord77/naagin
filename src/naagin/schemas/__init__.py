@@ -1,6 +1,7 @@
 from .episode import EpisodeSchema
 from .friendship import FriendshipSchema
 from .girl import GirlSchema
+from .girl_equipment import GirlEquipmentSchema
 from .honor import HonorSchema
 from .item_consume import ItemConsumeSchema
 from .item_equipemnt import ItemEquipmentSchema

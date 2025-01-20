@@ -5,8 +5,11 @@ from naagin.models.api import GirlGetResponseModel
 from naagin.schemas import GirlSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
+from . import equipment
 
 router = APIRouter(prefix="/girl")
+
+router.include_router(equipment.router)
 
 
 @router.get("")
