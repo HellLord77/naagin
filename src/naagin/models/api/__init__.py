@@ -45,6 +45,7 @@ from .v1.quest.check.license_point.post.request import (
 from .v1.quest.check.license_point.post.response import (
     QuestCheckLicensePointPostResponseModel,
 )
+from .v1.quest.fes.info.get.response import QuestFesInfoGetResponseModel
 from .v1.quest.stamina.get.response import QuestStaminaGetResponseModel
 from .v1.shop.paymentlog.incomplete.get.response import (
     ShopPaymentlogIncompleteGetResponseModel,
