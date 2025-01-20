@@ -16,9 +16,9 @@ router.include_router(negative.router)
 async def get(
     session: SessionDependency, owner_id: OwnerIdDependency
 ) -> ItemConsumeGetResponseModel:
-    consume_items = (
+    item_consume_list = (
         await session.scalars(
             select(ItemConsumeSchema).where(ItemConsumeSchema.owner_id == owner_id)
         )
     ).all()
-    return ItemConsumeGetResponseModel(item_consume_list=consume_items)
+    return ItemConsumeGetResponseModel(item_consume_list=item_consume_list)

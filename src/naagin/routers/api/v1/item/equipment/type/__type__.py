@@ -20,11 +20,13 @@ async def get(
         )
     else:
         whereclause = ItemEquipmentSchema.type == type
-    equipment_items = (
+    item_equipment_list = (
         await session.scalars(
             select(ItemEquipmentSchema).where(
                 ItemEquipmentSchema.owner_id == owner_id, whereclause
             )
         )
     ).all()
-    return ItemEquipmentTypeTypeGetResponseModel(item_equipment_list=equipment_items)
+    return ItemEquipmentTypeTypeGetResponseModel(
+        item_equipment_list=item_equipment_list
+    )

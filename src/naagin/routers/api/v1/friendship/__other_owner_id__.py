@@ -19,7 +19,7 @@ async def delete(
     friendship = await session.get_one(FriendshipSchema, owner_id, other_owner_id)
     other_friendship = await session.get_one(FriendshipSchema, other_owner_id, owner_id)
 
-    owners = None
+    owner_list = None
     if (
         friendship.state == FriendshipStateEnum.SENT
         and other_friendship.state == FriendshipStateEnum.RECEIVED
@@ -38,11 +38,11 @@ async def delete(
     ):
         friendship.state = FriendshipStateEnum.UNINVITED
         other_friendship.state = FriendshipStateEnum.UNINVITED
-        owners = [owner, other_owner]
+        owner_list = [owner, other_owner]
 
     await session.flush()
     await session.refresh(friendship)
     await session.refresh(other_friendship)
     return FriendshipFriendIdDeleteResponseModel(
-        friendship_list=[friendship, other_friendship], owner_list=owners
+        friendship_list=[friendship, other_friendship], owner_list=owner_list
     )

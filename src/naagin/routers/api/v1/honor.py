@@ -13,9 +13,9 @@ router = APIRouter(prefix="/honor")
 async def get(
     session: SessionDependency, owner_id: OwnerIdDependency
 ) -> HonorGetResponseModel:
-    honors = (
+    honor_list = (
         await session.scalars(
             select(HonorSchema).where(HonorSchema.owner_id == owner_id)
         )
     ).all()
-    return HonorGetResponseModel(honor_list=honors)
+    return HonorGetResponseModel(honor_list=honor_list)

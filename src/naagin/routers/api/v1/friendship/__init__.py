@@ -27,7 +27,7 @@ router.include_router(sent.router)
 async def get(
     session: SessionDependency, owner_id: OwnerIdDependency
 ) -> FriendshipGetResponseModel:
-    friendships = (
+    friendship_list = (
         await session.scalars(
             select(FriendshipSchema).where(
                 FriendshipSchema.owner_id == owner_id,
@@ -36,7 +36,7 @@ async def get(
             )
         )
     ).all()
-    return FriendshipGetResponseModel(friendship_list=friendships)
+    return FriendshipGetResponseModel(friendship_list=friendship_list)
 
 
 @router.post("")
