@@ -12,6 +12,9 @@ from .v1.friendship.received.get.response import FriendshipReceivedGetResponseMo
 from .v1.friendship.sent.get.response import FriendshipSentGetResponseModel
 from .v1.girl.get.response import GirlGetResponseModel
 from .v1.honor.get.response import HonorGetResponseModel
+from .v1.item.equipment.type.__type__.get.response import (
+    ItemEquipmentTypeTypeGetResponseModel,
+)
 from .v1.option.item_auto_lock.post.request import OptionItemAutoLockPostRequestModel
 from .v1.option.item_auto_lock.post.response import OptionItemAutoLockPostResponseModel
 from .v1.owner.birthday.post.request import OwnerBirthdayPostRequestModel
