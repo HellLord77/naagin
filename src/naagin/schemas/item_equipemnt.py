@@ -15,6 +15,10 @@ from .owner import OwnerSchema
 class ItemEquipmentSchema(BaseSchema):
     __tablename__ = "item_equipment"
 
+    owner_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey(OwnerSchema.owner_id), index=True
+    )
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     item_mid: Mapped[int] = mapped_column(Integer)
     type: Mapped[ItemEquipmentTypeEnum] = mapped_column(ItemEquipmentTypeEnumSchema)
@@ -30,10 +34,6 @@ class ItemEquipmentSchema(BaseSchema):
     unlock_count: Mapped[int] = mapped_column(Integer, default=0)
     upgrade_count: Mapped[int] = mapped_column(Integer, default=0)
     combine_count: Mapped[int] = mapped_column(Integer, default=0)
-
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), index=True
-    )
 
     __table_args__ = (
         CheckConstraint(id >= 1, "id_min"),

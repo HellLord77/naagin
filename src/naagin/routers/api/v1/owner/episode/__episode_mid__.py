@@ -32,11 +32,10 @@ async def put(
     episode = await session.get(EpisodeSchema, (owner_id, episode_mid))
 
     if episode is None:
-        episode_csv = episodes_csv[episode_mid]
         episode = EpisodeSchema(
             owner_id=owner_id,
             episode_mid=episode_mid,
-            experience_gain=episode_csv.experience_gain,
+            experience_gain=episodes_csv[episode_mid].experience_gain,
         )
         session.add(episode)
     else:
