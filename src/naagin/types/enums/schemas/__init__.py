@@ -1,6 +1,5 @@
 from sqlalchemy import Enum
 
-from naagin.types.enums import AppealUpEnum
 from naagin.types.enums import BooleanEnum
 from naagin.types.enums import CheckedLicenseLevelEnum
 from naagin.types.enums import FriendshipStateEnum
@@ -12,7 +11,6 @@ from naagin.types.enums import PrivateItemTypeEnum
 from naagin.types.enums import SpecialOrderTypeEnum
 from .utils import values_callable
 
-AppealUpEnumSchema = Enum(AppealUpEnum, values_callable=values_callable)
 BooleanEnumSchema = Enum(BooleanEnum, values_callable=values_callable)
 CheckedLicenseLevelEnumSchema = Enum(
     CheckedLicenseLevelEnum, values_callable=values_callable
