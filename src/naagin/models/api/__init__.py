@@ -12,6 +12,9 @@ from .v1.friendship.received.get.response import FriendshipReceivedGetResponseMo
 from .v1.friendship.sent.get.response import FriendshipSentGetResponseModel
 from .v1.girl.equipment.get.response import GirlEquipmentGetResponseModel
 from .v1.girl.get.response import GirlGetResponseModel
+from .v1.girl.private.favorite.__type__.get.response import (
+    GirlPrivateFavoriteTypeGetResponseModel,
+)
 from .v1.girl.private.get.response import GirlPrivateGetResponseModel
 from .v1.honor.get.response import HonorGetResponseModel
 from .v1.item.consume.get.response import ItemConsumeGetResponseModel
