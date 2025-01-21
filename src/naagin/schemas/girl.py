@@ -4,9 +4,7 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from naagin.types.enums import AppealUpEnum
 from naagin.types.enums import BooleanEnum
-from naagin.types.enums.schemas import AppealUpEnumSchema
 from naagin.types.enums.schemas import BooleanEnumSchema
 from .base import BaseSchema
 from .owner import OwnerSchema
@@ -29,9 +27,7 @@ class GirlSchema(BaseSchema):
     stamina: Mapped[int] = mapped_column(Integer)
     additional_stamina: Mapped[int] = mapped_column(Integer, default=0)
     appeal: Mapped[int] = mapped_column(Integer)
-    appeal_up: Mapped[AppealUpEnum] = mapped_column(
-        AppealUpEnumSchema, default=AppealUpEnum._VALUE_0
-    )
+    appeal_up: Mapped[int] = mapped_column(Integer, default=0)
     additional_appeal: Mapped[int] = mapped_column(Integer, default=0)
     hair_item_mid: Mapped[int] = mapped_column(Integer)
     ring_item_mid: Mapped[int] = mapped_column(Integer, default=0)
@@ -89,6 +85,7 @@ class GirlSchema(BaseSchema):
         CheckConstraint(additional_power >= 0, "additional_power_min"),
         CheckConstraint(additional_technic >= 0, "additional_technic_min"),
         CheckConstraint(additional_stamina >= 0, "additional_stamina_min"),
+        CheckConstraint(appeal_up >= 0, "appeal_up_min"),
         CheckConstraint(additional_appeal >= 0, "additional_appeal_min"),
         CheckConstraint(sunburn.between(0, 100), "sunburn_range"),
         CheckConstraint(sunburn % 10 == 0, "sunburn_mod"),
