@@ -16,8 +16,11 @@ async def put(
     session: SessionDependency,
     owner_id: OwnerIdDependency,
 ) -> TutorialEventMidPutResponseModel:
-    tutorial = await session.get_one(TutorialSchema, (owner_id, event_mid))
+    tutorial = await session.get(TutorialSchema, (owner_id, event_mid))
 
+    if tutorial is None:
+        tutorial = TutorialSchema(owner_id=owner_id, event_mid=event_mid)
+        session.add(tutorial)
     tutorial.flag = request.flag
 
     await session.flush()
