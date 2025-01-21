@@ -8,5 +8,6 @@ from .item_equipemnt import ItemEquipmentSchema
 from .option_item_auto_lock import OptionItemAutoLockSchema
 from .owner import OwnerSchema
 from .pvp_girl_equipment import PvpGirlEquipmentSchema
+from .special_order import SpecialOrderSchema
 from .tutorial import TutorialSchema
 from .wallet import WalletSchema
