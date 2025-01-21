@@ -305,6 +305,7 @@ CSV_FILE_HEADERS = {
 # 35010 Banana
 # 35011 Candy
 # 35015 Venus Ticket
+# 35018 SSR Ticket
 # 35030 Upgrade POW Stone (S)
 # 35031 Upgrade POW Stone (M)
 # 35032 Upgrade POW Stone (L)
@@ -336,6 +337,7 @@ CSV_FILE_HEADERS = {
 # 35112 Misaki Coin
 # 35125 Luna Coin
 # 35178 Tamaki Coin
+# 35243 Chinese Tea
 # 35246 Leifang Coin
 # 35252 Episode Coin
 # 35316 Fiona Coin
@@ -359,6 +361,8 @@ CSV_FILE_HEADERS = {
 # 35858 Shiny Deco-pen
 # 35888 Monica Coin
 # 36201 Moisturizing Fan (Momiji)
+# 36628 Weekly SSR Ticket
+# 36629 Weekly Gacha Ticket
 # 36629 Weekly Gacha Ticket
 # 37176 Bath Salts (L)
 # 37177 Bath Salts (M)
