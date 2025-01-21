@@ -10,6 +10,9 @@ from .v1.friendship.post.request import FriendshipPostRequestModel
 from .v1.friendship.post.response import FriendshipPostResponseModel
 from .v1.friendship.received.get.response import FriendshipReceivedGetResponseModel
 from .v1.friendship.sent.get.response import FriendshipSentGetResponseModel
+from .v1.girl.__girl_mid__.private.favorite.__type__.get.response import (
+    GirlGirlMidPrivateFavoriteTypeGetResponseModel,
+)
 from .v1.girl.equipment.get.response import GirlEquipmentGetResponseModel
 from .v1.girl.get.response import GirlGetResponseModel
 from .v1.girl.private.favorite.__type__.get.response import (
