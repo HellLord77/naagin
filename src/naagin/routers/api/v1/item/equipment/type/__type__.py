@@ -19,7 +19,7 @@ async def get(
         type == ItemEquipmentTypeEnum.HAIRSTYLE
         or type == ItemEquipmentTypeEnum.EXPRESSION
     ):
-        raise InternalServerErrorException()
+        raise InternalServerErrorException
 
     if type == ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION:
         whereclause = (ItemEquipmentSchema.type == ItemEquipmentTypeEnum.HAIRSTYLE) | (

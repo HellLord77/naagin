@@ -64,7 +64,7 @@ async def post(
         session.add(friendship)
         session.add(other_friendship)
     elif other_friendship.state == FriendshipStateEnum.BLOCKED:
-        raise FriendshipCantRequestException()
+        raise FriendshipCantRequestException
     elif (
         (
             friendship.state == FriendshipStateEnum.BLOCKED

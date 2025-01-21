@@ -18,7 +18,7 @@ async def get(
     owner_id: OwnerIdDependency,
 ) -> GirlPrivateFavoriteTypeGetResponseModel:
     if type == PrivateItemTypeEnum._VALUE_80:
-        raise InternalServerErrorException()
+        raise InternalServerErrorException
 
     favorite_private_item_list = (
         await session.scalars(

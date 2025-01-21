@@ -45,7 +45,7 @@ async def post(
     owner_id: OwnerIdDependency,
 ) -> GirlGirlMidPrivateFavoriteTypePostResponseModel:
     if len(request.item_list) > 1:
-        raise InternalServerErrorException()
+        raise InternalServerErrorException
 
     private_item = await session.get_one(
         PrivateItemSchema, owner_id, girl_mid, request.item_list[0].item_mid

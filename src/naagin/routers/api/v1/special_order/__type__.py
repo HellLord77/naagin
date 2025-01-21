@@ -16,7 +16,7 @@ async def get(
     type: SpecialOrderTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> SpecialOrderTypeGetResponseModel:
     if type == SpecialOrderTypeEnum._VALUE_81:
-        raise InternalServerErrorException()
+        raise InternalServerErrorException
 
     if type == SpecialOrderTypeEnum.POSE_CARD_ITEM:
         whereclause = (
