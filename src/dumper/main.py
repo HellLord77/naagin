@@ -32,6 +32,7 @@ def consume_to_enum():
         else:
             print(f"_VALUE_{type_} = {type_}")
 
+
 def get_md5(path: Path) -> str:
     md5 = hashlib.md5()
     with path.open("rb") as file:
