@@ -22,7 +22,7 @@ class PrivateItemSchema(BaseSchema):
     type: Mapped[PrivateItemTypeEnum] = mapped_column(PrivateItemTypeEnumSchema)
     item_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    is_favorite: Mapped[BooleanEnum] = mapped_column(
+    favorite: Mapped[BooleanEnum] = mapped_column(
         BooleanEnumSchema, default=BooleanEnum.FALSE
     )
 

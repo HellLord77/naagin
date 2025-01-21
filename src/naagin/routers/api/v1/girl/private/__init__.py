@@ -5,8 +5,11 @@ from naagin.models.api import GirlPrivateGetResponseModel
 from naagin.schemas import PrivateItemSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
+from . import favorite
 
 router = APIRouter(prefix="/private")
+
+router.include_router(favorite.router)
 
 
 @router.get("")

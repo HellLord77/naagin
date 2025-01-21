@@ -42,6 +42,7 @@ class ItemEquipmentSchema(BaseSchema):
         ),
         CheckConstraint(level.between(1, 90), "level_range"),
         CheckConstraint(experience.between(0, 480000), "experience_range"),
+        CheckConstraint(favorite == BooleanEnum.FALSE, "favorite_const"),
         CheckConstraint(unlock_count.between(0, 4), "unlock_count_range"),
         CheckConstraint(upgrade_count >= 0, "upgrade_count_min"),
         CheckConstraint(combine_count.between(0, 4), "combine_count_range"),
