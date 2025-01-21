@@ -7,12 +7,14 @@ from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
 from . import __girl_mid__
 from . import equipment
+from . import potential
 from . import private
 
 router = APIRouter(prefix="/girl")
 
 router.include_router(__girl_mid__.router)
 router.include_router(equipment.router)
+router.include_router(potential.router)
 router.include_router(private.router)
 
 
