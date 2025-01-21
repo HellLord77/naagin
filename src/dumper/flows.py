@@ -12,8 +12,6 @@ from mitmproxy.io import FlowReader
 
 import config
 import utils
-from proxy.utils import decrypt_message
-from proxy.utils import is_valid_message
 
 VARIABLE_PATHS = (
     "v1/dishevelment/{owner_id}/{item_mid}",
@@ -65,7 +63,7 @@ def get_model_dir() -> Path:
 
 def iter_messages(flow: HTTPFlow) -> Iterable[Message]:
     for message in (flow.request, flow.response):
-        if is_valid_message(flow.request, message):
+        if utils.is_valid_message(flow.request, message):
             yield message
 
 
@@ -79,7 +77,7 @@ def flows_to_json(path: Path):
             logging.debug(f"[FLOW] {flow.id}")
 
             for message in iter_messages(flow):
-                json_data = decrypt_message(flow.id, message)
+                json_data = utils.decrypt_message(flow.id, message)
 
                 relative_path = flow.request.path.removeprefix("/")
                 path_method = flow.request.method.lower()

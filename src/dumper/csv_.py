@@ -13,7 +13,6 @@ import httpx
 
 import config
 import utils
-from proxy.utils import decrypt_file
 
 CSV_FILE_LISTS = {
     10: {
@@ -420,7 +419,7 @@ def game_to_csv():
 
             logging.info(f"[ENCRYPTED] {encrypted_path}")
 
-            data = decrypt_file(key, encrypted_path)
+            data = utils.decrypt_file(key, encrypted_path)
             if csv_file in CSV_FILE_HEADERS.get(master_version, {}):
                 fieldnames = CSV_FILE_HEADERS[master_version][csv_file]
                 for index in range(len(fieldnames)):
