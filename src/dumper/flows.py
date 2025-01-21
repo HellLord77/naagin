@@ -13,7 +13,7 @@ from mitmproxy.io import FlowReader
 import config
 import utils
 
-VARIABLE_PATHS = (
+VARIABLE_PATHS = [
     "v1/dishevelment/{owner_id}/{item_mid}",
     "v1/friendship/friend_code/{friend_code}",
     "v1/friendship/{owner_id}",
@@ -43,7 +43,7 @@ VARIABLE_PATHS = (
     "v1/shop/exchange/{product_mid}",
     "v1/swimsuit_arrange_flag/{owner_id}",
     "v1/tutorial/{event_mid}",
-)
+]
 
 
 @functools.cache
@@ -129,6 +129,7 @@ def to_model():
         if flows_path.is_file():
             flows_to_json(flows_path)
 
+    VARIABLE_PATHS.sort(reverse=True)
     for variable_path in VARIABLE_PATHS:
         aggregate_json(variable_path)
     rmtree_empty(get_json_dir())
