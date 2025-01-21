@@ -13,6 +13,12 @@ from .v1.friendship.sent.get.response import FriendshipSentGetResponseModel
 from .v1.girl.__girl_mid__.private.favorite.__type__.get.response import (
     GirlGirlMidPrivateFavoriteTypeGetResponseModel,
 )
+from .v1.girl.__girl_mid__.private.favorite.__type__.post.request import (
+    GirlGirlMidPrivateFavoriteTypePostRequestModel,
+)
+from .v1.girl.__girl_mid__.private.favorite.__type__.post.response import (
+    GirlGirlMidPrivateFavoriteTypePostResponseModel,
+)
 from .v1.girl.equipment.get.response import GirlEquipmentGetResponseModel
 from .v1.girl.get.response import GirlGetResponseModel
 from .v1.girl.private.favorite.__type__.get.response import (
