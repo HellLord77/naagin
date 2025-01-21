@@ -14,8 +14,15 @@ from naagin.types.enums import ItemConsumeTypeEnum
 
 
 def consume_to_enum():
-    path = Path(
-        r"D:\Projects\naagin\data\schema\api\v1\item\consume\get\response.schema.json"
+    path = (
+        config.DATA_DIR
+        / "schema"
+        / "api"
+        / "v1"
+        / "item"
+        / "consume"
+        / "get"
+        / "response.schema.json"
     )
     with path.open("rb") as file:
         json_data = json.load(file)
