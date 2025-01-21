@@ -50,6 +50,7 @@ from .v1.quest.stamina.get.response import QuestStaminaGetResponseModel
 from .v1.shop.paymentlog.incomplete.get.response import (
     ShopPaymentlogIncompleteGetResponseModel,
 )
+from .v1.special_order.__type__.get.resposne import SpecialOrderTypeGetResponseModel
 from .v1.tutorial.__event_mid__.put.request import TutorialEventMidPutRequestModel
 from .v1.tutorial.__event_mid__.put.response import TutorialEventMidPutResponseModel
 from .v1.tutorial.get.response import TutorialGetResponseModel

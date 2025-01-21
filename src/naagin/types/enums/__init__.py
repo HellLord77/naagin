@@ -7,3 +7,4 @@ from .item_consume_type import ItemConsumeTypeEnum
 from .item_equipment_type import ItemEquipmentTypeEnum
 from .license_level import LicenseLevelEnum
 from .owner_status import OwnerStatusEnum
+from .special_order_type import SpecialOrderTypeEnum
