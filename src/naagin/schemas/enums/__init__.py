@@ -1,14 +1,14 @@
 from sqlalchemy import Enum
 
-from naagin.types.enums import BooleanEnum
-from naagin.types.enums import CheckedLicenseLevelEnum
-from naagin.types.enums import FriendshipStateEnum
-from naagin.types.enums import ItemConsumeTypeEnum
-from naagin.types.enums import ItemEquipmentTypeEnum
-from naagin.types.enums import LicenseLevelEnum
-from naagin.types.enums import OwnerStatusEnum
-from naagin.types.enums import PrivateItemTypeEnum
-from naagin.types.enums import SpecialOrderTypeEnum
+from naagin.enums import BooleanEnum
+from naagin.enums import CheckedLicenseLevelEnum
+from naagin.enums import FriendshipStateEnum
+from naagin.enums import ItemConsumeTypeEnum
+from naagin.enums import ItemEquipmentTypeEnum
+from naagin.enums import LicenseLevelEnum
+from naagin.enums import OwnerStatusEnum
+from naagin.enums import PrivateItemTypeEnum
+from naagin.enums import SpecialOrderTypeEnum
 from .utils import values_callable
 
 BooleanEnumSchema = Enum(BooleanEnum, values_callable=values_callable)

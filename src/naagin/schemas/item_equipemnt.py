@@ -4,11 +4,11 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from naagin.types.enums import BooleanEnum
-from naagin.types.enums import ItemEquipmentTypeEnum
-from naagin.types.enums.schemas import BooleanEnumSchema
-from naagin.types.enums.schemas import ItemEquipmentTypeEnumSchema
+from naagin.enums import BooleanEnum
+from naagin.enums import ItemEquipmentTypeEnum
 from .base import BaseSchema
+from .enums import BooleanEnumSchema
+from .enums import ItemEquipmentTypeEnumSchema
 from .owner import OwnerSchema
 
 

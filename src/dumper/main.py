@@ -10,7 +10,7 @@ from httpx import URL
 import config
 import csv_
 import flows
-from naagin.types.enums import ItemConsumeTypeEnum
+from naagin.enums import ItemConsumeTypeEnum
 
 
 def consume_to_enum():

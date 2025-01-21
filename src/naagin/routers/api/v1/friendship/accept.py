@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 
+from naagin.enums import FriendshipStateEnum
 from naagin.models.api import FriendshipAcceptPostRequestModel
 from naagin.models.api import FriendshipAcceptPostResponseModel
 from naagin.schemas import FriendshipSchema
 from naagin.schemas import OwnerSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
-from naagin.types.enums import FriendshipStateEnum
 
 router = APIRouter(prefix="/accept")
 

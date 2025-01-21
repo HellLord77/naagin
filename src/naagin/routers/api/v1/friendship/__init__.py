@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from sqlalchemy import select
 
+from naagin.enums import FriendshipStateEnum
 from naagin.exceptions import FriendshipCantRequestException
 from naagin.models.api import FriendshipGetResponseModel
 from naagin.models.api import FriendshipPostRequestModel
@@ -9,7 +10,6 @@ from naagin.schemas import FriendshipSchema
 from naagin.schemas import OwnerSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
-from naagin.types.enums import FriendshipStateEnum
 from . import __other_owner_id__
 from . import accept
 from . import received

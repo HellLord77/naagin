@@ -13,13 +13,13 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from naagin.types.enums import CheckedLicenseLevelEnum
-from naagin.types.enums import LicenseLevelEnum
-from naagin.types.enums import OwnerStatusEnum
-from naagin.types.enums.schemas import CheckedLicenseLevelEnumSchema
-from naagin.types.enums.schemas import LicenseLevelEnumSchema
-from naagin.types.enums.schemas import OwnerStatusEnumSchema
+from naagin.enums import CheckedLicenseLevelEnum
+from naagin.enums import LicenseLevelEnum
+from naagin.enums import OwnerStatusEnum
 from .base import BaseSchema
+from .enums import CheckedLicenseLevelEnumSchema
+from .enums import LicenseLevelEnumSchema
+from .enums import OwnerStatusEnumSchema
 
 
 class OwnerSchema(BaseSchema):

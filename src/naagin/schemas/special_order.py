@@ -4,9 +4,9 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from naagin.types.enums import SpecialOrderTypeEnum
-from naagin.types.enums.schemas import SpecialOrderTypeEnumSchema
+from naagin.enums import SpecialOrderTypeEnum
 from .base import BaseSchema
+from .enums import SpecialOrderTypeEnumSchema
 from .owner import OwnerSchema
 
 
