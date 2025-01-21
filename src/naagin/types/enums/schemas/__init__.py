@@ -8,6 +8,7 @@ from naagin.types.enums import ItemConsumeTypeEnum
 from naagin.types.enums import ItemEquipmentTypeEnum
 from naagin.types.enums import LicenseLevelEnum
 from naagin.types.enums import OwnerStatusEnum
+from naagin.types.enums import PrivateItemTypeEnum
 from naagin.types.enums import SpecialOrderTypeEnum
 from .utils import values_callable
 
@@ -23,4 +24,5 @@ ItemEquipmentTypeEnumSchema = Enum(
 )
 LicenseLevelEnumSchema = Enum(LicenseLevelEnum, values_callable=values_callable)
 OwnerStatusEnumSchema = Enum(OwnerStatusEnum, values_callable=values_callable)
+PrivateItemTypeEnumSchema = Enum(PrivateItemTypeEnum, values_callable=values_callable)
 SpecialOrderTypeEnumSchema = Enum(SpecialOrderTypeEnum, values_callable=values_callable)
