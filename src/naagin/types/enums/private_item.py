@@ -7,4 +7,5 @@ class PrivateItemTypeEnum(IntEnum):
     FACE = 23
     ARM = 24
     POSE = 37
+    _VALUE_80 = 80
     PROP = 81
