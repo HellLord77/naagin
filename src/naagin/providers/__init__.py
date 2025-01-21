@@ -30,10 +30,10 @@ async def provide_owner_id(
 ) -> int:
     if access_token == "XPEACHACCESSTOKEN":
         if pinksid is None:
-            raise AuthenticationFailedException()
+            raise AuthenticationFailedException
     else:
         if access_token is None:
-            raise AuthenticationFailedException()
+            raise AuthenticationFailedException
 
     owner_id = int(access_token)
     owner = await session.get(OwnerSchema, owner_id)
