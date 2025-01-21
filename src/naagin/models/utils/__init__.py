@@ -1,3 +1,4 @@
+from .bromide import BromideModel
 from .exception import ExceptionModel
 from .favorite_private_item import FavoritePrivateItemModel
 from .friendship import FriendshipModel

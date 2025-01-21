@@ -1,3 +1,4 @@
+from .bromide import BromideSchema
 from .episode import EpisodeSchema
 from .friendship import FriendshipSchema
 from .girl import GirlSchema

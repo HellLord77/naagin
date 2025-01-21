@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from . import bromide
 from . import cheat_log
 from . import csv
 from . import friendship
@@ -18,6 +19,7 @@ from . import wallet
 
 router = APIRouter(prefix="/v1")
 
+router.include_router(bromide.router)
 router.include_router(cheat_log.router)
 router.include_router(csv.router)
 router.include_router(friendship.router)
