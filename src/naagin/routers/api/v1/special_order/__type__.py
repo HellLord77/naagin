@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from sqlalchemy import select
 
+from naagin.enums import SpecialOrderTypeEnum
 from naagin.exceptions import InternalServerErrorException
 from naagin.models.api import SpecialOrderTypeGetResponseModel
 from naagin.schemas import SpecialOrderSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
-from naagin.types.enums import SpecialOrderTypeEnum
 
 router = APIRouter(prefix="/{type}")
 

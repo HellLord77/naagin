@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from sqlalchemy import select
 
+from naagin.enums import BooleanEnum
+from naagin.enums import PrivateItemTypeEnum
 from naagin.exceptions import InternalServerErrorException
 from naagin.models.api import GirlGirlMidPrivateFavoriteTypeGetResponseModel
 from naagin.models.api import GirlGirlMidPrivateFavoriteTypePostRequestModel
@@ -8,8 +10,6 @@ from naagin.models.api import GirlGirlMidPrivateFavoriteTypePostResponseModel
 from naagin.schemas import PrivateItemSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
-from naagin.types.enums import BooleanEnum
-from naagin.types.enums import PrivateItemTypeEnum
 
 router = APIRouter(prefix="/{type}")
 

@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Header
 
-from naagin.types.enums import ClientTypeEnum
+from naagin.enums import ClientTypeEnum
 from .utils import default_factory
 
 AccessTokenHeader = Annotated[
