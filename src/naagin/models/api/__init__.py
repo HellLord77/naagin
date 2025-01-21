@@ -21,6 +21,7 @@ from .v1.girl.__girl_mid__.private.favorite.__type__.post.response import (
 )
 from .v1.girl.equipment.get.response import GirlEquipmentGetResponseModel
 from .v1.girl.get.response import GirlGetResponseModel
+from .v1.girl.potential.get.response import GirlPotentialGetResponseModel
 from .v1.girl.private.favorite.__type__.get.response import (
     GirlPrivateFavoriteTypeGetResponseModel,
 )
