@@ -15,7 +15,8 @@ SERVER_URL = urllib.parse.urlparse(config.SERVER_URL)
 
 CERT_DIR = config.DATA_DIR / "cert"
 
-if Path(sys.argv[0]).name != "mitmweb":
+MITMWEB = Path(sys.argv[0]).name == "mitmweb"
+if not MITMWEB:
     FLOW_WRITER = FlowWriter(
         (config.DATA_DIR / "flows" / f"DOAXVV-{int(time.time())}.flows").open("wb")
     )

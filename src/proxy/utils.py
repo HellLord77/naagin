@@ -2,7 +2,7 @@ import base64
 import gzip
 import hashlib
 import logging
-import os
+import secrets
 import zlib
 from pathlib import Path
 from typing import Optional
@@ -73,22 +73,24 @@ def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
     return unpadded_data
 
 
-def renounce_request(request: Request):
-    nonce = request.headers["X-DOAXVV-Nonce"]
-    proxy_nonce = os.urandom(4).hex()
-    request.headers["X-DOAXVV-Nonce"] = proxy_nonce
-    logging.debug("[nonce] %s -> %s", nonce, proxy_nonce)
-
-
 def redirect_request(request: Request, path: str):
     logging.debug("[%s] %s %s", request.method, path, request.path)
 
+    pretty_host = request.pretty_host
     pretty_url = request.pretty_url
     request.scheme = consts.SERVER_URL.scheme
     request.host = consts.SERVER_URL.hostname
     request.port = consts.SERVER_URL.port
     request.path_components = path, *request.path_components
+    request.headers["Host"] = pretty_host
     logging.info("[url] %s -> %s", pretty_url, request.pretty_url)
+
+
+def renounce_request(request: Request):
+    nonce = request.headers["X-DOAXVV-Nonce"]
+    proxy_nonce = secrets.token_hex(4)
+    request.headers["X-DOAXVV-Nonce"] = proxy_nonce
+    logging.debug("[nonce] %s -> %s", nonce, proxy_nonce)
 
 
 def is_valid_message(request: Request, message: Message) -> bool:
@@ -130,9 +132,10 @@ def print_json(flow: HTTPFlow, session_key: Optional[bytes] = None):
                 get_fernet(flow.id).encrypt(session_key).decode()
             )
 
-        if flow.response is not None:
-            consts.FLOW_WRITER.add(flow)
+        if not consts.MITMWEB:
+            if flow.response is not None:
+                consts.FLOW_WRITER.add(flow)
 
-        body = decrypt_message(flow.id, message)
-        print(f"[{type(message).__name__.lower()}] {flow.request.path}")
-        rich.print_json(body.decode())
+            body = decrypt_message(flow.id, message)
+            print(f"[{type(message).__name__.lower()}] {flow.request.path}")
+            rich.print_json(body.decode())
