@@ -1,6 +1,6 @@
 from naagin.models.base import BaseModel
-from naagin.models.utils import OtherOwnerModel
-from naagin.models.utils import OwnerModel
+from naagin.models.common import OtherOwnerModel
+from naagin.models.common import OwnerModel
 
 
 class OwnerBirthdayPostResponseModel(BaseModel):

@@ -1,5 +1,5 @@
 from naagin.models.base import BaseModel
-from naagin.models.utils import FavoritePrivateItemModel
+from naagin.models.common import FavoritePrivateItemModel
 
 
 class GirlGirlMidPrivateFavoriteTypePostResponseModel(BaseModel):

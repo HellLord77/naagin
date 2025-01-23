@@ -1,5 +1,5 @@
 from naagin.models.base import BaseModel
-from naagin.models.utils import ItemConsumeModel
+from naagin.models.common import ItemConsumeModel
 
 
 class ItemConsumeGetResponseModel(BaseModel):
