@@ -32,6 +32,7 @@ class AddonDOAXVV:
         match flow.request.pretty_host:
             case consts.API_HOST:
                 logging.debug("[%s] api %s", flow.request.method, flow.request.path)
+                utils.redirect_request(flow.request, "api")
                 utils.renounce_request(flow.request)
             case consts.API01_HOST:
                 if flow.request.path_components[:3] != ("v1", "johren", "authJohren"):
@@ -43,7 +44,7 @@ class AddonDOAXVV:
         if (
             flow.request.method == HTTPMethod.PUT
             and flow.request.pretty_host == consts.API_HOST
-            and flow.request.path_components == ("v1", "session", "key")
+            and flow.request.path_components[-3:] == ("v1", "session", "key")
         ):
             encrypt_key = flow.request.json()["encrypt_key"]
             session_key = self.proxy_private_key.decrypt(
@@ -65,7 +66,7 @@ class AddonDOAXVV:
         if (
             flow.request.method == HTTPMethod.GET
             and flow.request.pretty_host == consts.API_HOST
-            and flow.request.path_components == ("v1", "session", "key")
+            and flow.request.path_components[-3:] == ("v1", "session", "key")
         ):
             encrypt_key = flow.response.json()["encrypt_key"]
             self.public_key = (
