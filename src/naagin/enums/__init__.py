@@ -1,6 +1,7 @@
 from .boolean import BooleanEnum
 from .checked_license_level import CheckedLicenseLevelEnum
 from .client_type import ClientTypeEnum
+from .encoding import EncodingEnum
 from .friendship_state import FriendshipStateEnum
 from .item_consume_type import ItemConsumeTypeEnum
 from .item_equipment_type import ItemEquipmentTypeEnum
