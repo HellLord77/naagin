@@ -11,6 +11,7 @@ from .option_item_auto_lock import OptionItemAutoLockSchema
 from .owner import OwnerSchema
 from .private_item import PrivateItemSchema
 from .pvp_girl_equipment import PvpGirlEquipmentSchema
+from .session import SessionSchema
 from .special_order import SpecialOrderSchema
 from .tutorial import TutorialSchema
 from .wallet import WalletSchema
