@@ -4,7 +4,7 @@ from pathlib import Path
 from aiopath import AsyncPath
 from pydantic import DirectoryPath
 
-from ..base import BaseSettings
+from .base import BaseSettings
 
 
 class DataSettings(BaseSettings):

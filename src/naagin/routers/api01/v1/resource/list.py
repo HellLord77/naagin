@@ -15,6 +15,6 @@ async def get() -> ResourceListGetResponseModel:
         / "v1"
         / "resource"
         / "list"
-        / f"{settings.api01.game_version}.json"
+        / f"{settings.version.application}.json"
     ).read_bytes()
     return ResourceListGetResponseModel.model_validate_json(json_data)

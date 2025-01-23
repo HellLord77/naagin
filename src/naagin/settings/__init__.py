@@ -1,9 +1,10 @@
-from .api01 import API01Settings
-from .common.data import DataSettings
-from .common.database import DatabaseSettings
+from .data import DataSettings
+from .database import DatabaseSettings
 from .game import GameSettings
+from .version import VersionSettings
 
-database = DatabaseSettings()
+version = VersionSettings()
 data = DataSettings()
-api01 = API01Settings()
+database = DatabaseSettings()
+
 game = GameSettings()
