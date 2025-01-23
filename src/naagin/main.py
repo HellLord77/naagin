@@ -16,8 +16,9 @@ from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions import NotFoundException
 from .exceptions.base import BaseException
-from .models.utils import ExceptionModel
+from .models.common import ExceptionModel
 from .schemas.base import BaseSchema
+from .utils import response_set_doaxvv_header
 
 
 @asynccontextmanager
@@ -30,11 +31,12 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Naagin", version="0.0.1", lifespan=lifespan)
-app.add_middleware(GZipMiddleware)
 
-app.include_router(routers.api.router, prefix="/api", tags=["api"])
-app.include_router(routers.api01.router, prefix="/api01", tags=["api01"])
+app.mount("/api", apps.api.app)
+app.include_router(routers.api01.router, prefix="/api01")
 app.mount("/game", apps.game.app)
+
+app.add_middleware(GZipMiddleware)
 
 
 @app.exception_handler(HTTPStatus.MOVED_PERMANENTLY)
@@ -70,11 +72,12 @@ async def internal_server_error_handler(request: Request, _: HTTPException):
 
 @app.exception_handler(BaseException)
 async def base_exception_handler(_: Request, exception: BaseException):
-    return JSONResponse(
+    response = JSONResponse(
         ExceptionModel.model_validate(exception).model_dump(),
         exception.code if exception.code in HTTPStatus else HTTPStatus.OK,
-        {"X-DOAXVV-Status": str(exception.code)},
     )
+    response_set_doaxvv_header(response, "Status", exception.code)
+    return response
 
 
 def main():

@@ -15,6 +15,7 @@ pydantic
 pydantic-settings
 sqlalchemy
 httpx
+starlette
 fastapi
 uvicorn==0.19
 
