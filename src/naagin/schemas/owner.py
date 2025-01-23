@@ -1,6 +1,6 @@
 from datetime import date
 from datetime import datetime
-from random import randrange
+from secrets import randbelow
 from typing import Literal
 from typing import Optional
 
@@ -58,7 +58,7 @@ class OwnerSchema(BaseSchema):
     )
     friend_code: Mapped[str] = mapped_column(
         String(11),
-        default=lambda: f"{randrange(1000):03}-{randrange(1000):03}-{randrange(1000):03}",
+        default=lambda: f"{randbelow(1000):03}-{randbelow(1000):03}-{randbelow(1000):03}",
         unique=True,
     )
 
