@@ -6,6 +6,7 @@ from shutil import rmtree
 
 from fastapi import HTTPException
 from fastapi import Request
+from fastapi import Response
 from fastapi.responses import FileResponse
 from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
@@ -17,21 +18,25 @@ from naagin import settings
 app = StaticFiles(directory=settings.data.game_dir)
 
 
+def not_found_response() -> PlainTextResponse:
+    return PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
+
+
 @lru_cache
-def get_path_lock(_: str):
+def get_path_lock(_: str) -> Lock:
     return Lock()
 
 
 @cache
-def get_client():
+def get_client() -> AsyncClient:
     return AsyncClient(
         base_url=settings.game.base_url, trust_env=not settings.game.no_proxy
     )
 
 
-async def not_found_handler(request: Request, _: HTTPException):
+async def not_found_handler(request: Request, _: HTTPException) -> Response:
     if settings.game.offline_mode:
-        return PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
+        return not_found_response()
     else:
         url_path = request.url.path.removeprefix("/game")
         path = settings.data.game_dir / url_path.removeprefix("/")
@@ -42,7 +47,7 @@ async def not_found_handler(request: Request, _: HTTPException):
                     response = await client.get(url_path)
                     response.raise_for_status()
                 except HTTPStatusError:
-                    return PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
+                    return not_found_response()
                 else:
                     if await path.is_dir():
                         rmtree(path)

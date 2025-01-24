@@ -31,7 +31,6 @@ class AddonDOAXVV:
     def requestheaders(flow: HTTPFlow):
         match flow.request.pretty_host:
             case consts.API_HOST:
-                logging.debug("[%s] api %s", flow.request.method, flow.request.path)
                 utils.redirect_request(flow.request, "api")
                 utils.renounce_request(flow.request)
             case consts.API01_HOST:

@@ -12,7 +12,6 @@ from naagin.schemas import SessionSchema
 from naagin.types.cookies import PINKSIDCookie
 from naagin.types.headers import AccessTokenHeader
 from naagin.types.headers import ContentLengthHeader
-from naagin.types.headers import ContentTypeHeader
 from naagin.types.headers import EncodingHeader
 from naagin.types.headers import EncryptedHeader
 from naagin.utils import request_decompress_body
@@ -70,20 +69,16 @@ async def provide_owner_id(
 
 
 async def provide_request_body(
-    content_type: ContentTypeHeader,
     content_length: ContentLengthHeader,
-    access_token: AccessTokenHeader,
     encoding: EncodingHeader,
     encrypted: EncryptedHeader,
-    pinksid: PINKSIDCookie,
     request: Request,
-    session: AsyncSession = Depends(provide_session),
+    session: SessionSchema = Depends(provide_session_),
 ):
-    if not request.url.path.removeprefix("/api/v1").startswith("/session"):
-        if content_type == "application/octet-stream" and content_length:
-            session_ = await provide_session_(access_token, pinksid, session)
+    if content_length:
+        if encrypted:
             await request_decrypt_body(
-                request, session_.session_key, b64decode(encrypted)
+                request, session.session_key, b64decode(encrypted)
             )
-            if encoding == EncodingEnum.DEFLATE:
-                await request_decompress_body(request)
+        if encoding == EncodingEnum.DEFLATE:
+            await request_decompress_body(request)
