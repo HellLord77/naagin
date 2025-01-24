@@ -20,7 +20,9 @@ def get_route_path(scope: Scope) -> str:
 
 def should_endec(scope: Scope) -> bool:
     route_path = get_route_path(scope)
-    return not route_path.startswith("/v1/session")
+    return route_path.startswith("/api/") and not route_path.startswith(
+        "/api/v1/session"
+    )
 
 
 def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes:
@@ -51,6 +53,7 @@ async def request_decompress_body(self: Request):
     body = decompress(body)
 
     headers = self.headers.mutablecopy()
+    headers["Content-Type"] = "application/json"
     headers["Content-Length"] = str(len(body))
 
     self._headers = headers

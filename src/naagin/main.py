@@ -1,9 +1,12 @@
 from contextlib import asynccontextmanager
 from http import HTTPStatus
+from time import time
+from typing import Callable
 
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi import Request
+from fastapi import Response
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from uvicorn import run
@@ -16,6 +19,8 @@ from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions import NotFoundException
 from .exceptions.base import BaseException
+from .middlewares import AESMiddleware
+from .middlewares import DeflateMiddleware
 from .models.common import ExceptionModel
 from .schemas.base import BaseSchema
 from .utils import response_set_doaxvv_header
@@ -32,15 +37,34 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="Naagin", version="0.0.1", lifespan=lifespan)
 
-app.mount("/api", apps.api.app)
+app.include_router(routers.api.router, prefix="/api")
+app.include_router(routers.api.v1.session.router, prefix="/api/v1")
 app.include_router(routers.api01.router, prefix="/api01")
 app.mount("/game", apps.game.app)
 
+app.add_middleware(DeflateMiddleware)
+app.add_middleware(AESMiddleware)
 app.add_middleware(GZipMiddleware)
 
 
+@app.middleware("http")
+async def add_doaxvv_headers(request: Request, call_next: Callable) -> Response:
+    response = await call_next(request)
+    if request.url.path.startswith("/api/"):
+        response_set_doaxvv_header(response, "ServerTime", int(time()))
+        response_set_doaxvv_header(response, "Status", HTTPStatus.OK)
+        response_set_doaxvv_header(
+            response, "ApplicationVersion", settings.version.application
+        )
+        response_set_doaxvv_header(response, "MasterVersion", settings.version.master)
+        response_set_doaxvv_header(
+            response, "ResourceVersion", settings.version.resource
+        )
+    return response
+
+
 @app.exception_handler(HTTPStatus.MOVED_PERMANENTLY)
-async def moved_permanently_handler(_: Request, __: HTTPException):
+async def moved_permanently_handler(_: Request, __: HTTPException) -> JSONResponse:
     return JSONResponse(
         {"code": HTTPStatus.MOVED_PERMANENTLY, "message": "cache exception"},
         HTTPStatus.MOVED_PERMANENTLY,
@@ -48,7 +72,7 @@ async def moved_permanently_handler(_: Request, __: HTTPException):
 
 
 @app.exception_handler(HTTPStatus.NOT_FOUND)
-async def not_found_handler(request: Request, _: HTTPException):
+async def not_found_handler(request: Request, _: HTTPException) -> Response:
     if request.url.path.startswith("/game"):
         return await apps.game.not_found_handler(request, _)
     else:
@@ -56,22 +80,28 @@ async def not_found_handler(request: Request, _: HTTPException):
 
 
 @app.exception_handler(HTTPStatus.METHOD_NOT_ALLOWED)
-async def method_not_allowed_handler(request: Request, _: HTTPException):
+async def method_not_allowed_handler(
+    request: Request, _: HTTPException
+) -> JSONResponse:
     return await base_exception_handler(request, MethodNotAllowedException())
 
 
 @app.exception_handler(HTTPStatus.UNPROCESSABLE_CONTENT)
-async def unprocessable_content_handler(request: Request, _: HTTPException):
+async def unprocessable_content_handler(
+    request: Request, _: HTTPException
+) -> JSONResponse:
     return await base_exception_handler(request, InvalidParameterException())
 
 
 @app.exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR)
-async def internal_server_error_handler(request: Request, _: HTTPException):
+async def internal_server_error_handler(
+    request: Request, _: HTTPException
+) -> JSONResponse:
     return await base_exception_handler(request, InternalServerErrorException())
 
 
 @app.exception_handler(BaseException)
-async def base_exception_handler(_: Request, exception: BaseException):
+async def base_exception_handler(_: Request, exception: BaseException) -> JSONResponse:
     response = JSONResponse(
         ExceptionModel.model_validate(exception).model_dump(),
         exception.code if exception.code in HTTPStatus else HTTPStatus.OK,
