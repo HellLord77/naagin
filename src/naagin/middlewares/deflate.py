@@ -1,5 +1,3 @@
-from zlib import compressobj
-
 from starlette.datastructures import Headers
 from starlette.datastructures import MutableHeaders
 from starlette.requests import empty_send
@@ -12,6 +10,7 @@ from starlette.types import Send
 from naagin.enums import EncodingEnum
 from naagin.utils import CaseSensitiveHeader
 from naagin.utils import should_endec
+from naagin.utils.encoder import DeflateEncoder
 
 ENCODING_HEADER = CaseSensitiveHeader("X-DOAXVV-Encoding")
 
@@ -31,7 +30,7 @@ class DeflateMiddleware:
 class DeflateResponder:
     def __init__(self, app: ASGIApp):
         self.app = app
-        self.compressobj = compressobj(1)
+        self.encoder = DeflateEncoder()
 
         self.send = empty_send
         self.initial_message = {}
@@ -58,9 +57,9 @@ class DeflateResponder:
                 more_body = message.get("more_body", False)
 
                 if self.started:
-                    body = self.compressobj.compress(body)
+                    body = self.encoder.update(body)
                     if not more_body:
-                        body += self.compressobj.flush()
+                        body += self.encoder.flush()
                 else:
                     self.started = True
 
@@ -69,11 +68,11 @@ class DeflateResponder:
                         headers["Content-Type"] = "application/octet-stream"
                         headers[ENCODING_HEADER] = EncodingEnum.DEFLATE
 
-                        body = self.compressobj.compress(body)
+                        body = self.encoder.update(body)
                         if more_body:
                             del headers["Content-Length"]
                         else:
-                            body += self.compressobj.flush()
+                            body += self.encoder.flush()
                             headers["Content-Length"] = str(len(body))
                     await self.send(self.initial_message)
 

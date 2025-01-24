@@ -80,8 +80,8 @@ async def provide_request_body(
     session: AsyncSession = Depends(provide_session),
 ):
     if not request.url.path.removeprefix("/api/v1").startswith("/session"):
-        session_ = await provide_session_(access_token, pinksid, session)
         if content_type == "application/octet-stream" and content_length:
+            session_ = await provide_session_(access_token, pinksid, session)
             await request_decrypt_body(
                 request, session_.session_key, b64decode(encrypted)
             )
