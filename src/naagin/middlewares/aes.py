@@ -1,7 +1,6 @@
 from base64 import b64encode
 from secrets import token_bytes
 
-from cryptography.hazmat.primitives.ciphers import AEADEncryptionContext
 from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
@@ -18,6 +17,9 @@ from starlette.types import Send
 
 from naagin.utils import CaseSensitiveHeader
 from naagin.utils import should_endec
+from naagin.utils.encoder import CipherEncoder
+from naagin.utils.encoder import MultiEncoder
+from naagin.utils.encoder import PaddingEncoder
 
 ENCRYPTED_HEADER = CaseSensitiveHeader("X-DOAXVV-Encrypted")
 
@@ -36,11 +38,10 @@ class AESMiddleware:
 
 class AESResponder:
     request: Request
-    encryptor: AEADEncryptionContext
+    encoder: MultiEncoder
 
     def __init__(self, app: ASGIApp):
         self.app = app
-        self.padder = PKCS7(AES.block_size).padder()
         self.initialization_vector = token_bytes(16)
 
         self.send = empty_send
@@ -69,20 +70,22 @@ class AESResponder:
                 more_body = message.get("more_body", False)
 
                 if self.started:
-                    body = self.encryptor.update(self.padder.update(body))
+                    body = self.encoder.update(body)
                     if not more_body:
-                        body += (
-                            self.encryptor.update(self.padder.finalize())
-                            + self.encryptor.finalize()
-                        )
+                        body += self.encoder.flush()
                 else:
                     self.started = True
 
                     if body or more_body:
-                        self.encryptor = Cipher(
-                            AES(self.request.state.session_key),
-                            CBC(self.initialization_vector),
-                        ).encryptor()
+                        self.encoder = MultiEncoder(
+                            PaddingEncoder(PKCS7(AES.block_size).padder()),
+                            CipherEncoder(
+                                Cipher(
+                                    AES(self.request.state.session_key),
+                                    CBC(self.initialization_vector),
+                                ).encryptor()
+                            ),
+                        )
 
                         headers = MutableHeaders(raw=self.initial_message["headers"])
                         headers["Content-Type"] = "application/octet-stream"
@@ -90,14 +93,11 @@ class AESResponder:
                             self.initialization_vector
                         ).decode()
 
-                        body = self.encryptor.update(self.padder.update(body))
+                        body = self.encoder.update(body)
                         if more_body:
                             del headers["Content-Length"]
                         else:
-                            body += (
-                                self.encryptor.update(self.padder.finalize())
-                                + self.encryptor.finalize()
-                            )
+                            body += self.encoder.flush()
                             headers["Content-Length"] = str(len(body))
                     await self.send(self.initial_message)
 
