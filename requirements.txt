@@ -5,20 +5,17 @@ datamodel-code-generator
 
 # proxy
 mitmproxy
-cryptography
 rich
 
 # naagin
 async-lru
 aiopath
+cryptography
 pydantic
 pydantic-settings
+asyncpg
 sqlalchemy
 httpx
 starlette
-fastapi
-uvicorn==0.19
-
-# driver
-aiosqlite
-asyncpg
+fastapi[standard]
+# !httptools

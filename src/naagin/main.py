@@ -1,17 +1,16 @@
 from contextlib import asynccontextmanager
 from http import HTTPStatus
-from time import time
-from typing import Callable
 
+from fastapi import Depends
 from fastapi import FastAPI
 from fastapi import HTTPException
 from fastapi import Request
 from fastapi import Response
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
-from uvicorn import run
 
 from . import apps
+from . import injectors
 from . import routers
 from . import settings
 from .exceptions import InternalServerErrorException
@@ -23,7 +22,7 @@ from .middlewares import AESMiddleware
 from .middlewares import DeflateMiddleware
 from .models.common import ExceptionModel
 from .schemas.base import BaseSchema
-from .utils import response_set_doaxvv_header
+from .utils import DOAXVVHeader
 
 
 @asynccontextmanager
@@ -35,34 +34,23 @@ async def lifespan(_: FastAPI):
     await settings.database.engine.dispose()
 
 
-app = FastAPI(title="Naagin", version="0.0.1", lifespan=lifespan)
+app = FastAPI(title="naagin", version="0.0.1", lifespan=lifespan)
 
-app.include_router(routers.api.router, prefix="/api")
-app.include_router(routers.api.v1.session.router, prefix="/api/v1")
-app.include_router(routers.api01.router, prefix="/api01")
+app.include_router(routers.api.router, prefix="/api", tags=["api"])
+app.include_router(
+    routers.api.v1.session.router,
+    prefix="/api/v1",
+    tags=["api", "session"],
+    dependencies=[Depends(injectors.response.inject_doaxvv_headers)],
+)
+app.include_router(routers.api01.router, prefix="/api01", tags=["api01"])
 app.mount("/game", apps.game.app)
 
 if settings.api.compress:
-    app.add_middleware(DeflateMiddleware, level=settings.api.compress_level)
+    app.add_middleware(DeflateMiddleware)
 if settings.api.encrypt:
     app.add_middleware(AESMiddleware)
 app.add_middleware(GZipMiddleware)
-
-
-@app.middleware("http")
-async def add_doaxvv_headers(request: Request, call_next: Callable) -> Response:
-    response = await call_next(request)
-    if request.url.path.startswith("/api/"):
-        response_set_doaxvv_header(response, "ServerTime", int(time()))
-        response_set_doaxvv_header(response, "Status", HTTPStatus.OK)
-        response_set_doaxvv_header(
-            response, "ApplicationVersion", settings.version.application
-        )
-        response_set_doaxvv_header(response, "MasterVersion", settings.version.master)
-        response_set_doaxvv_header(
-            response, "ResourceVersion", settings.version.resource
-        )
-    return response
 
 
 @app.exception_handler(HTTPStatus.MOVED_PERMANENTLY)
@@ -108,13 +96,5 @@ async def base_exception_handler(_: Request, exception: BaseException) -> JSONRe
         ExceptionModel.model_validate(exception).model_dump(),
         exception.code if exception.code in HTTPStatus else HTTPStatus.OK,
     )
-    response_set_doaxvv_header(response, "Status", exception.code)
+    DOAXVVHeader.set(response, "Status", exception.code)
     return response
-
-
-def main():
-    run(app)
-
-
-if __name__ == "__main__":
-    main()
