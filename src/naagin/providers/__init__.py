@@ -16,6 +16,7 @@ from naagin.types.headers import EncodingHeader
 from naagin.types.headers import EncryptedHeader
 from naagin.utils import request_decompress_body
 from naagin.utils import request_decrypt_body
+from naagin.utils import request_set_header
 from . import csv
 
 
@@ -82,3 +83,4 @@ async def provide_request_body(
             )
         if encoding == EncodingEnum.DEFLATE:
             await request_decompress_body(request)
+        request_set_header(request, "Content-Type", "application/json")

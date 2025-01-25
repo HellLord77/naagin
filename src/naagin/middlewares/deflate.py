@@ -8,11 +8,11 @@ from starlette.types import Scope
 from starlette.types import Send
 
 from naagin.enums import EncodingEnum
-from naagin.utils import CaseSensitiveHeader
+from naagin.utils import DOAXVVHeader
 from naagin.utils import should_endec
 from naagin.utils.encoder import DeflateEncoder
 
-ENCODING_HEADER = CaseSensitiveHeader("X-DOAXVV-Encoding")
+ENCODING_HEADER = DOAXVVHeader("Encoding")
 
 
 class DeflateMiddleware:

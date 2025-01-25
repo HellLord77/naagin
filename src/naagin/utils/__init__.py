@@ -7,9 +7,11 @@ from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
 from fastapi import Request
 from fastapi import Response
+from starlette.datastructures import MutableHeaders
 from starlette.types import Scope
 
-from .case_sensitive_header import CaseSensitiveHeader
+from naagin.utils.encoder import DeflateEncoder
+from .doaxvv_header import DOAXVVHeader
 
 
 def get_route_path(scope: Scope) -> str:
@@ -36,15 +38,19 @@ def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes
     return unpadded
 
 
+def request_set_header(self: Request, key: str, value: Any):
+    headers = self.headers
+    if not isinstance(self.headers, MutableHeaders):
+        headers = self.headers.mutablecopy()
+        self._headers = headers
+    headers[key] = str(value)
+
+
 async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes):
     body = await self.body()
     body = decrypt_data(body, key, initialization_vector)
 
-    headers = self.headers.mutablecopy()
-    headers["Content-Type"] = "application/json"
-    headers["Content-Length"] = str(len(body))
-
-    self._headers = headers
+    request_set_header(self, "Content-Length", len(body))
     self._body = body
 
 
@@ -52,14 +58,10 @@ async def request_decompress_body(self: Request):
     body = await self.body()
     body = decompress(body)
 
-    headers = self.headers.mutablecopy()
-    headers["Content-Type"] = "application/json"
-    headers["Content-Length"] = str(len(body))
-
-    self._headers = headers
-    self._body = decompress(body)
+    request_set_header(self, "Content-Length", len(body))
+    self._body = body
 
 
-def response_set_doaxvv_header(self: Response, key: str, value: Any):
-    alias = CaseSensitiveHeader(f"X-DOAXVV-{key}")
-    self.headers[alias] = str(value)
+def response_set_doaxvv_header(self: Response, alias: str, value: Any):
+    key = DOAXVVHeader(alias)
+    self.headers[key] = str(value)
