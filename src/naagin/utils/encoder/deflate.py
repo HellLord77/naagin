@@ -1,11 +1,12 @@
 from zlib import compressobj
 
+from naagin import settings
 from .base import BaseEncoder
 
 
 class DeflateEncoder(BaseEncoder):
-    def __init__(self, level: int):
-        self.compressobj = compressobj(level)
+    def __init__(self):
+        self.compressobj = compressobj(settings.api.compress_level)
 
     def update(self, data: bytes) -> bytes:
         return self.compressobj.compress(data)
