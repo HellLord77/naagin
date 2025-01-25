@@ -12,20 +12,19 @@ from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
 from fastapi import Request
-from fastapi.datastructures import Headers
 from fastapi.responses import StreamingResponse
 
 from naagin.enums import EncodingEnum
 from .doaxvv_header import DOAXVVHeader
 
 
-def get_route_path(scope: dict[str, Any]) -> str:
+def get_route_path(scope: MutableMapping[str, Any]) -> str:
     path = scope["path"]
     root_path = scope.get("root_path", "")
     return path.removeprefix(root_path)
 
 
-def should_endec(scope: dict[str, Any]) -> bool:
+def should_endec(scope: MutableMapping[str, Any]) -> bool:
     route_path = get_route_path(scope)
     return route_path.startswith("/api/") and not route_path.startswith(
         "/api/v1/session"
@@ -63,40 +62,12 @@ async def iter_encrypt_data(
     yield encryptor.finalize()
 
 
-def request_header(self: Request) -> MutableMapping[str, str]:
-    headers = self.headers
-    if type(self.headers) is Headers:
-        headers = self.headers.mutablecopy()
-        self._headers = headers
-    return headers
-
-
-def request_set_header(self: Request, key: str, value: Any):
-    headers = request_header(self)
-    headers[key] = str(value)
-
-
-def request_del_header(self: Request, key: str):
-    headers = request_header(self)
-    del headers[key]
-
-
 async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes):
-    body = await self.body()
-    body = decrypt_data(body, key, initialization_vector)
-
-    request_set_header(self, "Content-Length", len(body))
-    request_del_header(self, "X-DOAXVV-Encrypted")
-    self._body = body
+    self._body = decrypt_data(await self.body(), key, initialization_vector)
 
 
 async def request_decompress_body(self: Request):
-    body = await self.body()
-    body = decompress(body)
-
-    request_set_header(self, "Content-Length", len(body))
-    request_del_header(self, "X-DOAXVV-Encoding")
-    self._body = body
+    self._body = decompress(await self.body())
 
 
 def response_compress_body(self: StreamingResponse):
