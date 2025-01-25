@@ -4,7 +4,7 @@ import logging
 import shutil
 from pathlib import Path
 from string import Formatter
-from typing import Iterable
+from typing import Generator
 
 from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
@@ -61,7 +61,7 @@ def get_model_dir() -> Path:
     return config.DATA_DIR / "model" / "api"
 
 
-def iter_messages(flow: HTTPFlow) -> Iterable[Message]:
+def iter_messages(flow: HTTPFlow) -> Generator[Message]:
     for message in (flow.request, flow.response):
         if utils.is_valid_message(flow.request, message):
             yield message

@@ -16,6 +16,5 @@ pydantic-settings
 asyncpg
 sqlalchemy
 httpx
-starlette
 fastapi[standard]
 # !httptools

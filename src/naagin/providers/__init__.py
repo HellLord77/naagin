@@ -1,3 +1,5 @@
+from typing import Generator
+
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,7 +12,7 @@ from naagin.types.headers import AccessTokenHeader
 from . import csv
 
 
-async def provide_session() -> AsyncSession:
+async def provide_session() -> Generator[AsyncSession]:
     session = settings.database.sessionmaker()
     try:
         yield session

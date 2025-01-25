@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from http import HTTPStatus
+from typing import AsyncGenerator
 
 from fastapi import Depends
 from fastapi import FastAPI
@@ -18,15 +19,16 @@ from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions import NotFoundException
 from .exceptions.base import BaseException
-from .middlewares import AESMiddleware
-from .middlewares import DeflateMiddleware
 from .models.common import ExceptionModel
 from .schemas.base import BaseSchema
 from .utils import DOAXVVHeader
+from .utils import response_compress_body
+from .utils import response_encrypt_body
+from .utils import should_endec
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI):
+async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(BaseSchema.metadata.drop_all)
         await connection.run_sync(BaseSchema.metadata.create_all)
@@ -46,10 +48,19 @@ app.include_router(
 app.include_router(routers.api01.router, prefix="/api01", tags=["api01"])
 app.mount("/game", apps.game.app)
 
-if settings.api.compress:
-    app.add_middleware(DeflateMiddleware)
-if settings.api.encrypt:
-    app.add_middleware(AESMiddleware)
+
+@app.middleware("http")
+async def encode_response_body(request: Request, call_next):
+    response = await call_next(request)
+    if should_endec(request.scope):
+        assert hasattr(response, "body_iterator")
+        if settings.api.compress:
+            response_compress_body(response)
+        if settings.api.encrypt:
+            response_encrypt_body(response, request.state.session_key)
+    return response
+
+
 app.add_middleware(GZipMiddleware)
 
 
