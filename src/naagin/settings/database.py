@@ -13,15 +13,15 @@ from .base import BaseSettings
 
 class DatabaseSettings(BaseSettings):
     driver: str = "sqlite"
-    user: Optional[str] = None
-    passwd: Optional[SecretStr] = None
+    username: Optional[str] = None
+    password: Optional[SecretStr] = None
     host: Optional[str] = None
     port: Optional[str] = None
     name: Optional[str] = None
 
     echo: bool = False
 
-    model_config = SettingsConfigDict(env_prefix="db_")
+    model_config = SettingsConfigDict(env_prefix="database_")
 
     @cached_property
     def url(self) -> URL:
@@ -31,12 +31,12 @@ class DatabaseSettings(BaseSettings):
             self.driver = "postgresql+asyncpg"
         elif self.driver == "mysql":
             self.driver = "mysql+aiomysql"
-        if self.passwd is None:
-            self.passwd = SecretStr("")
+        if self.password is None:
+            self.password = SecretStr("")
         return URL.create(
             self.driver,
-            self.user,
-            self.passwd.get_secret_value(),
+            self.username,
+            self.password.get_secret_value(),
             self.host,
             self.port,
             self.name,

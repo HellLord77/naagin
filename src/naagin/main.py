@@ -42,8 +42,10 @@ app.include_router(routers.api.v1.session.router, prefix="/api/v1")
 app.include_router(routers.api01.router, prefix="/api01")
 app.mount("/game", apps.game.app)
 
-app.add_middleware(DeflateMiddleware)
-app.add_middleware(AESMiddleware)
+if settings.api.compress:
+    app.add_middleware(DeflateMiddleware, level=settings.api.compress_level)
+if settings.api.encrypt:
+    app.add_middleware(AESMiddleware)
 app.add_middleware(GZipMiddleware)
 
 
