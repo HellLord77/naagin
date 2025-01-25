@@ -15,13 +15,13 @@ from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
 
-from naagin.utils import CaseSensitiveHeader
+from naagin.utils import DOAXVVHeader
 from naagin.utils import should_endec
 from naagin.utils.encoder import CipherEncoder
 from naagin.utils.encoder import MultiEncoder
 from naagin.utils.encoder import PaddingEncoder
 
-ENCRYPTED_HEADER = CaseSensitiveHeader("X-DOAXVV-Encrypted")
+ENCRYPTED_HEADER = DOAXVVHeader("Encrypted")
 
 
 class AESMiddleware:
