@@ -9,7 +9,7 @@ class VersionSettings(BaseSettings):
     master: int = 10
     application: int = 64200
 
-    model_config = SettingsConfigDict(env_prefix="ver_")
+    model_config = SettingsConfigDict(env_prefix="version_")
 
     @cached_property
     def resource(self) -> str:

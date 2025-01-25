@@ -12,7 +12,7 @@ from .base import BaseSettings
 
 
 class DatabaseSettings(BaseSettings):
-    driver: str = "sqlite"
+    driver: str = "postgresql"
     username: Optional[str] = None
     password: Optional[SecretStr] = None
     host: Optional[str] = None

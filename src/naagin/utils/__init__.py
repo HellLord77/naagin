@@ -6,7 +6,6 @@ from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
 from fastapi import Request
-from fastapi import Response
 from starlette.datastructures import MutableHeaders
 from starlette.types import Scope
 
@@ -38,12 +37,22 @@ def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes
     return unpadded
 
 
-def request_set_header(self: Request, key: str, value: Any):
+def request_header(self: Request) -> MutableHeaders:
     headers = self.headers
     if not isinstance(self.headers, MutableHeaders):
         headers = self.headers.mutablecopy()
         self._headers = headers
+    return headers
+
+
+def request_set_header(self: Request, key: str, value: Any):
+    headers = request_header(self)
     headers[key] = str(value)
+
+
+def request_del_header(self: Request, key: str):
+    headers = request_header(self)
+    del headers[key]
 
 
 async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes):
@@ -51,6 +60,7 @@ async def request_decrypt_body(self: Request, key: bytes, initialization_vector:
     body = decrypt_data(body, key, initialization_vector)
 
     request_set_header(self, "Content-Length", len(body))
+    request_del_header(self, "X-DOAXVV-Encrypted")
     self._body = body
 
 
@@ -59,9 +69,5 @@ async def request_decompress_body(self: Request):
     body = decompress(body)
 
     request_set_header(self, "Content-Length", len(body))
+    request_del_header(self, "X-DOAXVV-Encoding")
     self._body = body
-
-
-def response_set_doaxvv_header(self: Response, alias: str, value: Any):
-    key = DOAXVVHeader(alias)
-    self.headers[key] = str(value)

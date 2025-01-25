@@ -6,7 +6,7 @@ from naagin.models.api import SessionPostResponseModel
 from naagin.schemas import OwnerSchema
 from naagin.schemas import SessionSchema
 from naagin.types.dependencies import SessionDependency
-from naagin.utils import response_set_doaxvv_header
+from naagin.utils import DOAXVVHeader
 from . import key
 
 router = APIRouter(prefix="/session")
@@ -36,7 +36,7 @@ async def post(
     await session.flush()
     await session.refresh(session_)
 
-    response_set_doaxvv_header(response, "Access-Token", session_.access_token)
+    DOAXVVHeader.set(response, "Access-Token", session_.access_token)
     response.set_cookie("PINKSID", session_.pinksid, samesite=None)
     return SessionPostResponseModel(
         auth=True, owner_id=owner.owner_id, owner_status=owner.status
