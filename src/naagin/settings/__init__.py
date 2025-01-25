@@ -1,3 +1,4 @@
+from .api import APISettings
 from .data import DataSettings
 from .database import DatabaseSettings
 from .game import GameSettings
@@ -7,4 +8,5 @@ version = VersionSettings()
 data = DataSettings()
 database = DatabaseSettings()
 
+api = APISettings()
 game = GameSettings()

@@ -1,3 +1,5 @@
+from zlib import Z_DEFAULT_COMPRESSION
+
 from starlette.datastructures import Headers
 from starlette.datastructures import MutableHeaders
 from starlette.requests import empty_send
@@ -16,21 +18,22 @@ ENCODING_HEADER = DOAXVVHeader("Encoding")
 
 
 class DeflateMiddleware:
-    def __init__(self, app: ASGIApp):
+    def __init__(self, app: ASGIApp, level: int = Z_DEFAULT_COMPRESSION):
         self.app = app
+        self.level = level
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send):
         if scope["type"] == "http" and should_endec(scope):
-            responder = DeflateResponder(self.app)
+            responder = DeflateResponder(self.app, self.level)
             await responder(scope, receive, send)
         else:
             await self.app(scope, receive, send)
 
 
 class DeflateResponder:
-    def __init__(self, app: ASGIApp):
+    def __init__(self, app: ASGIApp, level: int):
         self.app = app
-        self.encoder = DeflateEncoder()
+        self.encoder = DeflateEncoder(level)
 
         self.send = empty_send
         self.initial_message = {}

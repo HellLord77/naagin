@@ -4,8 +4,8 @@ from .base import BaseEncoder
 
 
 class DeflateEncoder(BaseEncoder):
-    def __init__(self):
-        self.compressobj = compressobj()
+    def __init__(self, level: int):
+        self.compressobj = compressobj(level)
 
     def update(self, data: bytes) -> bytes:
         return self.compressobj.compress(data)
