@@ -1,4 +1,10 @@
+from base64 import b64encode
+from secrets import token_bytes
 from typing import Any
+from typing import AsyncGenerator
+from typing import AsyncIterable
+from typing import MutableMapping
+from zlib import compressobj
 from zlib import decompress
 
 from cryptography.hazmat.primitives.ciphers import Cipher
@@ -6,20 +12,20 @@ from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
 from fastapi import Request
-from starlette.datastructures import MutableHeaders
-from starlette.types import Scope
+from fastapi.datastructures import Headers
+from fastapi.responses import StreamingResponse
 
-from naagin.utils.encoder import DeflateEncoder
+from naagin.enums import EncodingEnum
 from .doaxvv_header import DOAXVVHeader
 
 
-def get_route_path(scope: Scope) -> str:
+def get_route_path(scope: dict[str, Any]) -> str:
     path = scope["path"]
     root_path = scope.get("root_path", "")
     return path.removeprefix(root_path)
 
 
-def should_endec(scope: Scope) -> bool:
+def should_endec(scope: dict[str, Any]) -> bool:
     route_path = get_route_path(scope)
     return route_path.startswith("/api/") and not route_path.startswith(
         "/api/v1/session"
@@ -37,9 +43,29 @@ def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes
     return unpadded
 
 
-def request_header(self: Request) -> MutableHeaders:
+async def iter_compress_data(
+    data_stream: AsyncIterable[bytes],
+) -> AsyncGenerator[bytes]:
+    compressor = compressobj()
+    async for data in data_stream:
+        yield compressor.compress(data)
+    yield compressor.flush()
+
+
+async def iter_encrypt_data(
+    data_stream: AsyncIterable[bytes], key: bytes, initialization_vector: bytes
+) -> AsyncGenerator[bytes]:
+    padder = PKCS7(AES.block_size).padder()
+    encryptor = Cipher(AES(key), CBC(initialization_vector)).encryptor()
+    async for data in data_stream:
+        yield encryptor.update(padder.update(data))
+    yield encryptor.update(padder.finalize())
+    yield encryptor.finalize()
+
+
+def request_header(self: Request) -> MutableMapping[str, str]:
     headers = self.headers
-    if not isinstance(self.headers, MutableHeaders):
+    if type(self.headers) is Headers:
         headers = self.headers.mutablecopy()
         self._headers = headers
     return headers
@@ -71,3 +97,20 @@ async def request_decompress_body(self: Request):
     request_set_header(self, "Content-Length", len(body))
     request_del_header(self, "X-DOAXVV-Encoding")
     self._body = body
+
+
+def response_compress_body(self: StreamingResponse):
+    del self.headers["Content-Length"]
+    self.headers["Content-Type"] = "application/octet-stream"
+    DOAXVVHeader.set(self, "Encoding", EncodingEnum.DEFLATE)
+    self.body_iterator = iter_compress_data(self.body_iterator)
+
+
+def response_encrypt_body(self: StreamingResponse, key: bytes):
+    initialization_vector = token_bytes(16)
+    del self.headers["Content-Length"]
+    self.headers["Content-Type"] = "application/octet-stream"
+    DOAXVVHeader.set(self, "Encrypted", b64encode(initialization_vector).decode())
+    self.body_iterator = iter_encrypt_data(
+        self.body_iterator, key, initialization_vector
+    )
