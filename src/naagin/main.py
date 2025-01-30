@@ -9,7 +9,9 @@ from fastapi import Request
 from fastapi import Response
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 
+from . import __version__
 from . import apps
 from . import injectors
 from . import routers
@@ -19,12 +21,10 @@ from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions import NotFoundException
 from .exceptions.base import BaseException
+from .middlewares import encode_response_body_middleware
 from .models.common import ExceptionModel
 from .schemas.base import BaseSchema
 from .utils import DOAXVVHeader
-from .utils import response_compress_body
-from .utils import response_encrypt_body
-from .utils import should_endec
 
 
 @asynccontextmanager
@@ -36,7 +36,10 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     await settings.database.engine.dispose()
 
 
-app = FastAPI(title="naagin", version="0.0.1", lifespan=lifespan)
+app = FastAPI(title="naagin", version=__version__, lifespan=lifespan)
+
+app.add_middleware(BaseHTTPMiddleware, dispatch=encode_response_body_middleware)
+app.add_middleware(GZipMiddleware)
 
 app.include_router(routers.api.router, prefix="/api", tags=["api"])
 app.include_router(
@@ -46,22 +49,8 @@ app.include_router(
     dependencies=[Depends(injectors.response.inject_doaxvv_headers)],
 )
 app.include_router(routers.api01.router, prefix="/api01", tags=["api01"])
+
 app.mount("/game", apps.game.app)
-
-
-@app.middleware("http")
-async def encode_response_body(request: Request, call_next):
-    response = await call_next(request)
-    if should_endec(request.scope):
-        assert hasattr(response, "body_iterator")
-        if settings.api.compress:
-            response_compress_body(response)
-        if settings.api.encrypt:
-            response_encrypt_body(response, request.state.session_key)
-    return response
-
-
-app.add_middleware(GZipMiddleware)
 
 
 @app.exception_handler(HTTPStatus.MOVED_PERMANENTLY)
