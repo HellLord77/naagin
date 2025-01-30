@@ -5,7 +5,6 @@ datamodel-code-generator
 
 # proxy
 mitmproxy
-rich
 
 # naagin
 async-lru
@@ -16,5 +15,6 @@ pydantic-settings
 asyncpg
 sqlalchemy
 httpx
+starlette
 fastapi[standard]
 # !httptools
