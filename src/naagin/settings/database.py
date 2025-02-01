@@ -1,6 +1,7 @@
 from functools import cached_property
 from typing import Optional
 
+from pydantic import Field
 from pydantic import SecretStr
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import URL
@@ -13,15 +14,15 @@ from .base import BaseSettings
 
 class DatabaseSettings(BaseSettings):
     driver: str = "postgresql"
-    username: Optional[str] = None
-    password: Optional[SecretStr] = None
+    user: Optional[str] = None
+    pass_: Optional[SecretStr] = Field(None, alias="db_pass")
     host: Optional[str] = None
     port: Optional[str] = None
     name: Optional[str] = None
 
     echo: bool = False
 
-    model_config = SettingsConfigDict(env_prefix="database_")
+    model_config = SettingsConfigDict(env_prefix="db_")
 
     @cached_property
     def url(self) -> URL:
@@ -31,12 +32,12 @@ class DatabaseSettings(BaseSettings):
             self.driver = "postgresql+asyncpg"
         elif self.driver == "mysql":
             self.driver = "mysql+aiomysql"
-        if self.password is None:
-            self.password = SecretStr("")
+        if self.pass_ is None:
+            self.pass_ = SecretStr("")
         return URL.create(
             self.driver,
-            self.username,
-            self.password.get_secret_value(),
+            self.user,
+            self.pass_.get_secret_value(),
             self.host,
             self.port,
             self.name,
