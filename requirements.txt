@@ -10,6 +10,7 @@ mitmproxy
 async-lru
 aiopath
 cryptography
+rich
 pydantic
 pydantic-settings
 sqlparse

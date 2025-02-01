@@ -5,28 +5,24 @@ from typing import AsyncGenerator
 
 from fastapi import Depends
 from fastapi import FastAPI
-from fastapi import HTTPException
-from fastapi import Request
-from fastapi import Response
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from . import __version__
 from . import apps
 from . import injectors
+from . import middlewares
 from . import routers
 from . import settings
-from .exceptions import InternalServerErrorException
-from .exceptions import InvalidParameterException
-from .exceptions import MethodNotAllowedException
-from .exceptions import NotFoundException
 from .exceptions.base import BaseException
-from .middlewares import encode_response_body_middleware
-from .models.common import ExceptionModel
 from .schemas.base import BaseSchema
-from .utils import DOAXVVHeader
 from .utils import PostgreSQLHandler
+from .utils.exception_handlers import base_exception_handler
+from .utils.exception_handlers import internal_server_error_handler
+from .utils.exception_handlers import method_not_allowed_handler
+from .utils.exception_handlers import moved_permanently_handler
+from .utils.exception_handlers import not_found_handler
+from .utils.exception_handlers import unprocessable_content_handler
 
 
 @asynccontextmanager
@@ -44,8 +40,23 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
 app = FastAPI(title="naagin", version=__version__, lifespan=lifespan)
 
-app.add_middleware(BaseHTTPMiddleware, dispatch=encode_response_body_middleware)
+app.mount("/game", apps.game.app)
+
+app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.request.decode_body)
+app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.response.encode_body)
 app.add_middleware(GZipMiddleware)
+app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.handle_base_exception)
+
+app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
+app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
+app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, method_not_allowed_handler)
+app.add_exception_handler(
+    HTTPStatus.UNPROCESSABLE_CONTENT, unprocessable_content_handler
+)
+app.add_exception_handler(
+    HTTPStatus.INTERNAL_SERVER_ERROR, internal_server_error_handler
+)
+app.add_exception_handler(BaseException, base_exception_handler)
 
 app.include_router(routers.api.router, prefix="/api", tags=["api"])
 app.include_router(
@@ -55,52 +66,3 @@ app.include_router(
     dependencies=[Depends(injectors.response.inject_doaxvv_headers)],
 )
 app.include_router(routers.api01.router, prefix="/api01", tags=["api01"])
-
-app.mount("/game", apps.game.app)
-
-
-@app.exception_handler(HTTPStatus.MOVED_PERMANENTLY)
-async def moved_permanently_handler(_: Request, __: HTTPException) -> JSONResponse:
-    return JSONResponse(
-        {"code": HTTPStatus.MOVED_PERMANENTLY, "message": "cache exception"},
-        HTTPStatus.MOVED_PERMANENTLY,
-    )
-
-
-@app.exception_handler(HTTPStatus.NOT_FOUND)
-async def not_found_handler(request: Request, _: HTTPException) -> Response:
-    if request.url.path.startswith("/game"):
-        return await apps.game.not_found_handler(request, _)
-    else:
-        return await base_exception_handler(request, NotFoundException())
-
-
-@app.exception_handler(HTTPStatus.METHOD_NOT_ALLOWED)
-async def method_not_allowed_handler(
-    request: Request, _: HTTPException
-) -> JSONResponse:
-    return await base_exception_handler(request, MethodNotAllowedException())
-
-
-@app.exception_handler(HTTPStatus.UNPROCESSABLE_CONTENT)
-async def unprocessable_content_handler(
-    request: Request, _: HTTPException
-) -> JSONResponse:
-    return await base_exception_handler(request, InvalidParameterException())
-
-
-@app.exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR)
-async def internal_server_error_handler(
-    request: Request, _: HTTPException
-) -> JSONResponse:
-    return await base_exception_handler(request, InternalServerErrorException())
-
-
-@app.exception_handler(BaseException)
-async def base_exception_handler(_: Request, exception: BaseException) -> JSONResponse:
-    response = JSONResponse(
-        ExceptionModel.model_validate(exception).model_dump(),
-        exception.code if exception.code in HTTPStatus else HTTPStatus.OK,
-    )
-    DOAXVVHeader.set(response, "Status", exception.code)
-    return response
