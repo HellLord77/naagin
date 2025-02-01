@@ -16,6 +16,7 @@ from fastapi.responses import StreamingResponse
 
 from naagin.enums import EncodingEnum
 from .doaxvv_header import DOAXVVHeader
+from .postgresql_handler import PostgreSQLHandler
 
 
 def get_route_path(scope: MutableMapping[str, Any]) -> str:
