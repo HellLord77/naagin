@@ -3,25 +3,28 @@ from pathlib import Path
 
 from aiopath import AsyncPath
 from pydantic import DirectoryPath
+from pydantic_settings import SettingsConfigDict
 
 from .base import BaseSettings
 
 
 class DataSettings(BaseSettings):
-    data_dir: DirectoryPath = Path.cwd() / "data"
+    dir: DirectoryPath = Path.cwd() / "data"
+
+    model_config = SettingsConfigDict(env_prefix="data_")
 
     @cached_property
     def api_dir(self) -> AsyncPath:
-        return AsyncPath(self.data_dir / "api")
+        return AsyncPath(self.dir / "api")
 
     @cached_property
     def api01_dir(self) -> AsyncPath:
-        return AsyncPath(self.data_dir / "api01")
+        return AsyncPath(self.dir / "api01")
 
     @cached_property
     def game_dir(self) -> AsyncPath:
-        return AsyncPath(self.data_dir / "game")
+        return AsyncPath(self.dir / "game")
 
     @cached_property
     def csv_dir(self) -> AsyncPath:
-        return AsyncPath(self.data_dir / "csv")
+        return AsyncPath(self.dir / "csv")

@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
+from pydantic_settings import SettingsConfigDict
 
 
 class BaseSettings(BaseSettings):
-    pass
+    model_config = SettingsConfigDict(extra="ignore")
