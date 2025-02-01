@@ -12,6 +12,7 @@ aiopath
 cryptography
 pydantic
 pydantic-settings
+sqlparse
 asyncpg
 sqlalchemy
 httpx

@@ -20,12 +20,19 @@ class DatabaseSettings(BaseSettings):
     port: Optional[str] = None
     name: Optional[str] = None
 
-    echo: bool = False
+    echo_sql: bool = False
+    echo_pool: bool = False
+    echo_args: bool = False
+    echo_lint: bool = True
+    echo_color: bool = True
 
     model_config = SettingsConfigDict(env_prefix="db_")
 
     @cached_property
     def url(self) -> URL:
+        if self.driver != "postgresql":
+            raise NotImplementedError
+
         if self.driver == "sqlite":
             self.driver = "sqlite+aiosqlite"
         elif self.driver == "postgresql":
@@ -34,6 +41,7 @@ class DatabaseSettings(BaseSettings):
             self.driver = "mysql+aiomysql"
         if self.pass_ is None:
             self.pass_ = SecretStr("")
+
         return URL.create(
             self.driver,
             self.user,
@@ -45,7 +53,12 @@ class DatabaseSettings(BaseSettings):
 
     @cached_property
     def engine(self) -> AsyncEngine:
-        return create_async_engine(self.url, echo=self.echo)
+        return create_async_engine(
+            self.url,
+            echo=self.echo_sql,
+            echo_pool=self.echo_pool,
+            hide_parameters=not self.echo_args,
+        )
 
     @cached_property
     def sessionmaker(self) -> async_sessionmaker:

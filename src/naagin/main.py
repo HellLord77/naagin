@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from http import HTTPStatus
+from logging import getLogger
 from typing import AsyncGenerator
 
 from fastapi import Depends
@@ -25,10 +26,15 @@ from .middlewares import encode_response_body_middleware
 from .models.common import ExceptionModel
 from .schemas.base import BaseSchema
 from .utils import DOAXVVHeader
+from .utils import PostgreSQLHandler
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
+    logger = getLogger("sqlalchemy.engine.Engine")
+    handler = PostgreSQLHandler(show_path=False)
+    logger.addHandler(handler)
+
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(BaseSchema.metadata.drop_all)
         await connection.run_sync(BaseSchema.metadata.create_all)
