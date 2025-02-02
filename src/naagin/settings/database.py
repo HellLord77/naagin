@@ -6,6 +6,7 @@ from pydantic import SecretStr
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
@@ -39,13 +40,14 @@ class DatabaseSettings(BaseSettings):
             self.driver = "postgresql+asyncpg"
         elif self.driver == "mysql":
             self.driver = "mysql+aiomysql"
-        if self.pass_ is None:
-            self.pass_ = SecretStr("")
+        password = self.pass_
+        if password is not None:
+            password = password.get_secret_value()
 
         return URL.create(
             self.driver,
             self.user,
-            self.pass_.get_secret_value(),
+            password,
             self.host,
             self.port,
             self.name,
@@ -59,6 +61,10 @@ class DatabaseSettings(BaseSettings):
             echo_pool=self.echo_pool,
             hide_parameters=not self.echo_args,
         )
+
+    @cached_property
+    def session(self) -> AsyncSession:
+        return AsyncSession(self.engine, autoflush=False)
 
     @cached_property
     def sessionmaker(self) -> async_sessionmaker:
