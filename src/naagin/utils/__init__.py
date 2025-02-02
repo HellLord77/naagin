@@ -1,4 +1,5 @@
 from base64 import b64encode
+from secrets import choice
 from secrets import token_bytes
 from typing import AsyncGenerator
 from typing import AsyncIterable
@@ -13,11 +14,13 @@ from fastapi import Request
 from fastapi.responses import StreamingResponse
 from starlette.datastructures import MutableHeaders
 
-from naagin import settings
 from naagin.enums import EncodingEnum
-from naagin.providers import provide_session_
 from .doaxvv_header import DOAXVVHeader
 from .postgresql_handler import PostgreSQLHandler
+
+
+def choices(population: str, *, k: int = 1) -> list[str]:
+    return [choice(population) for _ in range(k)]
 
 
 def should_endec(request: Request) -> bool:
@@ -25,14 +28,6 @@ def should_endec(request: Request) -> bool:
     return route_path.startswith("/api/") and not route_path.startswith(
         "/api/v1/session"
     )
-
-
-async def get_session_key(request: Request) -> bytes:
-    access_token = request.headers["X-DOAXVV-Access-Token"]
-    pinksid = request.cookies["PINKSID"]
-    async with settings.database.sessionmaker() as session:
-        session_ = await provide_session_(access_token, pinksid, session)
-    return session_.session_key
 
 
 def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes:
