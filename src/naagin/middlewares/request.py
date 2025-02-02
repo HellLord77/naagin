@@ -2,8 +2,9 @@ from base64 import b64decode
 
 from fastapi import Request
 
+from naagin import settings
 from naagin.enums import EncodingEnum
-from naagin.utils import get_session_key
+from naagin.providers import provide_session_cached
 from naagin.utils import request_decompress_body
 from naagin.utils import request_decrypt_body
 from naagin.utils import request_headers
@@ -16,8 +17,14 @@ async def decode_body(request: Request, call_next):
 
         encrypted = headers.get("X-DOAXVV-Encrypted")
         if encrypted is not None:
-            session_key = await get_session_key(request)
-            await request_decrypt_body(request, session_key, b64decode(encrypted))
+            access_token = request.headers["X-DOAXVV-Access-Token"]
+            pinksid = request.cookies["PINKSID"]
+            session = await provide_session_cached(
+                access_token, pinksid, request, settings.database.session
+            )
+            await request_decrypt_body(
+                request, session.session_key, b64decode(encrypted)
+            )
 
         encoding = headers.get("X-DOAXVV-Encoding")
         if encoding == EncodingEnum.DEFLATE:

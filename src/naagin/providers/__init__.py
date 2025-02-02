@@ -1,6 +1,7 @@
 from typing import AsyncGenerator
 
 from fastapi import Depends
+from fastapi import Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -25,26 +26,31 @@ async def provide_session() -> AsyncGenerator[AsyncSession]:
         await session.close()
 
 
-async def provide_session_(
+async def provide_session_cached(
     access_token: AccessTokenHeader,
     pinksid: PINKSIDCookie,
+    request: Request,
     session: AsyncSession = Depends(provide_session),
 ) -> SessionSchema:
-    if access_token and access_token != "XPEACHACCESSTOKEN":
-        whereclause = SessionSchema.access_token == access_token
-    elif pinksid is not None:
-        whereclause = SessionSchema.pinksid == pinksid
-    else:
-        raise AuthenticationFailedException
+    try:
+        return request.state.session
+    except AttributeError:
+        if access_token and access_token != "XPEACHACCESSTOKEN":
+            whereclause = SessionSchema.access_token == access_token
+        elif pinksid is not None:
+            whereclause = SessionSchema.pinksid == pinksid
+        else:
+            raise AuthenticationFailedException
 
-    session_ = await session.scalar(select(SessionSchema).where(whereclause))
-    if session_ is None:
-        raise AuthenticationFailedException
-    return session_
+        session_ = await session.scalar(select(SessionSchema).where(whereclause))
+        if session_ is None:
+            raise AuthenticationFailedException
+        request.state.session = session_
+        return session_
 
 
 async def provide_owner_id(
-    session: SessionSchema = Depends(provide_session_),
+    session: SessionSchema = Depends(provide_session_cached),
 ) -> int:
     return session.owner_id
 
