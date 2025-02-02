@@ -11,16 +11,14 @@ from naagin.utils import request_headers
 from naagin.utils import should_endec
 
 
-async def decode_body(request: Request, call_next):
+async def body_decoder(request: Request, call_next):
     if await request.body() and should_endec(request):
         headers = request_headers(request)
 
         encrypted = headers.get("X-DOAXVV-Encrypted")
         if encrypted is not None:
-            access_token = request.headers["X-DOAXVV-Access-Token"]
-            pinksid = request.cookies["PINKSID"]
             session = await provide_session_cached(
-                access_token, pinksid, request, settings.database.session
+                request, session=settings.database.session
             )
             await request_decrypt_body(
                 request, session.session_key, b64decode(encrypted)

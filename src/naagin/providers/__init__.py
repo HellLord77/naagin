@@ -1,4 +1,5 @@
 from typing import AsyncGenerator
+from typing import Optional
 
 from fastapi import Depends
 from fastapi import Request
@@ -27,15 +28,19 @@ async def provide_session() -> AsyncGenerator[AsyncSession]:
 
 
 async def provide_session_cached(
-    access_token: AccessTokenHeader,
-    pinksid: PINKSIDCookie,
     request: Request,
+    access_token: Optional[AccessTokenHeader] = None,
+    pinksid: PINKSIDCookie = None,
     session: AsyncSession = Depends(provide_session),
 ) -> SessionSchema:
-    try:
-        return request.state.session
-    except AttributeError:
-        if access_token and access_token != "XPEACHACCESSTOKEN":
+    state = request.state
+    if not hasattr(state, "session"):
+        if access_token is None:
+            access_token = request.headers["X-DOAXVV-Access-Token"]
+        if pinksid is None:
+            pinksid = request.cookies.get("PINKSID")
+
+        if access_token != "XPEACHACCESSTOKEN":
             whereclause = SessionSchema.access_token == access_token
         elif pinksid is not None:
             whereclause = SessionSchema.pinksid == pinksid
@@ -45,8 +50,9 @@ async def provide_session_cached(
         session_ = await session.scalar(select(SessionSchema).where(whereclause))
         if session_ is None:
             raise AuthenticationFailedException
-        request.state.session = session_
-        return session_
+        session.expunge(session_)
+        state.session = session_
+    return state.session
 
 
 async def provide_owner_id(

@@ -35,23 +35,18 @@ class DatabaseSettings(BaseSettings):
             raise NotImplementedError
 
         if self.driver == "sqlite":
-            self.driver = "sqlite+aiosqlite"
+            driver = "sqlite+aiosqlite"
         elif self.driver == "postgresql":
-            self.driver = "postgresql+asyncpg"
+            driver = "postgresql+asyncpg"
         elif self.driver == "mysql":
-            self.driver = "mysql+aiomysql"
+            driver = "mysql+aiomysql"
+        else:
+            driver = self.driver
         password = self.pass_
         if password is not None:
             password = password.get_secret_value()
 
-        return URL.create(
-            self.driver,
-            self.user,
-            password,
-            self.host,
-            self.port,
-            self.name,
-        )
+        return URL.create(driver, self.user, password, self.host, self.port, self.name)
 
     @cached_property
     def engine(self) -> AsyncEngine:

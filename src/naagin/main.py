@@ -42,10 +42,10 @@ app = FastAPI(title="naagin", version=__version__, lifespan=lifespan)
 
 app.mount("/game", apps.game.app)
 
-app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.request.decode_body)
-app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.response.encode_body)
+app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.request.body_decoder)
+app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.response.body_encoder)
 app.add_middleware(GZipMiddleware)
-app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.handle_base_exception)
+app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.exception_handler)
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
