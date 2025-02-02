@@ -10,10 +10,10 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from naagin.utils.default_factories import access_token_factory
-from naagin.utils.default_factories import pinksid_factory
 from .base import BaseSchema
 from .owner import OwnerSchema
+from .utils.factories import access_token_factory
+from .utils.factories import pinksid_factory
 
 
 def choices(population: str, *, k: int = 1) -> list[str]:

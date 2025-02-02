@@ -8,10 +8,10 @@ from naagin.providers import provide_session_cached
 from naagin.utils import request_decompress_body
 from naagin.utils import request_decrypt_body
 from naagin.utils import request_headers
-from naagin.utils import should_endec
+from .utils import should_endec
 
 
-async def body_decoder(request: Request, call_next):
+async def decode_body(request: Request, call_next):
     if await request.body() and should_endec(request):
         headers = request_headers(request)
 

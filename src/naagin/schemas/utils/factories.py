@@ -6,10 +6,6 @@ from string import digits
 from . import choices
 
 
-def null_factory() -> None:
-    return None
-
-
 def access_token_factory() -> str:
     return token_hex(16)
 
