@@ -3,7 +3,6 @@ from http import HTTPStatus
 from fastapi import Request
 
 from naagin import settings
-from naagin.utils import get_session_key
 from naagin.utils import response_compress_body
 from naagin.utils import response_encrypt_body
 from naagin.utils import should_endec
@@ -18,6 +17,5 @@ async def encode_body(request: Request, call_next):
         if settings.api.compress:
             response_compress_body(response)
         if settings.api.encrypt:
-            session_key = await get_session_key(request)
-            response_encrypt_body(response, session_key)
+            response_encrypt_body(response, request.state.session_key)
     return response
