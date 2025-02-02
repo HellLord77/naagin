@@ -22,9 +22,9 @@ async def moved_permanently_handler(_: Request, __: HTTPException) -> JSONRespon
     )
 
 
-async def not_found_handler(request: Request, _: HTTPException) -> Response:
+async def not_found_handler(request: Request, exception: HTTPException) -> Response:
     if request.url.path.startswith("/game"):
-        return await apps.game.not_found_handler(request, _)
+        return await apps.game.not_found_handler(request, exception)
     else:
         return await base_exception_handler(request, NotFoundException())
 
