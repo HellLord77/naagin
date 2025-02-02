@@ -1,6 +1,5 @@
 from datetime import date
 from datetime import datetime
-from secrets import randbelow
 from typing import Literal
 from typing import Optional
 
@@ -16,6 +15,7 @@ from sqlalchemy.orm import mapped_column
 from naagin.enums import CheckedLicenseLevelEnum
 from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
+from naagin.utils.default_factories import friend_code_factory
 from .base import BaseSchema
 from .enums import CheckedLicenseLevelEnumSchema
 from .enums import LicenseLevelEnumSchema
@@ -57,9 +57,7 @@ class OwnerSchema(BaseSchema):
         DateTime, default=func.current_timestamp()
     )
     friend_code: Mapped[str] = mapped_column(
-        String(11),
-        default=lambda: f"{randbelow(1000):03}-{randbelow(1000):03}-{randbelow(1000):03}",
-        unique=True,
+        String(11), default=friend_code_factory, unique=True
     )
 
     __table_args__ = (

@@ -1,7 +1,4 @@
 from secrets import choice
-from secrets import token_hex
-from string import ascii_lowercase
-from string import digits
 from typing import Optional
 
 from sqlalchemy import CheckConstraint
@@ -13,6 +10,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.utils.default_factories import access_token_factory
+from naagin.utils.default_factories import pinksid_factory
 from .base import BaseSchema
 from .owner import OwnerSchema
 
@@ -27,11 +26,11 @@ class SessionSchema(BaseSchema):
     owner_id: Mapped[int] = mapped_column(
         Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
     )
-    access_token: Mapped[str] = mapped_column(String(32), default=lambda: token_hex(16))
+    access_token: Mapped[str] = mapped_column(
+        String(32), default=access_token_factory, index=True
+    )
     pinksid: Mapped[str] = mapped_column(
-        String(26),
-        default=lambda: "".join(choices(ascii_lowercase + digits, k=26)),
-        index=True,
+        String(26), default=pinksid_factory, index=True
     )
     session_key: Mapped[Optional[bytes]] = mapped_column(LargeBinary(32), default=None)
 
