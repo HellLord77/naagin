@@ -2,6 +2,6 @@ from typing import Annotated
 
 from fastapi import Cookie
 
-from .utils import default_factory
+from naagin.utils.default_factories import null_factory
 
-PINKSIDCookie = Annotated[str, Cookie(default_factory=default_factory, alias="PINKSID")]
+PINKSIDCookie = Annotated[str, Cookie(default_factory=null_factory, alias="PINKSID")]
