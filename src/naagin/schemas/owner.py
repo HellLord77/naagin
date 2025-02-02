@@ -15,11 +15,11 @@ from sqlalchemy.orm import mapped_column
 from naagin.enums import CheckedLicenseLevelEnum
 from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
-from naagin.utils.default_factories import friend_code_factory
 from .base import BaseSchema
 from .enums import CheckedLicenseLevelEnumSchema
 from .enums import LicenseLevelEnumSchema
 from .enums import OwnerStatusEnumSchema
+from .utils.factories import friend_code_factory
 
 
 class OwnerSchema(BaseSchema):

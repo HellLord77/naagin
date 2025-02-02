@@ -18,7 +18,7 @@ class PostgreSQLHandler(RichHandler):
 
     def render_message(self, record: LogRecord, message: str) -> ConsoleRenderable:
         if getattr(record, "format", False):
-            message = format(message, reindent=True)
+            message = format(message, reindent=True, keyword_case="upper")
 
         if getattr(record, "syntax", False):
             return Syntax(message, "postgresql", background_color="default")

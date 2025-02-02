@@ -1,5 +1,4 @@
 from base64 import b64encode
-from secrets import choice
 from secrets import token_bytes
 from typing import AsyncGenerator
 from typing import AsyncIterable
@@ -17,17 +16,6 @@ from starlette.datastructures import MutableHeaders
 from naagin.enums import EncodingEnum
 from .doaxvv_header import DOAXVVHeader
 from .postgresql_handler import PostgreSQLHandler
-
-
-def choices(population: str, *, k: int = 1) -> list[str]:
-    return [choice(population) for _ in range(k)]
-
-
-def should_endec(request: Request) -> bool:
-    route_path = request_route_path(request)
-    return route_path.startswith("/api/") and not route_path.startswith(
-        "/api/v1/session"
-    )
 
 
 def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes:
@@ -59,12 +47,6 @@ async def iter_encrypt_data(
         yield encryptor.update(padder.update(data))
     yield encryptor.update(padder.finalize())
     yield encryptor.finalize()
-
-
-def request_route_path(self: Request) -> str:
-    path = self.scope["path"]
-    root_path = self.scope.get("root_path", "")
-    return path.removeprefix(root_path)
 
 
 def request_headers(self: Request) -> MutableHeaders:
