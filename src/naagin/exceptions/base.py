@@ -10,24 +10,22 @@ from naagin.models.common import ExceptionModel
 from naagin.utils import DOAXVVHeader
 
 
-class BaseException(Exception, metaclass=type("", (type,), {})):
+class BaseException(Exception):
     code: ClassVar[int]
     message: ClassVar[str]
-
-    def __init__(self):
-        raise NotImplementedError
 
     @classmethod
     @cache
     def get_args(cls) -> tuple[dict[str, int | str], int]:
-        content = ExceptionModel.model_validate(cls).model_dump()
+        instance = cls()
+        content = ExceptionModel.model_validate(instance).model_dump()
         status_code = HTTPStatus.OK
         if cls.code in HTTPStatus:
             status_code = cls.code
         return content, status_code
 
     @classmethod
-    def handle(cls, _: Optional[Request] = None, __: Optional[Exception] = None) -> JSONResponse:
+    def handler(cls, _: Optional[Request] = None, __: Optional[Exception] = None) -> JSONResponse:
         response = JSONResponse(*cls.get_args())
         DOAXVVHeader.set(response, "Status", cls.code)
         return response

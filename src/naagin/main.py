@@ -15,9 +15,9 @@ from . import injectors
 from . import middlewares
 from . import routers
 from . import settings
+from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
-from .exceptions.base import BaseException
 from .schemas.base import BaseSchema
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import moved_permanently_handler
@@ -48,12 +48,12 @@ app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.handle_base_exceptio
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
-app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handle)
+app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
 app.add_exception_handler(
-    HTTPStatus.INTERNAL_SERVER_ERROR, BaseException.handle
+    HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler
 )
-app.add_exception_handler(RequestValidationError, InvalidParameterException.handle)
-app.add_exception_handler(BaseException, BaseException.handle)
+app.add_exception_handler(RequestValidationError, InvalidParameterException.handler)
+app.add_exception_handler(Exception, InternalServerErrorException.handler)
 
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(

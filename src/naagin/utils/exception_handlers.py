@@ -20,4 +20,4 @@ async def not_found_handler(request: Request, exception: HTTPException) -> Respo
     if request.url.path.startswith("/game"):
         return await apps.game.not_found_handler(request, exception)
     else:
-        return NotFoundException.handle()
+        return NotFoundException.handler()
