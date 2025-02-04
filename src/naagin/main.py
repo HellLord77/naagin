@@ -63,6 +63,6 @@ app.include_router(
     routers.api.v1.session.router,
     prefix="/api/v1",
     tags=["api", "session"],
-    dependencies=[Depends(injectors.response.inject_doaxvv_headers)],
+    dependencies=[Depends(injectors.response.add_doaxvv_headers)],
 )
 app.include_router(routers.api01.router, tags=["api01"])

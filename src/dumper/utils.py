@@ -78,7 +78,7 @@ class AbstractDateTime(TypedSchemaStrategy):
         return super().match_schema(schema) and schema.get("format") == cls.FORMAT_NAME
 
     @classmethod
-    def match_object(cls, obj: Any) -> bool:
+    def match_object(cls, obj) -> bool:
         match = super().match_object(obj)
         if match:
             try:
