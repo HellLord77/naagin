@@ -15,7 +15,7 @@ from starlette.datastructures import MutableHeaders
 
 from naagin.enums import EncodingEnum
 from .doaxvv_header import DOAXVVHeader
-from .postgresql_handler import PostgreSQLHandler
+from .sqlalchemy_handler import SQLAlchemyHandler
 
 
 def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes:

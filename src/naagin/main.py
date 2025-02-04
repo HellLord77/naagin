@@ -16,7 +16,7 @@ from . import routers
 from . import settings
 from .exceptions.base import BaseException
 from .schemas.base import BaseSchema
-from .utils import PostgreSQLHandler
+from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import base_exception_handler
 from .utils.exception_handlers import internal_server_error_handler
 from .utils.exception_handlers import method_not_allowed_handler
@@ -28,7 +28,7 @@ from .utils.exception_handlers import unprocessable_content_handler
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     logger = getLogger("sqlalchemy.engine.Engine")
-    handler = PostgreSQLHandler(show_path=False)
+    handler = SQLAlchemyHandler(show_path=False)
     logger.addHandler(handler)
 
     async with settings.database.engine.begin() as connection:
@@ -45,9 +45,7 @@ app.mount("/game", apps.game.app)
 app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.request.decode_body)
 app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.response.encode_body)
 app.add_middleware(GZipMiddleware)
-app.add_middleware(
-    BaseHTTPMiddleware, dispatch=middlewares.common.handle_base_exception
-)
+app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.handle_base_exception)
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)

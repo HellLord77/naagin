@@ -10,11 +10,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
+from naagin.enums import DatabaseDriverEnum
 from .base import BaseSettings
 
 
 class DatabaseSettings(BaseSettings):
-    driver: str = "postgresql"
+    driver: DatabaseDriverEnum = DatabaseDriverEnum.POSTGRESQL
     user: Optional[str] = None
     pass_: Optional[SecretStr] = Field(None, alias="db_pass")
     host: Optional[str] = None
@@ -31,17 +32,15 @@ class DatabaseSettings(BaseSettings):
 
     @cached_property
     def url(self) -> URL:
-        if self.driver != "postgresql":
+        if self.driver != DatabaseDriverEnum.POSTGRESQL:
             raise NotImplementedError
 
-        if self.driver == "sqlite":
-            driver = "sqlite+aiosqlite"
-        elif self.driver == "postgresql":
-            driver = "postgresql+asyncpg"
-        elif self.driver == "mysql":
-            driver = "mysql+aiomysql"
-        else:
-            driver = self.driver
+        driver = {
+            DatabaseDriverEnum.SQLITE: "sqlite+aiosqlite",
+            DatabaseDriverEnum.POSTGRESQL: "postgresql+asyncpg",
+            DatabaseDriverEnum.MYSQL: "mysql+aiomysql",
+            DatabaseDriverEnum.MARIADB: "mysql+aiomysql",
+        }.get(self.driver, self.driver)
         password = self.pass_
         if password is not None:
             password = password.get_secret_value()
