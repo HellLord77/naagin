@@ -7,11 +7,22 @@ from rich.syntax import Syntax
 from sqlparse import format
 
 from naagin import settings
+from naagin.enums import DatabaseDriverEnum
+
+SYNTAX = Syntax(
+    "",
+    {
+        DatabaseDriverEnum.POSTGRESQL: "postgresql",
+        DatabaseDriverEnum.MYSQL: "mysql",
+        DatabaseDriverEnum.MARIADB: "mysql",
+    }.get(settings.database.driver, "sql"),
+    background_color="default",
+)
 
 
-class PostgreSQLHandler(RichHandler):
+class SQLAlchemyHandler(RichHandler):
     def emit(self, record: LogRecord):
-        if record.levelno == INFO and not record.args:
+        if record.levelno == INFO and record.msg != "[%s] %r":
             record.format = settings.database.echo_lint
             record.syntax = settings.database.echo_color
         return super().emit(record)
@@ -21,6 +32,6 @@ class PostgreSQLHandler(RichHandler):
             message = format(message, reindent=True, keyword_case="upper")
 
         if getattr(record, "syntax", False):
-            return Syntax(message, "postgresql", background_color="default")
+            return SYNTAX.highlight(message)
         else:
             return super().render_message(record, message)

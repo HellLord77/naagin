@@ -7,7 +7,7 @@ from .base import BaseSettings
 
 class VersionSettings(BaseSettings):
     master: int = 10
-    application: int = 64200
+    application: int = 64500
 
     model_config = SettingsConfigDict(env_prefix="ver_")
 
