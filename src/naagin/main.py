@@ -5,6 +5,7 @@ from typing import AsyncGenerator
 
 from fastapi import Depends
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.gzip import GZipMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -14,15 +15,13 @@ from . import injectors
 from . import middlewares
 from . import routers
 from . import settings
+from .exceptions import InvalidParameterException
+from .exceptions import MethodNotAllowedException
 from .exceptions.base import BaseException
 from .schemas.base import BaseSchema
 from .utils import SQLAlchemyHandler
-from .utils.exception_handlers import base_exception_handler
-from .utils.exception_handlers import internal_server_error_handler
-from .utils.exception_handlers import method_not_allowed_handler
 from .utils.exception_handlers import moved_permanently_handler
 from .utils.exception_handlers import not_found_handler
-from .utils.exception_handlers import unprocessable_content_handler
 
 
 @asynccontextmanager
@@ -49,14 +48,12 @@ app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.handle_base_exceptio
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
-app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, method_not_allowed_handler)
+app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handle)
 app.add_exception_handler(
-    HTTPStatus.UNPROCESSABLE_CONTENT, unprocessable_content_handler
+    HTTPStatus.INTERNAL_SERVER_ERROR, BaseException.handle
 )
-app.add_exception_handler(
-    HTTPStatus.INTERNAL_SERVER_ERROR, internal_server_error_handler
-)
-app.add_exception_handler(BaseException, base_exception_handler)
+app.add_exception_handler(RequestValidationError, InvalidParameterException.handle)
+app.add_exception_handler(BaseException, BaseException.handle)
 
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(
