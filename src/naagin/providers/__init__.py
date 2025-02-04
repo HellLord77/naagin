@@ -59,15 +59,3 @@ async def provide_owner_id(
     session: SessionSchema = Depends(provide_session_cached),
 ) -> int:
     return session.owner_id
-
-    # owner_id = int(access_token)
-    # owner = await session.get(OwnerSchema, owner_id)
-    # if owner is None:
-    #     owner = OwnerSchema(owner_id=owner_id)
-    #     session.add(owner)
-    #     await session.flush()
-    #
-    #     wallet = WalletSchema(owner_id=owner_id)
-    #     session.add(wallet)
-    #     await session.flush()
-    # return owner_id

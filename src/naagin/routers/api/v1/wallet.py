@@ -12,5 +12,13 @@ router = APIRouter(prefix="/wallet")
 async def get(
     session: SessionDependency, owner_id: OwnerIdDependency
 ) -> WalletGetResponseModel:
-    wallet = await session.get_one(WalletSchema, owner_id)
+    wallet = await session.get(WalletSchema, owner_id)
+
+    if wallet is None:
+        wallet = WalletSchema(owner_id=owner_id)
+        session.add(wallet)
+
+        await session.flush()
+        await session.refresh(wallet)
+
     return WalletGetResponseModel(wallet=wallet)
