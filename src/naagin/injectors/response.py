@@ -7,7 +7,7 @@ from naagin import settings
 from naagin.utils import DOAXVVHeader
 
 
-def inject_doaxvv_headers(response: Response):
+def add_doaxvv_headers(response: Response):
     DOAXVVHeader.set(response, "ServerTime", int(time()))
     DOAXVVHeader.set(response, "Access-Token", "XPEACHACCESSTOKEN")
     DOAXVVHeader.set(response, "Status", HTTPStatus.OK)

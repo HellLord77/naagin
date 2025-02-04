@@ -23,6 +23,7 @@ async def post(
     if owner is None:
         owner = OwnerSchema(owner_id=owner_id)
         session.add(owner)
+
         await session.flush()
         await session.refresh(owner)
 
@@ -33,6 +34,7 @@ async def post(
 
     session_ = SessionSchema(owner_id=owner_id)
     session.add(session_)
+
     await session.flush()
     await session.refresh(session_)
 

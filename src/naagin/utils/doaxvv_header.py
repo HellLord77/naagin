@@ -1,5 +1,3 @@
-from typing import Any
-
 from fastapi import Response
 
 
@@ -11,6 +9,6 @@ class DOAXVVHeader(str):
         return self
 
     @classmethod
-    def set(cls, response: Response, key: str, value: Any):
+    def set(cls, response: Response, key: str, value):
         self = cls(key)
         response.headers[self] = str(value)
