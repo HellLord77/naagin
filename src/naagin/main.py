@@ -33,7 +33,9 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(BaseSchema.metadata.drop_all)
         await connection.run_sync(BaseSchema.metadata.create_all)
+
     yield
+
     await settings.database.engine.dispose()
 
 
