@@ -26,8 +26,11 @@ class BaseException(Exception):
 
     @classmethod
     def handler(
-        cls, _: Optional[Request] = None, __: Optional[Exception] = None
+        cls, _: Optional[Request] = None, exception: Optional[Exception] = None
     ) -> JSONResponse:
-        response = JSONResponse(*cls.get_args())
-        DOAXVVHeader.set(response, "Status", cls.code)
-        return response
+        if isinstance(exception, BaseException):
+            return cls.handler()
+        else:
+            response = JSONResponse(*cls.get_args())
+            DOAXVVHeader.set(response, "Status", cls.code)
+            return response
