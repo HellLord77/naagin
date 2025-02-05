@@ -18,6 +18,7 @@ from . import settings
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
+from .exceptions.base import BaseException
 from .schemas.base import BaseSchema
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import moved_permanently_handler
@@ -46,7 +47,6 @@ app.mount("/game", apps.game.app)
 app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.request.decode_body)
 app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.response.encode_body)
 app.add_middleware(GZipMiddleware)
-app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.handle_base_exception)
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
@@ -57,7 +57,7 @@ app.add_exception_handler(
     HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler
 )
 app.add_exception_handler(RequestValidationError, InvalidParameterException.handler)
-app.add_exception_handler(Exception, InternalServerErrorException.handler)
+app.add_exception_handler(BaseException, BaseException.handler)
 
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(
