@@ -17,15 +17,17 @@ class BaseException(Exception):
     @classmethod
     @cache
     def get_args(cls) -> tuple[dict[str, int | str], int]:
-        instance = cls()
-        content = ExceptionModel.model_validate(instance).model_dump()
+        self = cls()
+        content = ExceptionModel.model_validate(self).model_dump()
         status_code = HTTPStatus.OK
         if cls.code in HTTPStatus:
             status_code = cls.code
         return content, status_code
 
     @classmethod
-    def handler(cls, _: Optional[Request] = None, __: Optional[Exception] = None) -> JSONResponse:
+    def handler(
+        cls, _: Optional[Request] = None, __: Optional[Exception] = None
+    ) -> JSONResponse:
         response = JSONResponse(*cls.get_args())
         DOAXVVHeader.set(response, "Status", cls.code)
         return response
