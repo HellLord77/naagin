@@ -50,7 +50,9 @@ app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.handle_base_exceptio
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
-app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
+app.add_exception_handler(
+    HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler
+)
 app.add_exception_handler(
     HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler
 )
