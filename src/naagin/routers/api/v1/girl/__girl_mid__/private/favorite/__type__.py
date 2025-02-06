@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from sqlalchemy import select
 
-from naagin.enums import BooleanEnum
 from naagin.enums import PrivateItemTypeEnum
 from naagin.exceptions import InternalServerErrorException
 from naagin.models.api import GirlGirlMidPrivateFavoriteTypeGetResponseModel
@@ -27,7 +26,7 @@ async def get(
                 PrivateItemSchema.owner_id == owner_id,
                 PrivateItemSchema.girl_mid == girl_mid,
                 PrivateItemSchema.type == type,
-                PrivateItemSchema.favorite == BooleanEnum.TRUE,
+                PrivateItemSchema.favorite,
             )
         )
     ).all()
@@ -52,7 +51,7 @@ async def post(
     )
 
     private_item.favorite = request.item_list[0].is_favorite
-    if private_item.favorite == BooleanEnum.TRUE:
+    if private_item.favorite:
         favorite_private_item_list = [private_item]
         favorite_delete_private_item_list = []
     else:
