@@ -1,3 +1,3 @@
-from .episode import EpisodeCSVModel
-from .girl import GirlCSVModel
-from .girl_status import GirlStatusCSVModel
+from .episode import EpisodeCSVModel as EpisodeCSVModel
+from .girl import GirlCSVModel as GirlCSVModel
+from .girl_status import GirlStatusCSVModel as GirlStatusCSVModel

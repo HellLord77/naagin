@@ -1,17 +1,17 @@
-from .bromide import BromideSchema
-from .episode import EpisodeSchema
-from .friendship import FriendshipSchema
-from .girl import GirlSchema
-from .girl_equipment import GirlEquipmentSchema
-from .girl_potential import GirlPotentialSchema
-from .honor import HonorSchema
-from .item_consume import ItemConsumeSchema
-from .item_equipemnt import ItemEquipmentSchema
-from .option_item_auto_lock import OptionItemAutoLockSchema
-from .owner import OwnerSchema
-from .private_item import PrivateItemSchema
-from .pvp_girl_equipment import PvpGirlEquipmentSchema
-from .session import SessionSchema
-from .special_order import SpecialOrderSchema
-from .tutorial import TutorialSchema
-from .wallet import WalletSchema
+from .bromide import BromideSchema as BromideSchema
+from .episode import EpisodeSchema as EpisodeSchema
+from .friendship import FriendshipSchema as FriendshipSchema
+from .girl import GirlSchema as GirlSchema
+from .girl_equipment import GirlEquipmentSchema as GirlEquipmentSchema
+from .girl_potential import GirlPotentialSchema as GirlPotentialSchema
+from .honor import HonorSchema as HonorSchema
+from .item_consume import ItemConsumeSchema as ItemConsumeSchema
+from .item_equipemnt import ItemEquipmentSchema as ItemEquipmentSchema
+from .option_item_auto_lock import OptionItemAutoLockSchema as OptionItemAutoLockSchema
+from .owner import OwnerSchema as OwnerSchema
+from .private_item import PrivateItemSchema as PrivateItemSchema
+from .pvp_girl_equipment import PvpGirlEquipmentSchema as PvpGirlEquipmentSchema
+from .session import SessionSchema as SessionSchema
+from .special_order import SpecialOrderSchema as SpecialOrderSchema
+from .tutorial import TutorialSchema as TutorialSchema
+from .wallet import WalletSchema as WalletSchema
