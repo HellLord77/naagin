@@ -12,7 +12,7 @@ from . import owner
 from . import pvp_fes_deck
 from . import pvp_girl
 from . import quest
-from . import session
+from . import session  # noqa: F401
 from . import shop
 from . import special_order
 from . import tutorial

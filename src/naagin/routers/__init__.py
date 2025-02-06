@@ -1,2 +1,2 @@
-from . import api
-from . import api01
+from . import api as api
+from . import api01 as api01

@@ -1,12 +1,12 @@
-from .boolean import BooleanEnum
-from .checked_license_level import CheckedLicenseLevelEnum
-from .client_type import ClientTypeEnum
-from .database_driver import DatabaseDriverEnum
-from .encoding import EncodingEnum
-from .friendship_state import FriendshipStateEnum
-from .item_consume_type import ItemConsumeTypeEnum
-from .item_equipment_type import ItemEquipmentTypeEnum
-from .license_level import LicenseLevelEnum
-from .owner_status import OwnerStatusEnum
-from .private_item import PrivateItemTypeEnum
-from .special_order_type import SpecialOrderTypeEnum
+from .boolean import BooleanEnum as BooleanEnum
+from .checked_license_level import CheckedLicenseLevelEnum as CheckedLicenseLevelEnum
+from .client_type import ClientTypeEnum as ClientTypeEnum
+from .database_driver import DatabaseDriverEnum as DatabaseDriverEnum
+from .encoding import EncodingEnum as EncodingEnum
+from .friendship_state import FriendshipStateEnum as FriendshipStateEnum
+from .item_consume_type import ItemConsumeTypeEnum as ItemConsumeTypeEnum
+from .item_equipment_type import ItemEquipmentTypeEnum as ItemEquipmentTypeEnum
+from .license_level import LicenseLevelEnum as LicenseLevelEnum
+from .owner_status import OwnerStatusEnum as OwnerStatusEnum
+from .private_item import PrivateItemTypeEnum as PrivateItemTypeEnum
+from .special_order_type import SpecialOrderTypeEnum as SpecialOrderTypeEnum

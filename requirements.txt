@@ -1,6 +1,5 @@
-# tools
-isort
-black
+# tool
+ruff
 
 # dumper
 frozendict
