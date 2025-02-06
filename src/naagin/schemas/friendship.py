@@ -10,6 +10,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 from naagin.enums import FriendshipStateEnum
+
 from .base import BaseSchema
 from .enums import FriendshipStateEnumSchema
 from .owner import OwnerSchema

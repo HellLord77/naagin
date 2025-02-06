@@ -10,6 +10,7 @@ from naagin.schemas import FriendshipSchema
 from naagin.schemas import OwnerSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
+
 from . import __other_owner_id__
 from . import accept
 from . import received

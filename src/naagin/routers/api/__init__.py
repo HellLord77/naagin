@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 
 from naagin import injectors
+
 from . import v1
 
 
