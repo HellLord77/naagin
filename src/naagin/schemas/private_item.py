@@ -3,11 +3,9 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from naagin.enums import BooleanEnum
 from naagin.enums import PrivateItemTypeEnum
-
+from sqlalchemy import Boolean
 from .base import BaseSchema
-from .enums import BooleanEnumSchema
 from .enums import PrivateItemTypeEnumSchema
 from .owner import OwnerSchema
 
@@ -23,9 +21,7 @@ class PrivateItemSchema(BaseSchema):
     type: Mapped[PrivateItemTypeEnum] = mapped_column(PrivateItemTypeEnumSchema)
     item_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    favorite: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
+    favorite: Mapped[bool] = mapped_column(Boolean, default=False)
 
     __table_args__ = (
         # CheckConstraint(
