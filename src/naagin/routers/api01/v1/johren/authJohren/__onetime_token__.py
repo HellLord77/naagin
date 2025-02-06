@@ -6,5 +6,5 @@ router = APIRouter(prefix="/{onetime_token}")
 
 
 @router.get("")
-async def get() -> JohrenAuthJohrenOnetimeTokenGetResponse:
+async def get(onetime_token: str) -> JohrenAuthJohrenOnetimeTokenGetResponse:
     raise NotImplementedError
