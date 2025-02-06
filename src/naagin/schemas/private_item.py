@@ -5,6 +5,7 @@ from sqlalchemy.orm import mapped_column
 
 from naagin.enums import BooleanEnum
 from naagin.enums import PrivateItemTypeEnum
+
 from .base import BaseSchema
 from .enums import BooleanEnumSchema
 from .enums import PrivateItemTypeEnumSchema

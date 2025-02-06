@@ -11,6 +11,7 @@ from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import SessionSchema
 from naagin.types.cookies import PINKSIDCookie
 from naagin.types.headers import AccessTokenHeader
+
 from . import csv
 
 

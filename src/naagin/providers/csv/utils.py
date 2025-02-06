@@ -1,5 +1,5 @@
-from csv import DictReader
 from csv import QUOTE_ALL
+from csv import DictReader
 from csv import reader
 
 from naagin import settings

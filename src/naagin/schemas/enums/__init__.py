@@ -9,6 +9,7 @@ from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
 from naagin.enums import PrivateItemTypeEnum
 from naagin.enums import SpecialOrderTypeEnum
+
 from .utils import values_callable
 
 BooleanEnumSchema = Enum(BooleanEnum, values_callable=values_callable)

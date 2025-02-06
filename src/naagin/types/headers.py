@@ -5,6 +5,7 @@ from fastapi import Header
 
 from naagin.enums import ClientTypeEnum
 from naagin.enums import EncodingEnum
+
 from .utils import null_factory
 
 ContentTypeHeader = Annotated[str, Header(alias="Content-Type")]

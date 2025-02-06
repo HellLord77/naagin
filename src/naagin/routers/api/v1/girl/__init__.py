@@ -5,6 +5,7 @@ from naagin.models.api import GirlGetResponseModel
 from naagin.schemas import GirlSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
+
 from . import __girl_mid__
 from . import equipment
 from . import potential

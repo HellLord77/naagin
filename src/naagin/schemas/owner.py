@@ -15,6 +15,7 @@ from sqlalchemy.orm import mapped_column
 from naagin.enums import CheckedLicenseLevelEnum
 from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
+
 from .base import BaseSchema
 from .enums import CheckedLicenseLevelEnumSchema
 from .enums import LicenseLevelEnumSchema

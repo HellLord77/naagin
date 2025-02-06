@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 from naagin.enums import ItemConsumeTypeEnum
+
 from .base import BaseSchema
 from .enums import ItemConsumeTypeEnumSchema
 from .owner import OwnerSchema

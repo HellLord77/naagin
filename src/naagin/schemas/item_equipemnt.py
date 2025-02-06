@@ -6,6 +6,7 @@ from sqlalchemy.orm import mapped_column
 
 from naagin.enums import BooleanEnum
 from naagin.enums import ItemEquipmentTypeEnum
+
 from .base import BaseSchema
 from .enums import BooleanEnumSchema
 from .enums import ItemEquipmentTypeEnumSchema

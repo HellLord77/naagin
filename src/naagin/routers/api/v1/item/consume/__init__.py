@@ -5,6 +5,7 @@ from naagin.models.api import ItemConsumeGetResponseModel
 from naagin.schemas import ItemConsumeSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
+
 from . import negative
 
 router = APIRouter(prefix="/consume")
