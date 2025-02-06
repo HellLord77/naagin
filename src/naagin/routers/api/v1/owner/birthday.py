@@ -19,9 +19,8 @@ async def post(
 ) -> OwnerBirthdayPostResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
 
-    birthday = datetime.strptime(request.birthday, "%Y%m%d").date()
     if owner.birthday is None:
-        owner.birthday = birthday
+        owner.birthday = datetime.strptime(request.birthday, "%Y%m%d").date()
 
     await session.flush()
     await session.refresh(owner)

@@ -27,16 +27,11 @@ async def put(
     _: OwnerEpisodeEpisodeMidPutRequestModel,
     session: SessionDependency,
     owner_id: OwnerIdDependency,
-    episodes_csv: EpisodesCSVDependency,
 ) -> OwnerEpisodeEpisodeMidPutResponseModel:
     episode = await session.get(EpisodeSchema, (owner_id, episode_mid))
 
     if episode is None:
-        episode = EpisodeSchema(
-            owner_id=owner_id,
-            episode_mid=episode_mid,
-            experience_gain=episodes_csv[episode_mid].experience_gain,
-        )
+        episode = EpisodeSchema(owner_id=owner_id, episode_mid=episode_mid)
         session.add(episode)
     else:
         episode.count += 1
@@ -52,20 +47,25 @@ async def post(
     session: SessionDependency,
     owner_id: OwnerIdDependency,
     owner_levels_csv: OwnerLevelsCSVDependency,
+    episodes_csv: EpisodesCSVDependency,
 ) -> OwnerEpisodeEpisodeMidPostResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
     episode = await session.get_one(EpisodeSchema, (owner_id, episode_mid))
 
+    if episode.experience_gained:
+        experience_gain = 0
+    else:
+        experience_gain = episodes_csv[episode_mid].experience_gain
     experience_before = owner.experience
-    experience_gain = episode.experience_gain
     experience_after = experience_before + experience_gain
     level_before = owner.level
     level_after = bisect(owner_levels_csv, experience_after)
     level_gain = level_after - level_before
+
     owner.level = level_after
     owner.experience = experience_after
     episode.count += 1
-    episode.experience_gain = 0
+    episode.experience_gained = True
 
     await session.flush()
     await session.refresh(owner)

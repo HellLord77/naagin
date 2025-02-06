@@ -51,13 +51,13 @@ async def post(
         PrivateItemSchema, owner_id, girl_mid, request.item_list[0].item_mid
     )
 
-    favorite_private_item_list = []
-    favorite_delete_private_item_list = []
     private_item.favorite = request.item_list[0].is_favorite
     if private_item.favorite == BooleanEnum.TRUE:
-        favorite_private_item_list.append(private_item)
+        favorite_private_item_list = [private_item]
+        favorite_delete_private_item_list = []
     else:
-        favorite_delete_private_item_list.append(private_item)
+        favorite_private_item_list = []
+        favorite_delete_private_item_list = [private_item]
 
     await session.flush()
     await session.refresh(private_item)
