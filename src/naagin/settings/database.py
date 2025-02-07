@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
+from naagin.classes import AsyncSession
 from naagin.enums import DatabaseDriverEnum
-from naagin.utils import AsyncSession
 
 from .base import BaseSettings
 

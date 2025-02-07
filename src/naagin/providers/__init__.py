@@ -5,11 +5,11 @@ from fastapi import Request
 from sqlalchemy import select
 
 from naagin import settings
+from naagin.classes import AsyncSession
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import SessionSchema
 from naagin.types.cookies import PINKSIDCookie
 from naagin.types.headers import AccessTokenHeader
-from naagin.utils import AsyncSession
 
 
 async def provide_session() -> AsyncGenerator[AsyncSession]:
