@@ -15,3 +15,4 @@ from .session import SessionSchema as SessionSchema
 from .special_order import SpecialOrderSchema as SpecialOrderSchema
 from .tutorial import TutorialSchema as TutorialSchema
 from .wallet import WalletSchema as WalletSchema
+from .ywrk_skill import YwrkSkillSchema as YwrkSkillSchema
