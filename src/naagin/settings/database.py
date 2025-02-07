@@ -5,11 +5,11 @@ from pydantic import SecretStr
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncEngine
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from naagin.enums import DatabaseDriverEnum
+from naagin.utils import AsyncSession
 
 from .base import BaseSettings
 
@@ -59,4 +59,4 @@ class DatabaseSettings(BaseSettings):
 
     @cached_property
     def sessionmaker(self) -> async_sessionmaker:
-        return async_sessionmaker(self.engine, autoflush=False)
+        return async_sessionmaker(self.engine, class_=AsyncSession, autoflush=False)

@@ -1,3 +1,4 @@
+from functools import cache
 from logging import INFO
 from logging import LogRecord
 
@@ -9,15 +10,18 @@ from sqlparse import format
 from naagin import settings
 from naagin.enums import DatabaseDriverEnum
 
-SYNTAX = Syntax(
-    "",
-    {
-        DatabaseDriverEnum.POSTGRESQL: "postgresql",
-        DatabaseDriverEnum.MYSQL: "mysql",
-        DatabaseDriverEnum.MARIADB: "mysql",
-    }.get(settings.database.driver, "sql"),
-    background_color="default",
-)
+
+@cache
+def get_syntax() -> Syntax:
+    return Syntax(
+        "",
+        {
+            DatabaseDriverEnum.POSTGRESQL: "postgresql",
+            DatabaseDriverEnum.MYSQL: "mysql",
+            DatabaseDriverEnum.MARIADB: "mysql",
+        }.get(settings.database.driver, "sql"),
+        background_color="default",
+    )
 
 
 class SQLAlchemyHandler(RichHandler):
@@ -32,6 +36,6 @@ class SQLAlchemyHandler(RichHandler):
             message = format(message, reindent=True, keyword_case="upper")
 
         if getattr(record, "syntax", False):
-            return SYNTAX.highlight(message)
+            return get_syntax().highlight(message)
         else:
             return super().render_message(record, message)

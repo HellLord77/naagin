@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy import select
 
 from naagin.models.api import GirlPrivateGetResponseModel
 from naagin.schemas import PrivateItemSchema
@@ -15,7 +14,5 @@ router.include_router(favorite.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> GirlPrivateGetResponseModel:
-    private_item_list = (
-        await session.scalars(select(PrivateItemSchema).where(PrivateItemSchema.owner_id == owner_id))
-    ).all()
+    private_item_list = await session.get_all(PrivateItemSchema, PrivateItemSchema.owner_id == owner_id)
     return GirlPrivateGetResponseModel(private_item_list=private_item_list)

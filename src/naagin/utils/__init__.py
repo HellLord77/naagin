@@ -15,6 +15,7 @@ from starlette.datastructures import MutableHeaders
 
 from naagin.enums import EncodingEnum
 
+from .async_session import AsyncSession as AsyncSession
 from .doaxvv_header import DOAXVVHeader as DOAXVVHeader
 from .sqlalchemy_handler import SQLAlchemyHandler as SQLAlchemyHandler
 

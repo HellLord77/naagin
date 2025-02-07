@@ -40,9 +40,8 @@ async def not_found_handler(request: Request, _: HTTPException) -> Response:
         path = settings.data.game_dir / url_path
         async with get_path_lock(url_path):
             if not await path.is_file():
-                client = get_client()
                 try:
-                    response = await client.get(url_path)
+                    response = await get_client().get(url_path)
                     response.raise_for_status()
                 except HTTPStatusError:
                     return not_found_response()

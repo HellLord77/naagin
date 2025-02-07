@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy import select
 
 from naagin.models.api import BromideGetResponseModel
 from naagin.schemas import BromideSchema
@@ -11,5 +10,5 @@ router = APIRouter(prefix="/bromide")
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> BromideGetResponseModel:
-    bromide_list = (await session.scalars(select(BromideSchema).where(BromideSchema.owner_id == owner_id))).all()
+    bromide_list = await session.get_all(BromideSchema, BromideSchema.owner_id == owner_id)
     return BromideGetResponseModel(bromide_list=bromide_list)
