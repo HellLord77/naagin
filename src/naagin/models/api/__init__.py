@@ -1,6 +1,9 @@
 from .v1.bromide.get.response import BromideGetResponseModel as BromideGetResponseModel
 from .v1.cheat_log.check.get.response import CheatLogCheckGetResponseModel as CheatLogCheckGetResponseModel
 from .v1.csv.list.get.response import CsvListGetResponseModel as CsvListGetResponseModel
+from .v1.dishevelment.__owner_id__.__item_mid__.get.response import (
+    DishevelmentOwnerIdItemMidGetResponseModel as DishevelmentOwnerIdItemMidGetResponseModel,
+)
 from .v1.dishevelment.get.response import DishevelmentGetResponseModel as DishevelmentGetResponseModel
 from .v1.friendship.__friend_id__.delete.response import (
     FriendshipFriendIdDeleteResponseModel as FriendshipFriendIdDeleteResponseModel,
