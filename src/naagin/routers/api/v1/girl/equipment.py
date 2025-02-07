@@ -10,10 +10,7 @@ router = APIRouter(prefix="/equipment")
 
 
 @router.get("")
-async def get(
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
-) -> GirlEquipmentGetResponseModel:
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> GirlEquipmentGetResponseModel:
     girl_equipment_list = (
         await session.scalars(select(GirlEquipmentSchema).where(GirlEquipmentSchema.owner_id == owner_id))
     ).all()
