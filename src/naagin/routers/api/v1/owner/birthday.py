@@ -14,9 +14,7 @@ router = APIRouter(prefix="/birthday")
 
 @router.post("")
 async def post(
-    request: OwnerBirthdayPostRequestModel,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    request: OwnerBirthdayPostRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> OwnerBirthdayPostResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
 

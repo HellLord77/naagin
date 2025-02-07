@@ -16,7 +16,7 @@ class BaseSchema(DeclarativeBase):
             "ck": "ck_%(table_name)s_%(constraint_name)s",
             "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
             "pk": "pk_%(table_name)s",
-        },
+        }
     )
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())

@@ -11,10 +11,7 @@ router = APIRouter(prefix="/{event_mid}")
 
 @router.put("")
 async def put(
-    event_mid: int,
-    request: TutorialEventMidPutRequestModel,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    event_mid: int, request: TutorialEventMidPutRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> TutorialEventMidPutResponseModel:
     tutorial = await session.get(TutorialSchema, (owner_id, event_mid))
 

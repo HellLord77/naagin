@@ -11,8 +11,7 @@ from naagin.exceptions import NotFoundException
 
 async def moved_permanently_handler(_: Request, __: HTTPException) -> JSONResponse:
     return JSONResponse(
-        {"code": HTTPStatus.MOVED_PERMANENTLY, "message": "cache exception"},
-        HTTPStatus.MOVED_PERMANENTLY,
+        {"code": HTTPStatus.MOVED_PERMANENTLY, "message": "cache exception"}, HTTPStatus.MOVED_PERMANENTLY
     )
 
 

@@ -13,9 +13,7 @@ router = APIRouter(prefix="/{type}")
 
 @router.get("")
 async def get(
-    type: SpecialOrderTypeEnum,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    type: SpecialOrderTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> SpecialOrderTypeGetResponseModel:
     if type == SpecialOrderTypeEnum._VALUE_81:  # noqa: SLF001
         raise InternalServerErrorException

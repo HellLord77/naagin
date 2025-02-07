@@ -12,9 +12,7 @@ router = APIRouter(prefix="/{other_owner_id}")
 
 @router.delete("")
 async def delete(
-    other_owner_id: int,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    other_owner_id: int, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> FriendshipFriendIdDeleteResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
     other_owner = await session.get_one(OwnerSchema, other_owner_id)

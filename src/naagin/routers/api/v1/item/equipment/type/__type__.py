@@ -13,9 +13,7 @@ router = APIRouter(prefix="/{type}")
 
 @router.get("")
 async def get(
-    type: ItemEquipmentTypeEnum,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    type: ItemEquipmentTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> ItemEquipmentTypeTypeGetResponseModel:
     if type in {ItemEquipmentTypeEnum.HAIRSTYLE, ItemEquipmentTypeEnum.EXPRESSION}:
         raise InternalServerErrorException

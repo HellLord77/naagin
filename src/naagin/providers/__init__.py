@@ -53,7 +53,5 @@ async def provide_session_cached(
     return state.session
 
 
-async def provide_owner_id(
-    session: SessionSchema = Depends(provide_session_cached),
-) -> int:
+async def provide_owner_id(session: SessionSchema = Depends(provide_session_cached)) -> int:
     return session.owner_id
