@@ -1,7 +1,7 @@
 from naagin.models.base import BaseModel
-from naagin.models.common import OtherOwnerModel
+from naagin.models.common import OwnerOtherModel
 
 
 class OwnerPutResponseModel(BaseModel):
     success: bool
-    owner_list: list[OtherOwnerModel]
+    owner_list: list[OwnerOtherModel]

@@ -6,7 +6,7 @@ from pydantic import field_validator
 from naagin.models.base import BaseModel
 
 
-class OtherOwnerModel(BaseModel):
+class OwnerOtherModel(BaseModel):
     owner_id: int
     status: int
     name: str | None

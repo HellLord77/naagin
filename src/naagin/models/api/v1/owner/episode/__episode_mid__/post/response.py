@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from naagin.models.base import BaseModel
-from naagin.models.common import OtherOwnerModel
+from naagin.models.common import OwnerOtherModel
 
 
 class EpisodeResultEpisodeModel(BaseModel):
@@ -31,5 +31,5 @@ class EpisodeModel(BaseModel):
 
 class OwnerEpisodeEpisodeMidPostResponseModel(BaseModel):
     episode_result: EpisodeResultModel
-    owner_list: list[OtherOwnerModel]
+    owner_list: list[OwnerOtherModel]
     episode_list: list[EpisodeModel]
