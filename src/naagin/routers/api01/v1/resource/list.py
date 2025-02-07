@@ -11,10 +11,6 @@ router = APIRouter(prefix="/list")
 @alru_cache
 async def get() -> ResourceListGetResponseModel:
     json_data = await (
-        settings.data.api01_dir
-        / "v1"
-        / "resource"
-        / "list"
-        / f"{settings.version.application}.json"
+        settings.data.api01_dir / "v1" / "resource" / "list" / f"{settings.version.application}.json"
     ).read_bytes()
     return ResourceListGetResponseModel.model_validate_json(json_data)

@@ -22,10 +22,7 @@ async def post(
     friendship = await session.get_one(FriendshipSchema, owner_id)
     other_friendship = await session.get_one(FriendshipSchema, request.friend_id)
 
-    if (
-        friendship.state == FriendshipStateEnum.RECEIVED
-        and other_friendship.state == FriendshipStateEnum.SENT
-    ):
+    if friendship.state == FriendshipStateEnum.RECEIVED and other_friendship.state == FriendshipStateEnum.SENT:
         friendship.state = FriendshipStateEnum.ACCEPTED
         friendship.invited = True
         other_friendship.state = FriendshipStateEnum.ACCEPTED
@@ -35,5 +32,6 @@ async def post(
     await session.refresh(friendship)
     await session.refresh(other_friendship)
     return FriendshipAcceptPostResponseModel(
-        friendship_list=[friendship, other_friendship], owner_list=[owner, other_owner]
+        friendship_list=[friendship, other_friendship],
+        owner_list=[owner, other_owner],
     )

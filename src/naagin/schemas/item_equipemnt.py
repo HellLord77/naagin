@@ -16,9 +16,7 @@ from .owner import OwnerSchema
 class ItemEquipmentSchema(BaseSchema):
     __tablename__ = "item_equipment"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), index=True
-    )
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), index=True)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     item_mid: Mapped[int] = mapped_column(Integer)
@@ -26,21 +24,15 @@ class ItemEquipmentSchema(BaseSchema):
     level: Mapped[int] = mapped_column(Integer, default=1)
     experience: Mapped[int] = mapped_column(Integer, default=0)
     girl_mid: Mapped[int] = mapped_column(Integer, default=0)
-    favorite: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
-    in_lock: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
+    favorite: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    in_lock: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
     unlock_count: Mapped[int] = mapped_column(Integer, default=0)
     upgrade_count: Mapped[int] = mapped_column(Integer, default=0)
     combine_count: Mapped[int] = mapped_column(Integer, default=0)
 
     __table_args__ = (
         CheckConstraint(id >= 1, "id_min"),
-        CheckConstraint(
-            type != ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION, "type_const"
-        ),
+        CheckConstraint(type != ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION, "type_const"),
         CheckConstraint(level.between(1, 90), "level_range"),
         CheckConstraint(experience.between(0, 480000), "experience_range"),
         CheckConstraint(favorite == BooleanEnum.FALSE, "favorite_const"),

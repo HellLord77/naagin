@@ -19,17 +19,11 @@ from .owner import OwnerSchema
 class FriendshipSchema(BaseSchema):
     __tablename__ = "friendship"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
-    friend_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
+    friend_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     state: Mapped[FriendshipStateEnum] = mapped_column(FriendshipStateEnumSchema)
     invited: Mapped[bool] = mapped_column(Boolean, default=False)
-    sent_at: Mapped[datetime] = mapped_column(
-        DateTime, default=func.current_timestamp()
-    )
+    sent_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())
 
     __table_args__ = (
         CheckConstraint(owner_id != friend_id, "owner_id_ne_friend_id"),

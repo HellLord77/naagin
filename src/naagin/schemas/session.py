@@ -1,5 +1,4 @@
 from secrets import choice
-from typing import Optional
 
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
@@ -23,19 +22,13 @@ def choices(population: str, *, k: int = 1) -> list[str]:
 class SessionSchema(BaseSchema):
     __tablename__ = "session"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
-    access_token: Mapped[str] = mapped_column(
-        String(32), default=access_token_factory, index=True
-    )
-    pinksid: Mapped[str] = mapped_column(
-        String(26), default=pinksid_factory, index=True
-    )
-    session_key: Mapped[Optional[bytes]] = mapped_column(LargeBinary(32), default=None)
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
+    access_token: Mapped[str] = mapped_column(String(32), default=access_token_factory, index=True)
+    pinksid: Mapped[str] = mapped_column(String(26), default=pinksid_factory, index=True)
+    session_key: Mapped[bytes | None] = mapped_column(LargeBinary(32), default=None)
 
     __table_args__ = (
-        CheckConstraint(func.char_length(access_token) == 32, "access_token_len"),
-        CheckConstraint(func.char_length(pinksid) == 26, "pinksid_len"),
-        CheckConstraint(func.octet_length(session_key) == 32, "session_key_len"),
+        CheckConstraint(func.regexp_like(access_token, r"^[0-9a-f]{32}$"), "access_token_fmt"),
+        CheckConstraint(func.regexp_like(pinksid, r"^[0-9a-z]{26}$"), "pinksid_fmt"),
+        CheckConstraint(func.octet_length(session_key) == 32, "session_key_len"),  # noqa: PLR2004
     )

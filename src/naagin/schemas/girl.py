@@ -14,9 +14,7 @@ from .owner import OwnerSchema
 class GirlSchema(BaseSchema):
     __tablename__ = "girl"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     girl_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
     mood: Mapped[int] = mapped_column(Integer, default=0)
     experience: Mapped[int] = mapped_column(Integer, default=0)
@@ -37,40 +35,22 @@ class GirlSchema(BaseSchema):
     accessory_head_item_mid: Mapped[int] = mapped_column(Integer, default=0)
     accessory_face_item_mid: Mapped[int] = mapped_column(Integer, default=0)
     accessory_arm_item_mid: Mapped[int] = mapped_column(Integer, default=0)
-    visual_state_flag_a: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
-    visual_state_flag_b: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
-    visual_state_flag_c: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
-    visual_state_flag_d: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
+    visual_state_flag_a: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    visual_state_flag_b: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    visual_state_flag_c: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    visual_state_flag_d: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
     sunburn: Mapped[int] = mapped_column(Integer, default=0)
     wet: Mapped[int] = mapped_column(Integer, default=0)
     hip_swing: Mapped[int] = mapped_column(Integer, default=0)
     hip_press: Mapped[int] = mapped_column(Integer, default=0)
     bust_swing: Mapped[int] = mapped_column(Integer, default=0)
     bust_press: Mapped[int] = mapped_column(Integer, default=0)
-    hip_swing_lock: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
-    hip_press_lock: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
-    bust_swing_lock: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
-    bust_press_lock: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
+    hip_swing_lock: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    hip_press_lock: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    bust_swing_lock: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    bust_press_lock: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
     panel_experience: Mapped[int] = mapped_column(Integer, default=0)
-    display_coordinate: Mapped[BooleanEnum] = mapped_column(
-        BooleanEnumSchema, default=BooleanEnum.FALSE
-    )
+    display_coordinate: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
     affection_level: Mapped[int] = mapped_column(Integer, default=1)
     affection_point: Mapped[int] = mapped_column(Integer, default=0)
     venus_memory: Mapped[int] = mapped_column(Integer, default=0)

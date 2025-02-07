@@ -14,12 +14,8 @@ router.include_router(favorite.router)
 
 
 @router.get("")
-async def get(
-    session: SessionDependency, owner_id: OwnerIdDependency
-) -> GirlPrivateGetResponseModel:
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> GirlPrivateGetResponseModel:
     private_item_list = (
-        await session.scalars(
-            select(PrivateItemSchema).where(PrivateItemSchema.owner_id == owner_id)
-        )
+        await session.scalars(select(PrivateItemSchema).where(PrivateItemSchema.owner_id == owner_id))
     ).all()
     return GirlPrivateGetResponseModel(private_item_list=private_item_list)

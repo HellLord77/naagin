@@ -12,13 +12,9 @@ from naagin.providers.csv import provide_girl_statuses
 from naagin.providers.csv import provide_girls
 from naagin.providers.csv import provide_owner_levels
 
-GirlAffectionLevelsCSVDependency = Annotated[
-    list[int], Depends(provide_girl_affection_levels)
-]
+GirlAffectionLevelsCSVDependency = Annotated[list[int], Depends(provide_girl_affection_levels)]
 GirlLevelsCSVDependency = Annotated[list[int], Depends(provide_girl_levels)]
 GirlsCSVDependency = Annotated[dict[int, GirlCSVModel], Depends(provide_girls)]
-GirlStatusesCSVDependency = Annotated[
-    list[GirlStatusCSVModel], Depends(provide_girl_statuses)
-]
+GirlStatusesCSVDependency = Annotated[list[GirlStatusCSVModel], Depends(provide_girl_statuses)]
 OwnerLevelsCSVDependency = Annotated[list[int], Depends(provide_owner_levels)]
 EpisodesCSVDependency = Annotated[dict[int, EpisodeCSVModel], Depends(provide_episodes)]

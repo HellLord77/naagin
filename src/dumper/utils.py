@@ -6,7 +6,6 @@ import logging
 import zlib
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 import datamodel_code_generator
 import frozendict

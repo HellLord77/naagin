@@ -11,9 +11,7 @@ from .owner import OwnerSchema
 class WalletSchema(BaseSchema):
     __tablename__ = "wallet"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     zack_money: Mapped[int] = mapped_column(Integer, default=0)
     guest_point: Mapped[int] = mapped_column(Integer, default=0)
     vip_point: Mapped[int] = mapped_column(Integer, default=0)

@@ -5,7 +5,4 @@ from naagin import routers
 
 
 def should_endec(request: Request) -> bool:
-    for route in routers.api.router.routes:
-        if route.matches(request)[0] == Match.FULL:
-            return True
-    return False
+    return any(route.matches(request)[0] == Match.FULL for route in routers.api.router.routes)

@@ -1,6 +1,8 @@
 from base64 import b64decode
 
 from fastapi import Request
+from fastapi import Response
+from starlette.middleware.base import RequestResponseEndpoint
 
 from naagin import settings
 from naagin.enums import EncodingEnum
@@ -12,18 +14,14 @@ from naagin.utils import request_headers
 from .utils import should_endec
 
 
-async def decode_body(request: Request, call_next):
+async def decode_body(request: Request, call_next: RequestResponseEndpoint) -> Response:
     if await request.body() and should_endec(request):
         headers = request_headers(request)
 
         encrypted = headers.get("X-DOAXVV-Encrypted")
         if encrypted is not None:
-            session = await provide_session_cached(
-                request, session=settings.database.session
-            )
-            await request_decrypt_body(
-                request, session.session_key, b64decode(encrypted)
-            )
+            session = await provide_session_cached(request, session=settings.database.session)
+            await request_decrypt_body(request, session.session_key, b64decode(encrypted))
 
         encoding = headers.get("X-DOAXVV-Encoding")
         if encoding == EncodingEnum.DEFLATE:

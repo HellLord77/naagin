@@ -1,5 +1,25 @@
+[project]
+name = "naagin"
+requires-python = "==3.13.*"
+
+[tool.ruff]
+line-length = 120
+
 [tool.ruff.lint]
-extend-select = ["I"]
+extend-select = ["ALL"]
+ignore = [
+    "A", # flake8-builtins *
+    "D1", # pydocstyle undocumented-*
+    "D203", # pydocstyle incorrect-blank-line-before-class
+    "D212", # pydocstyle multi-line-summary-first-line
+    "COM812", # flake8-commas missing-trailing-comma
+    "RET505", # flake8-return superfluous-else-return
+    "ERA001", # eradicate commented-out-code
+    "PLC0414", # Convention useless-import-alias
+]
 
 [tool.ruff.lint.isort]
 force-single-line = true
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends"]

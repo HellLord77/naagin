@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from naagin.models.base import BaseModel
 
@@ -9,7 +8,7 @@ class TutorialModel(BaseModel):
     event_mid: int
     flag: int
     created_at: datetime
-    updated_at: Optional[datetime]
+    updated_at: datetime | None
 
 
 class TutorialGetResponseModel(BaseModel):

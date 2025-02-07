@@ -29,9 +29,7 @@ def get_path_lock(_: str) -> Lock:
 
 @cache
 def get_client() -> AsyncClient:
-    return AsyncClient(
-        base_url=settings.game.base_url, trust_env=not settings.game.no_proxy
-    )
+    return AsyncClient(base_url=settings.game.base_url, trust_env=not settings.game.no_proxy)
 
 
 async def not_found_handler(request: Request, _: HTTPException) -> Response:

@@ -1,5 +1,4 @@
-from typing import AsyncGenerator
-from typing import Optional
+from collections.abc import AsyncGenerator
 
 from fastapi import Depends
 from fastapi import Request
@@ -28,7 +27,7 @@ async def provide_session() -> AsyncGenerator[AsyncSession]:
 
 async def provide_session_cached(
     request: Request,
-    access_token: Optional[AccessTokenHeader] = None,
+    access_token: AccessTokenHeader | None = None,
     pinksid: PINKSIDCookie = None,
     session: AsyncSession = Depends(provide_session),
 ) -> SessionSchema:
@@ -39,7 +38,7 @@ async def provide_session_cached(
         if pinksid is None:
             pinksid = request.cookies.get("PINKSID")
 
-        if access_token != "XPEACHACCESSTOKEN":
+        if access_token != "XPEACHACCESSTOKEN":  # noqa: S105
             whereclause = SessionSchema.access_token == access_token
         elif pinksid is not None:
             whereclause = SessionSchema.pinksid == pinksid

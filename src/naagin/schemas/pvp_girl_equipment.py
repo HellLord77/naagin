@@ -11,19 +11,17 @@ from .owner import OwnerSchema
 class PvpGirlEquipmentSchema(BaseSchema):
     __tablename__ = "pvp_girl_equipment"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     girl_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
-    swimsuit_equipment_item_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(ItemEquipmentSchema.id), default=0
-    )
+    swimsuit_equipment_item_id: Mapped[int] = mapped_column(Integer, ForeignKey(ItemEquipmentSchema.id), default=0)
     accessory_head_equipment_item_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(ItemEquipmentSchema.id), default=0
+        Integer,
+        ForeignKey(ItemEquipmentSchema.id),
+        default=0,
     )
     accessory_face_equipment_item_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(ItemEquipmentSchema.id), default=0
+        Integer,
+        ForeignKey(ItemEquipmentSchema.id),
+        default=0,
     )
-    accessory_arm_equipment_item_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(ItemEquipmentSchema.id), default=0
-    )
+    accessory_arm_equipment_item_id: Mapped[int] = mapped_column(Integer, ForeignKey(ItemEquipmentSchema.id), default=0)

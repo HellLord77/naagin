@@ -13,14 +13,10 @@ from naagin.enums import SpecialOrderTypeEnum
 from .utils import values_callable
 
 BooleanEnumSchema = Enum(BooleanEnum, values_callable=values_callable)
-CheckedLicenseLevelEnumSchema = Enum(
-    CheckedLicenseLevelEnum, values_callable=values_callable
-)
+CheckedLicenseLevelEnumSchema = Enum(CheckedLicenseLevelEnum, values_callable=values_callable)
 FriendshipStateEnumSchema = Enum(FriendshipStateEnum, values_callable=values_callable)
 ItemConsumeTypeEnumSchema = Enum(ItemConsumeTypeEnum, values_callable=values_callable)
-ItemEquipmentTypeEnumSchema = Enum(
-    ItemEquipmentTypeEnum, values_callable=values_callable
-)
+ItemEquipmentTypeEnumSchema = Enum(ItemEquipmentTypeEnum, values_callable=values_callable)
 LicenseLevelEnumSchema = Enum(LicenseLevelEnum, values_callable=values_callable)
 OwnerStatusEnumSchema = Enum(OwnerStatusEnum, values_callable=values_callable)
 PrivateItemTypeEnumSchema = Enum(PrivateItemTypeEnum, values_callable=values_callable)

@@ -6,5 +6,7 @@ router = APIRouter(prefix="/{steam_id}")
 
 
 @router.get("")
-async def get(steam_id: int) -> MaintenancePrivilegeCheckSteamIdGetResponseModel:
+async def get(
+    steam_id: int,  # noqa: ARG001
+) -> MaintenancePrivilegeCheckSteamIdGetResponseModel:
     return MaintenancePrivilegeCheckSteamIdGetResponseModel(result="NG")

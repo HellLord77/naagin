@@ -10,12 +10,6 @@ router = APIRouter(prefix="/bromide")
 
 
 @router.get("")
-async def get(
-    session: SessionDependency, owner_id: OwnerIdDependency
-) -> BromideGetResponseModel:
-    bromide_list = (
-        await session.scalars(
-            select(BromideSchema).where(BromideSchema.owner_id == owner_id)
-        )
-    ).all()
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> BromideGetResponseModel:
+    bromide_list = (await session.scalars(select(BromideSchema).where(BromideSchema.owner_id == owner_id))).all()
     return BromideGetResponseModel(bromide_list=bromide_list)

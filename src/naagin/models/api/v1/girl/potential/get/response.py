@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from naagin.models.base import BaseModel
 
@@ -14,7 +13,7 @@ class GirlPotentialModel(BaseModel):
     equipment_id: int
     pvp_equipment_id: int
     created_at: datetime
-    updated_at: Optional[datetime]
+    updated_at: datetime | None
 
 
 class GirlPotentialGetResponseModel(BaseModel):

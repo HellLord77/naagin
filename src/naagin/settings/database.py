@@ -1,5 +1,4 @@
 from functools import cached_property
-from typing import Optional
 
 from pydantic import Field
 from pydantic import SecretStr
@@ -17,11 +16,11 @@ from .base import BaseSettings
 
 class DatabaseSettings(BaseSettings):
     driver: DatabaseDriverEnum = DatabaseDriverEnum.POSTGRESQL
-    user: Optional[str] = None
-    pass_: Optional[SecretStr] = Field(None, alias="db_pass")
-    host: Optional[str] = None
-    port: Optional[str] = None
-    name: Optional[str] = None
+    user: str | None = None
+    pass_: SecretStr | None = Field(None, alias="db_pass")
+    host: str | None = None
+    port: str | None = None
+    name: str | None = None
 
     echo_sql: bool = False
     echo_pool: bool = False

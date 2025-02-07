@@ -6,9 +6,7 @@ from naagin import settings
 
 
 async def get_lines(master_version: int, name: str) -> list[str]:
-    data = await (
-        settings.data.csv_dir / str(master_version) / f"{name}.csv"
-    ).read_text("shift_jis")
+    data = await (settings.data.csv_dir / str(master_version) / f"{name}.csv").read_text("shift_jis")
     return data.splitlines()
 
 

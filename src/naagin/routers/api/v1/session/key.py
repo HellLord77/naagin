@@ -30,9 +30,7 @@ async def get_private_key() -> RSAPrivateKey:
 async def get() -> SessionKeyGetResponseModel:
     private_key = await get_private_key()
     public_key = private_key.public_key()
-    encrypt_key = public_key.public_bytes(
-        Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
-    ).decode()
+    encrypt_key = public_key.public_bytes(Encoding.PEM, PublicFormat.SubjectPublicKeyInfo).decode()
     return SessionKeyGetResponseModel(encrypt_key=encrypt_key)
 
 

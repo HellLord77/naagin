@@ -1,6 +1,5 @@
 from datetime import date
 from datetime import datetime
-from typing import Optional
 
 from naagin.models.base import BaseModel
 
@@ -8,9 +7,9 @@ from naagin.models.base import BaseModel
 class OwnerModel(BaseModel):
     owner_id: int
     status: int
-    name: Optional[str]
-    island_name: Optional[str]
-    message: Optional[str]
+    name: str | None
+    island_name: str | None
+    message: str | None
     team_id: int
     honor1_mid: int
     honor2_mid: int
@@ -24,7 +23,7 @@ class OwnerModel(BaseModel):
     license_point: int
     license_level: int
     checked_license_level: int
-    birthday: Optional[date]
+    birthday: date | None
     stamina_checked_at: datetime
     last_logged_at: datetime
     friend_code: str

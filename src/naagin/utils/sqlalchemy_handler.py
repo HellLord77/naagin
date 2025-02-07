@@ -21,11 +21,11 @@ SYNTAX = Syntax(
 
 
 class SQLAlchemyHandler(RichHandler):
-    def emit(self, record: LogRecord):
+    def emit(self, record: LogRecord) -> None:
         if record.levelno == INFO and record.msg != "[%s] %r":
             record.format = settings.database.echo_lint
             record.syntax = settings.database.echo_color
-        return super().emit(record)
+        super().emit(record)
 
     def render_message(self, record: LogRecord, message: str) -> ConsoleRenderable:
         if getattr(record, "format", False):

@@ -1,5 +1,5 @@
 from secrets import choice
 
 
-def choices(population: str, *, k: int = 1) -> list[str]:
+def choices[T](population: T, *, k: int = 1) -> list[T]:
     return [choice(population) for _ in range(k)]

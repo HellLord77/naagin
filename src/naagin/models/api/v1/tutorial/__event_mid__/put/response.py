@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from naagin.models.base import BaseModel
 from naagin.models.common import OtherOwnerModel
@@ -10,9 +9,9 @@ class TutorialModel(BaseModel):
     event_mid: int
     flag: int
     created_at: datetime
-    updated_at: Optional[datetime]
+    updated_at: datetime | None
 
 
 class TutorialEventMidPutResponseModel(BaseModel):
-    owner_list: Optional[list[OtherOwnerModel]] = None
+    owner_list: list[OtherOwnerModel] | None = None
     tutorial_list: list[TutorialModel]

@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from naagin.models.base import BaseModel
 
@@ -50,7 +49,7 @@ class GirlModel(BaseModel):
     nail_color: int
     partner_count: int
     created_at: datetime
-    updated_at: Optional[datetime]
+    updated_at: datetime | None
 
 
 class GirlGetResponseModel(BaseModel):

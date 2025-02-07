@@ -16,9 +16,7 @@ router.include_router(key.router)
 
 
 @router.post("")
-async def post(
-    _: SessionPostRequestModel, session: SessionDependency, response: Response
-) -> SessionPostResponseModel:
+async def post(_: SessionPostRequestModel, session: SessionDependency, response: Response) -> SessionPostResponseModel:
     owner_id = 6957694
     owner = await session.get(OwnerSchema, owner_id)
     if owner is None:
@@ -41,6 +39,4 @@ async def post(
 
     DOAXVVHeader.set(response, "Access-Token", session_.access_token)
     response.set_cookie("PINKSID", session_.pinksid, samesite=None)
-    return SessionPostResponseModel(
-        auth=True, owner_id=owner.owner_id, owner_status=owner.status
-    )
+    return SessionPostResponseModel(auth=True, owner_id=owner.owner_id, owner_status=owner.status)

@@ -25,16 +25,14 @@ router.include_router(sent.router)
 
 
 @router.get("")
-async def get(
-    session: SessionDependency, owner_id: OwnerIdDependency
-) -> FriendshipGetResponseModel:
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> FriendshipGetResponseModel:
     friendship_list = (
         await session.scalars(
             select(FriendshipSchema).where(
                 FriendshipSchema.owner_id == owner_id,
                 FriendshipSchema.state == FriendshipStateEnum.ACCEPTED,
                 FriendshipSchema.invited,
-            )
+            ),
         )
     ).all()
     return FriendshipGetResponseModel(friendship_list=friendship_list)
@@ -67,10 +65,7 @@ async def post(
     elif other_friendship.state == FriendshipStateEnum.BLOCKED:
         raise FriendshipCantRequestException
     elif (
-        (
-            friendship.state == FriendshipStateEnum.BLOCKED
-            and other_friendship.state == FriendshipStateEnum.REJECTED
-        )
+        (friendship.state == FriendshipStateEnum.BLOCKED and other_friendship.state == FriendshipStateEnum.REJECTED)
         or (
             friendship.state == FriendshipStateEnum.RETRACTED
             and other_friendship.state == FriendshipStateEnum.RETRACTED
@@ -86,6 +81,4 @@ async def post(
     await session.flush()
     await session.refresh(friendship)
     await session.refresh(other_friendship)
-    return FriendshipPostResponseModel(
-        friendship_list=[friendship, other_friendship], owner_list=[owner, other_owner]
-    )
+    return FriendshipPostResponseModel(friendship_list=[friendship, other_friendship], owner_list=[owner, other_owner])
