@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from naagin.models.base import BaseModel
-from naagin.models.common import OtherOwnerModel
+from naagin.models.common import OwnerOtherModel
 
 
 class TutorialModel(BaseModel):
@@ -13,5 +13,5 @@ class TutorialModel(BaseModel):
 
 
 class TutorialEventMidPutResponseModel(BaseModel):
-    owner_list: list[OtherOwnerModel] | None = None
+    owner_list: list[OwnerOtherModel] | None = None
     tutorial_list: list[TutorialModel]
