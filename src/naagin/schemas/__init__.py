@@ -9,6 +9,7 @@ from .item_consume import ItemConsumeSchema as ItemConsumeSchema
 from .item_equipemnt import ItemEquipmentSchema as ItemEquipmentSchema
 from .option_item_auto_lock import OptionItemAutoLockSchema as OptionItemAutoLockSchema
 from .owner import OwnerSchema as OwnerSchema
+from .owner_checked_at import OwnerCheckedAtSchema as OwnerCheckedAtSchema
 from .private_item import PrivateItemSchema as PrivateItemSchema
 from .pvp_girl_equipment import PvpGirlEquipmentSchema as PvpGirlEquipmentSchema
 from .session import SessionSchema as SessionSchema
