@@ -23,4 +23,5 @@ async def post(
     option_item_auto_lock.option_lock_ssr = request.option_lock_ssr
 
     await session.flush()
+
     return OptionItemAutoLockPostResponseModel(root=[])

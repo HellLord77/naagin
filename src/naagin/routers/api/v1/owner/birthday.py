@@ -1,6 +1,3 @@
-from datetime import UTC
-from datetime import datetime
-
 from fastapi import APIRouter
 
 from naagin.models.api import OwnerBirthdayPostRequestModel
@@ -19,8 +16,9 @@ async def post(
     owner = await session.get_one(OwnerSchema, owner_id)
 
     if owner.birthday is None:
-        owner.birthday = datetime.strptime(request.birthday, "%Y%m%d").replace(tzinfo=UTC).date()
+        owner.birthday = request.birthday
 
-    await session.flush()
-    await session.refresh(owner)
+        await session.flush()
+        await session.refresh(owner)
+
     return OwnerBirthdayPostResponseModel(owner=owner, owner_list=[owner])

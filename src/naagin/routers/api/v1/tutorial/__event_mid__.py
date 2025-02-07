@@ -22,4 +22,5 @@ async def put(
 
     await session.flush()
     await session.refresh(tutorial)
+
     return TutorialEventMidPutResponseModel(tutorial_list=[tutorial])

@@ -42,6 +42,8 @@ async def post(
     else:
         success = False
 
-    await session.flush()
-    await session.refresh(owner)
+    if success:
+        await session.flush()
+        await session.refresh(owner)
+
     return OwnerPutResponseModel(success=success, owner_list=[owner])
