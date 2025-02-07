@@ -8,12 +8,14 @@ from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
 
 from . import birthday
+from . import checkedat
 from . import countlogin
 from . import episode
 
 router = APIRouter(prefix="/owner")
 
 router.include_router(birthday.router)
+router.include_router(checkedat.router)
 router.include_router(countlogin.router)
 router.include_router(episode.router)
 

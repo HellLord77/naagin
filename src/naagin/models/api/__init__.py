@@ -46,7 +46,8 @@ from .v1.option.item_auto_lock.post.response import (
 )
 from .v1.owner.birthday.post.request import OwnerBirthdayPostRequestModel as OwnerBirthdayPostRequestModel
 from .v1.owner.birthday.post.response import OwnerBirthdayPostResponseModel as OwnerBirthdayPostResponseModel
-from .v1.owner.countlogin.get.response import OwnerCountloginGetResponseModel as OwnerCountloginGetResponseModel
+from .v1.owner.checkedat.get.response import OwnerCheckedAtGetResponseModel as OwnerCheckedAtGetResponseModel
+from .v1.owner.countlogin.get.response import OwnerCountLoginGetResponseModel as OwnerCountLoginGetResponseModel
 from .v1.owner.episode.__episode_mid__.post.response import (
     OwnerEpisodeEpisodeMidPostResponseModel as OwnerEpisodeEpisodeMidPostResponseModel,
 )
@@ -78,7 +79,7 @@ from .v1.session.key.put.response import SessionKeyPutResponseModel as SessionKe
 from .v1.session.post.request import SessionPostRequestModel as SessionPostRequestModel
 from .v1.session.post.response import SessionPostResponseModel as SessionPostResponseModel
 from .v1.shop.paymentlog.incomplete.get.response import (
-    ShopPaymentlogIncompleteGetResponseModel as ShopPaymentlogIncompleteGetResponseModel,
+    ShopPaymentLogIncompleteGetResponseModel as ShopPaymentLogIncompleteGetResponseModel,
 )
 from .v1.special_order.__type__.get.resposne import SpecialOrderTypeGetResponseModel as SpecialOrderTypeGetResponseModel
 from .v1.tutorial.__event_mid__.put.request import TutorialEventMidPutRequestModel as TutorialEventMidPutRequestModel
