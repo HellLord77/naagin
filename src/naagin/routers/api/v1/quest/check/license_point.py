@@ -7,7 +7,5 @@ router = APIRouter(prefix="/license_point")
 
 
 @router.post("")
-async def post(
-    _: QuestCheckLicensePointPostRequestModel,
-) -> QuestCheckLicensePointPostResponseModel:
+async def post(_: QuestCheckLicensePointPostRequestModel) -> QuestCheckLicensePointPostResponseModel:
     return QuestCheckLicensePointPostResponseModel(root=[])

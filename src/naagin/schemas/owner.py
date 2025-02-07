@@ -43,8 +43,7 @@ class OwnerSchema(BaseSchema):
     license_point: Mapped[int] = mapped_column(Integer, default=0)
     license_level: Mapped[LicenseLevelEnum] = mapped_column(LicenseLevelEnumSchema, default=LicenseLevelEnum.F)
     checked_license_level: Mapped[CheckedLicenseLevelEnum] = mapped_column(
-        CheckedLicenseLevelEnumSchema,
-        default=CheckedLicenseLevelEnum.F,
+        CheckedLicenseLevelEnumSchema, default=CheckedLicenseLevelEnum.F
     )
     birthday: Mapped[date | None] = mapped_column(Date, default=None)
     stamina_checked_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())
@@ -72,9 +71,6 @@ class OwnerSchema(BaseSchema):
         CheckConstraint(birthday <= func.current_date(), "birthday_lte_today"),
         CheckConstraint(stamina_checked_at <= func.current_timestamp(), "stamina_checked_at_lte_now"),
         CheckConstraint(last_logged_at <= func.current_timestamp(), "last_logged_at_lte_now"),
-        CheckConstraint(
-            stamina_checked_at >= last_logged_at,
-            "stamina_checked_at_gte_last_logged_at",
-        ),
+        CheckConstraint(stamina_checked_at >= last_logged_at, "stamina_checked_at_gte_last_logged_at"),
         CheckConstraint(func.regexp_like(friend_code, r"^\d{3}-\d{3}-\d{3}$"), "friend_code_fmt"),
     )

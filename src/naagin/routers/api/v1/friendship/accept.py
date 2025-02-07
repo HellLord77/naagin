@@ -13,9 +13,7 @@ router = APIRouter(prefix="/accept")
 
 @router.post("")
 async def post(
-    request: FriendshipAcceptPostRequestModel,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    request: FriendshipAcceptPostRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> FriendshipAcceptPostResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
     other_owner = await session.get_one(OwnerSchema, request.friend_id)
@@ -32,6 +30,5 @@ async def post(
     await session.refresh(friendship)
     await session.refresh(other_friendship)
     return FriendshipAcceptPostResponseModel(
-        friendship_list=[friendship, other_friendship],
-        owner_list=[owner, other_owner],
+        friendship_list=[friendship, other_friendship], owner_list=[owner, other_owner]
     )

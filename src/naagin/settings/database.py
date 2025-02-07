@@ -50,10 +50,7 @@ class DatabaseSettings(BaseSettings):
     @cached_property
     def engine(self) -> AsyncEngine:
         return create_async_engine(
-            self.url,
-            echo=self.echo_sql,
-            echo_pool=self.echo_pool,
-            hide_parameters=not self.echo_args,
+            self.url, echo=self.echo_sql, echo_pool=self.echo_pool, hide_parameters=not self.echo_args
         )
 
     @cached_property

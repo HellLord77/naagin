@@ -26,9 +26,7 @@ async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> OwnerG
 
 @router.post("")
 async def post(
-    request: OwnerPutRequestModel,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    request: OwnerPutRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> OwnerPutResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
 

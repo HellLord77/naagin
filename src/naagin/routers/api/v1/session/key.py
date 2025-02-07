@@ -36,17 +36,12 @@ async def get() -> SessionKeyGetResponseModel:
 
 @router.put("")
 async def put(
-    request: SessionKeyPutRequestModel,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    request: SessionKeyPutRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> SessionKeyPutResponseModel:
     session_ = await session.get_one(SessionSchema, owner_id)
 
     private_key = await get_private_key()
-    session_key = private_key.decrypt(
-        b64decode(request.encrypt_key),
-        PKCS1v15(),
-    )
+    session_key = private_key.decrypt(b64decode(request.encrypt_key), PKCS1v15())
     session_.session_key = session_key
 
     await session.flush()

@@ -32,7 +32,7 @@ async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> Friend
                 FriendshipSchema.owner_id == owner_id,
                 FriendshipSchema.state == FriendshipStateEnum.ACCEPTED,
                 FriendshipSchema.invited,
-            ),
+            )
         )
     ).all()
     return FriendshipGetResponseModel(friendship_list=friendship_list)
@@ -40,9 +40,7 @@ async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> Friend
 
 @router.post("")
 async def post(
-    request: FriendshipPostRequestModel,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    request: FriendshipPostRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> FriendshipPostResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
     other_owner = await session.get_one(OwnerSchema, request.friend_id)
@@ -50,15 +48,9 @@ async def post(
     other_friendship = await session.get(FriendshipSchema, request.friend_id, owner_id)
 
     if friendship is None and other_friendship is None:
-        friendship = FriendshipSchema(
-            owner_id=owner_id,
-            friend_id=request.friend_id,
-            state=FriendshipStateEnum.SENT,
-        )
+        friendship = FriendshipSchema(owner_id=owner_id, friend_id=request.friend_id, state=FriendshipStateEnum.SENT)
         other_friendship = FriendshipSchema(
-            owner_id=request.friend_id,
-            friend_id=owner_id,
-            state=FriendshipStateEnum.RECEIVED,
+            owner_id=request.friend_id, friend_id=owner_id, state=FriendshipStateEnum.RECEIVED
         )
         session.add(friendship)
         session.add(other_friendship)

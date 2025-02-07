@@ -22,9 +22,6 @@ router.include_router(ywrk_skill.router)
 
 
 @router.get("")
-async def get(
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
-) -> GirlGetResponseModel:
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> GirlGetResponseModel:
     girl_list = (await session.scalars(select(GirlSchema).where(GirlSchema.owner_id == owner_id))).all()
     return GirlGetResponseModel(girl_list=girl_list)

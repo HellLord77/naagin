@@ -15,10 +15,7 @@ router = APIRouter(prefix="/{type}")
 
 @router.get("")
 async def get(
-    girl_mid: int,
-    type: PrivateItemTypeEnum,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    girl_mid: int, type: PrivateItemTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> GirlGirlMidPrivateFavoriteTypeGetResponseModel:
     favorite_private_item_list = (
         await session.scalars(
@@ -27,7 +24,7 @@ async def get(
                 PrivateItemSchema.girl_mid == girl_mid,
                 PrivateItemSchema.type == type,
                 PrivateItemSchema.favorite,
-            ),
+            )
         )
     ).all()
     return GirlGirlMidPrivateFavoriteTypeGetResponseModel(favorite_private_item_list=favorite_private_item_list)

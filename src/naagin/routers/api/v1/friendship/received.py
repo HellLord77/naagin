@@ -15,9 +15,8 @@ async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> Friend
     friendship_list = (
         await session.scalars(
             select(FriendshipSchema).where(
-                FriendshipSchema.owner_id == owner_id,
-                FriendshipSchema.state == FriendshipStateEnum.RECEIVED,
-            ),
+                FriendshipSchema.owner_id == owner_id, FriendshipSchema.state == FriendshipStateEnum.RECEIVED
+            )
         )
     ).all()
     return FriendshipReceivedGetResponseModel(friendship_list=friendship_list)

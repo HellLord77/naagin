@@ -11,9 +11,7 @@ router = APIRouter(prefix="/item_auto_lock")
 
 @router.post("")
 async def post(
-    request: OptionItemAutoLockPostRequestModel,
-    session: SessionDependency,
-    owner_id: OwnerIdDependency,
+    request: OptionItemAutoLockPostRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> OptionItemAutoLockPostResponseModel:
     option_item_auto_lock = await session.get(OptionItemAutoLockSchema, owner_id)
 

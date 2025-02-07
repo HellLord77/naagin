@@ -28,9 +28,7 @@ def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes
     return unpadder.update(decryptor.update(data) + decryptor.finalize()) + unpadder.finalize()
 
 
-async def iter_compress_data(
-    data_stream: AsyncIterable[bytes],
-) -> AsyncGenerator[bytes]:
+async def iter_compress_data(data_stream: AsyncIterable[bytes]) -> AsyncGenerator[bytes]:
     compressor = compressobj()
     async for data in data_stream:
         yield compressor.compress(data)
@@ -38,9 +36,7 @@ async def iter_compress_data(
 
 
 async def iter_encrypt_data(
-    data_stream: AsyncIterable[bytes],
-    key: bytes,
-    initialization_vector: bytes,
+    data_stream: AsyncIterable[bytes], key: bytes, initialization_vector: bytes
 ) -> AsyncGenerator[bytes]:
     padder = PKCS7(AES.block_size).padder()
     encryptor = Cipher(AES(key), CBC(initialization_vector)).encryptor()

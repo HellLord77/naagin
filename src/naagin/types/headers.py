@@ -14,9 +14,6 @@ AccessTokenHeader = Annotated[str, Header(alias="X-DOAXVV-Access-Token")]
 NonceHeader = Annotated[str, Header(alias="X-DOAXVV-Nonce")]
 ApplicationVersionHeader = Annotated[int, Header(alias="X-DOAXVV-ApplicationVersion")]
 ClientTypeHeader = Annotated[ClientTypeEnum, Header(alias="X-DOAXVV-ClientType")]
-EncodingHeader = Annotated[
-    EncodingEnum | None,
-    Header(default_factory=null_factory, alias="X-DOAXVV-Encoding"),
-]
+EncodingHeader = Annotated[EncodingEnum | None, Header(default_factory=null_factory, alias="X-DOAXVV-Encoding")]
 EncryptedHeader = Annotated[str | None, Header(default_factory=null_factory, alias="X-DOAXVV-Encrypted")]
 MasterVersionHeader = Annotated[int, Header(alias="X-DOAXVV-MasterVersion")]

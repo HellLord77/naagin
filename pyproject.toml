@@ -23,3 +23,6 @@ force-single-line = true
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends"]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
