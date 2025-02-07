@@ -1,13 +1,11 @@
+from sqlalchemy import Boolean
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from naagin.enums import BooleanEnum
-
 from .base import BaseSchema
-from .enums import BooleanEnumSchema
 from .owner import OwnerSchema
 
 
@@ -18,7 +16,7 @@ class BromideSchema(BaseSchema):
 
     bromide_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
     variation: Mapped[int] = mapped_column(Integer)
-    is_generate_seal: Mapped[BooleanEnum] = mapped_column(BooleanEnumSchema, default=BooleanEnum.FALSE)
+    is_generate_seal: Mapped[bool] = mapped_column(Boolean, default=False)
     count: Mapped[int] = mapped_column(Integer, default=0)
 
     __table_args__ = (
