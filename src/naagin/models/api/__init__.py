@@ -56,6 +56,7 @@ from .v1.owner.episode.__episode_mid__.put.request import (
 from .v1.owner.episode.__episode_mid__.put.response import (
     OwnerEpisodeEpisodeMidPutResponseModel as OwnerEpisodeEpisodeMidPutResponseModel,
 )
+from .v1.owner.episode.get.response import OwnerEpisodeGetResponseModel as OwnerEpisodeGetResponseModel
 from .v1.owner.get.response import OwnerGetResponseModel as OwnerGetResponseModel
 from .v1.owner.put.request import OwnerPutRequestModel as OwnerPutRequestModel
 from .v1.owner.put.response import OwnerPutResponseModel as OwnerPutResponseModel
