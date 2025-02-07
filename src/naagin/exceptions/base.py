@@ -1,6 +1,6 @@
+from collections.abc import Callable
 from functools import cache
 from http import HTTPStatus
-from typing import Any
 from typing import ClassVar
 
 from fastapi import Request
@@ -16,7 +16,7 @@ class BaseException(Exception):  # noqa: N818
 
     @classmethod
     @cache
-    def get_args(cls) -> tuple[dict[str, Any], int]:
+    def get_args[T, **P](cls, _: Callable[P, T] = JSONResponse) -> P.args:
         self = cls()
         content = ExceptionModel.model_validate(self).model_dump()
         status_code = HTTPStatus.OK
