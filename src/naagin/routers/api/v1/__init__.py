@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from . import bromide
 from . import cheat_log
 from . import csv
+from . import dishevelment
 from . import friendship
 from . import girl
 from . import honor
@@ -23,6 +24,7 @@ router = APIRouter(prefix="/v1")
 router.include_router(bromide.router)
 router.include_router(cheat_log.router)
 router.include_router(csv.router)
+router.include_router(dishevelment.router)
 router.include_router(friendship.router)
 router.include_router(girl.router)
 router.include_router(honor.router)
