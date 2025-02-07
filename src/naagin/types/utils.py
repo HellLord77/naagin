@@ -1,2 +1,2 @@
-def null_factory():
-    return None
+def null_factory() -> None:
+    pass

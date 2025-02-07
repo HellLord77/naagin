@@ -7,6 +7,4 @@ router = APIRouter(prefix="/equipment_list_all")
 
 @router.get("")
 async def get() -> PvpFesDeckEquipmentListAllGetResponseModel:
-    return PvpFesDeckEquipmentListAllGetResponseModel(
-        pvp_fes_deck_girl_equipment_full_list=[]
-    )
+    return PvpFesDeckEquipmentListAllGetResponseModel(pvp_fes_deck_girl_equipment_full_list=[])

@@ -1,7 +1,7 @@
 from base64 import b64encode
+from collections.abc import AsyncGenerator
+from collections.abc import AsyncIterable
 from secrets import token_bytes
-from typing import AsyncGenerator
-from typing import AsyncIterable
 from zlib import compressobj
 from zlib import decompress
 
@@ -23,11 +23,9 @@ def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes
     algorithm = AES(key)
     mode = CBC(initialization_vector)
     decryptor = Cipher(algorithm, mode).decryptor()
-    encrypted = decryptor.update(data) + decryptor.finalize()
-
     unpadder = PKCS7(AES.block_size).unpadder()
-    unpadded = unpadder.update(encrypted) + unpadder.finalize()
-    return unpadded
+
+    return unpadder.update(decryptor.update(data) + decryptor.finalize()) + unpadder.finalize()
 
 
 async def iter_compress_data(
@@ -40,7 +38,9 @@ async def iter_compress_data(
 
 
 async def iter_encrypt_data(
-    data_stream: AsyncIterable[bytes], key: bytes, initialization_vector: bytes
+    data_stream: AsyncIterable[bytes],
+    key: bytes,
+    initialization_vector: bytes,
 ) -> AsyncGenerator[bytes]:
     padder = PKCS7(AES.block_size).padder()
     encryptor = Cipher(AES(key), CBC(initialization_vector)).encryptor()
@@ -58,7 +58,7 @@ def request_headers(self: Request) -> MutableHeaders:
     return headers
 
 
-async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes):
+async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes) -> None:
     body = await self.body()
     decrypted = decrypt_data(body, key, initialization_vector)
     self._body = decrypted
@@ -67,7 +67,7 @@ async def request_decrypt_body(self: Request, key: bytes, initialization_vector:
     headers["Content-Length"] = str(len(decrypted))
 
 
-async def request_decompress_body(self: Request):
+async def request_decompress_body(self: Request) -> None:
     body = await self.body()
     decompressed = decompress(body)
     self._body = decompressed
@@ -76,7 +76,7 @@ async def request_decompress_body(self: Request):
     headers["Content-Length"] = str(len(decompressed))
 
 
-def response_compress_body(self: StreamingResponse):
+def response_compress_body(self: StreamingResponse) -> None:
     self.body_iterator = iter_compress_data(self.body_iterator)
 
     del self.headers["Content-Length"]
@@ -84,11 +84,9 @@ def response_compress_body(self: StreamingResponse):
     DOAXVVHeader.set(self, "Encoding", EncodingEnum.DEFLATE)
 
 
-def response_encrypt_body(self: StreamingResponse, key: bytes):
+def response_encrypt_body(self: StreamingResponse, key: bytes) -> None:
     initialization_vector = token_bytes(16)
-    self.body_iterator = iter_encrypt_data(
-        self.body_iterator, key, initialization_vector
-    )
+    self.body_iterator = iter_encrypt_data(self.body_iterator, key, initialization_vector)
 
     del self.headers["Content-Length"]
     self.headers["Content-Type"] = "application/octet-stream"

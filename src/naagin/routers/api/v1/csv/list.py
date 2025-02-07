@@ -11,10 +11,6 @@ router = APIRouter(prefix="/list")
 @alru_cache
 async def get() -> CsvListGetResponseModel:
     json_data = await (
-        settings.data.api_dir
-        / "v1"
-        / "csv"
-        / "list"
-        / f"{settings.version.application}.json"
+        settings.data.api_dir / "v1" / "csv" / "list" / f"{settings.version.application}.json"
     ).read_bytes()
     return CsvListGetResponseModel.model_validate_json(json_data)

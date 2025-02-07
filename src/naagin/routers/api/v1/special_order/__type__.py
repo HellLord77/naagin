@@ -13,23 +13,21 @@ router = APIRouter(prefix="/{type}")
 
 @router.get("")
 async def get(
-    type: SpecialOrderTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
+    type: SpecialOrderTypeEnum,
+    session: SessionDependency,
+    owner_id: OwnerIdDependency,
 ) -> SpecialOrderTypeGetResponseModel:
-    if type == SpecialOrderTypeEnum._VALUE_81:
+    if type == SpecialOrderTypeEnum._VALUE_81:  # noqa: SLF001
         raise InternalServerErrorException
 
     if type == SpecialOrderTypeEnum.POSE_CARD_ITEM:
-        whereclause = (
-            SpecialOrderSchema.type == SpecialOrderTypeEnum.POSE_CARD_ITEM
-        ) | (SpecialOrderSchema.type == SpecialOrderTypeEnum._VALUE_81)
+        whereclause = (SpecialOrderSchema.type == SpecialOrderTypeEnum.POSE_CARD_ITEM) | (
+            SpecialOrderSchema.type == SpecialOrderTypeEnum._VALUE_81  # noqa: SLF001
+        )
     else:
         whereclause = SpecialOrderSchema.type == type
     special_order_list = (
-        await session.scalars(
-            select(SpecialOrderSchema).where(
-                SpecialOrderSchema.owner_id == owner_id, whereclause
-            )
-        )
+        await session.scalars(select(SpecialOrderSchema).where(SpecialOrderSchema.owner_id == owner_id, whereclause))
     ).all()
     response = SpecialOrderTypeGetResponseModel()
     if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:

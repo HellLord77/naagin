@@ -1,3 +1,4 @@
+from datetime import UTC
 from datetime import datetime
 
 from fastapi import APIRouter
@@ -20,7 +21,7 @@ async def post(
     owner = await session.get_one(OwnerSchema, owner_id)
 
     if owner.birthday is None:
-        owner.birthday = datetime.strptime(request.birthday, "%Y%m%d").date()
+        owner.birthday = datetime.strptime(request.birthday, "%Y%m%d").replace(tzinfo=UTC).date()
 
     await session.flush()
     await session.refresh(owner)

@@ -11,15 +11,13 @@ router = APIRouter(prefix="/received")
 
 
 @router.get("")
-async def get(
-    session: SessionDependency, owner_id: OwnerIdDependency
-) -> FriendshipReceivedGetResponseModel:
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> FriendshipReceivedGetResponseModel:
     friendship_list = (
         await session.scalars(
             select(FriendshipSchema).where(
                 FriendshipSchema.owner_id == owner_id,
                 FriendshipSchema.state == FriendshipStateEnum.RECEIVED,
-            )
+            ),
         )
     ).all()
     return FriendshipReceivedGetResponseModel(friendship_list=friendship_list)

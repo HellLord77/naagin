@@ -13,12 +13,11 @@ router = APIRouter(prefix="/{type}")
 
 @router.get("")
 async def get(
-    type: ItemEquipmentTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
+    type: ItemEquipmentTypeEnum,
+    session: SessionDependency,
+    owner_id: OwnerIdDependency,
 ) -> ItemEquipmentTypeTypeGetResponseModel:
-    if (
-        type == ItemEquipmentTypeEnum.HAIRSTYLE
-        or type == ItemEquipmentTypeEnum.EXPRESSION
-    ):
+    if type in {ItemEquipmentTypeEnum.HAIRSTYLE, ItemEquipmentTypeEnum.EXPRESSION}:
         raise InternalServerErrorException
 
     if type == ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION:
@@ -28,12 +27,6 @@ async def get(
     else:
         whereclause = ItemEquipmentSchema.type == type
     item_equipment_list = (
-        await session.scalars(
-            select(ItemEquipmentSchema).where(
-                ItemEquipmentSchema.owner_id == owner_id, whereclause
-            )
-        )
+        await session.scalars(select(ItemEquipmentSchema).where(ItemEquipmentSchema.owner_id == owner_id, whereclause))
     ).all()
-    return ItemEquipmentTypeTypeGetResponseModel(
-        item_equipment_list=item_equipment_list
-    )
+    return ItemEquipmentTypeTypeGetResponseModel(item_equipment_list=item_equipment_list)

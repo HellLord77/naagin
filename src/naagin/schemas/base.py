@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import DateTime
 from sqlalchemy import MetaData
@@ -17,15 +16,11 @@ class BaseSchema(DeclarativeBase):
             "ck": "ck_%(table_name)s_%(constraint_name)s",
             "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
             "pk": "pk_%(table_name)s",
-        }
+        },
     )
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=func.current_timestamp()
-    )
-    updated_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime, default=None, onupdate=func.current_timestamp()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, default=None, onupdate=func.current_timestamp())
 
     # __table_args__ = (
     #     CheckConstraint(created_at <= func.current_timestamp(), "created_at_lte_now"),

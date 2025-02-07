@@ -1,7 +1,6 @@
 from datetime import date
 from datetime import datetime
 from typing import Literal
-from typing import Optional
 
 from sqlalchemy import CheckConstraint
 from sqlalchemy import Date
@@ -27,12 +26,10 @@ class OwnerSchema(BaseSchema):
     __tablename__ = "owner"
 
     owner_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    status: Mapped[OwnerStatusEnum] = mapped_column(
-        OwnerStatusEnumSchema, default=OwnerStatusEnum.CREATED
-    )
-    name: Mapped[Optional[str]] = mapped_column(String(12), default=None)
-    island_name: Mapped[Optional[str]] = mapped_column(String(12), default=None)
-    message: Mapped[Optional[str]] = mapped_column(String(20), default=None)
+    status: Mapped[OwnerStatusEnum] = mapped_column(OwnerStatusEnumSchema, default=OwnerStatusEnum.CREATED)
+    name: Mapped[str | None] = mapped_column(String(12), default=None)
+    island_name: Mapped[str | None] = mapped_column(String(12), default=None)
+    message: Mapped[str | None] = mapped_column(String(20), default=None)
     team_id: Mapped[Literal[0]] = mapped_column(Integer, default=0)
     honor1_mid: Mapped[int] = mapped_column(Integer, default=0)
     honor2_mid: Mapped[int] = mapped_column(Integer, default=0)
@@ -44,30 +41,21 @@ class OwnerSchema(BaseSchema):
     spot_mid: Mapped[int] = mapped_column(Integer, default=0)
     spot_phase_mid: Mapped[int] = mapped_column(Integer, default=0)
     license_point: Mapped[int] = mapped_column(Integer, default=0)
-    license_level: Mapped[LicenseLevelEnum] = mapped_column(
-        LicenseLevelEnumSchema, default=LicenseLevelEnum.F
-    )
+    license_level: Mapped[LicenseLevelEnum] = mapped_column(LicenseLevelEnumSchema, default=LicenseLevelEnum.F)
     checked_license_level: Mapped[CheckedLicenseLevelEnum] = mapped_column(
-        CheckedLicenseLevelEnumSchema, default=CheckedLicenseLevelEnum.F
+        CheckedLicenseLevelEnumSchema,
+        default=CheckedLicenseLevelEnum.F,
     )
-    birthday: Mapped[Optional[date]] = mapped_column(Date, default=None)
-    stamina_checked_at: Mapped[datetime] = mapped_column(
-        DateTime, default=func.current_timestamp()
-    )
-    last_logged_at: Mapped[datetime] = mapped_column(
-        DateTime, default=func.current_timestamp()
-    )
-    friend_code: Mapped[str] = mapped_column(
-        String(11), default=friend_code_factory, unique=True
-    )
+    birthday: Mapped[date | None] = mapped_column(Date, default=None)
+    stamina_checked_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())
+    last_logged_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())
+    friend_code: Mapped[str] = mapped_column(String(11), default=friend_code_factory, unique=True)
 
     __table_args__ = (
         CheckConstraint(owner_id >= 1, "owner_id_min"),
         CheckConstraint(func.char_length(name).between(1, 12), "name_len_range"),
         CheckConstraint(func.trim(name) == name, "name_strip"),
-        CheckConstraint(
-            func.char_length(island_name).between(1, 12), "island_name_len_range"
-        ),
+        CheckConstraint(func.char_length(island_name).between(1, 12), "island_name_len_range"),
         CheckConstraint(func.trim(island_name) == island_name, "island_name_strip"),
         CheckConstraint(func.char_length(message).between(1, 20), "message_len_range"),
         CheckConstraint(func.trim(message) == message, "message_strip"),
@@ -82,17 +70,11 @@ class OwnerSchema(BaseSchema):
             "license_level_gte_checked_license_level",
         ),
         CheckConstraint(birthday <= func.current_date(), "birthday_lte_today"),
-        CheckConstraint(
-            stamina_checked_at <= func.current_timestamp(), "stamina_checked_at_lte_now"
-        ),
-        CheckConstraint(
-            last_logged_at <= func.current_timestamp(), "last_logged_at_lte_now"
-        ),
+        CheckConstraint(stamina_checked_at <= func.current_timestamp(), "stamina_checked_at_lte_now"),
+        CheckConstraint(last_logged_at <= func.current_timestamp(), "last_logged_at_lte_now"),
         CheckConstraint(
             stamina_checked_at >= last_logged_at,
             "stamina_checked_at_gte_last_logged_at",
         ),
-        CheckConstraint(
-            func.regexp_like(friend_code, r"^\d{3}-\d{3}-\d{3}$"), "friend_code_fmt"
-        ),
+        CheckConstraint(func.regexp_like(friend_code, r"^\d{3}-\d{3}-\d{3}$"), "friend_code_fmt"),
     )

@@ -15,12 +15,6 @@ async def get(
     owner_id: OwnerIdDependency,
 ) -> PvpGirlEquipmentGetResponseModel:
     pvp_girl_equipment_list = (
-        await session.scalars(
-            select(PvpGirlEquipmentSchema).where(
-                PvpGirlEquipmentSchema.owner_id == owner_id
-            )
-        )
+        await session.scalars(select(PvpGirlEquipmentSchema).where(PvpGirlEquipmentSchema.owner_id == owner_id))
     ).all()
-    return PvpGirlEquipmentGetResponseModel(
-        pvp_girl_equipment_list=pvp_girl_equipment_list
-    )
+    return PvpGirlEquipmentGetResponseModel(pvp_girl_equipment_list=pvp_girl_equipment_list)

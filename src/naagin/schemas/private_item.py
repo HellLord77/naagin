@@ -14,9 +14,7 @@ from .owner import OwnerSchema
 class PrivateItemSchema(BaseSchema):
     __tablename__ = "private_item"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
 
     girl_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
     type: Mapped[PrivateItemTypeEnum] = mapped_column(PrivateItemTypeEnumSchema)

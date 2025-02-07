@@ -12,7 +12,9 @@ router = APIRouter(prefix="/{other_owner_id}")
 
 @router.delete("")
 async def delete(
-    other_owner_id: int, session: SessionDependency, owner_id: OwnerIdDependency
+    other_owner_id: int,
+    session: SessionDependency,
+    owner_id: OwnerIdDependency,
 ) -> FriendshipFriendIdDeleteResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
     other_owner = await session.get_one(OwnerSchema, other_owner_id)
@@ -20,22 +22,13 @@ async def delete(
     other_friendship = await session.get_one(FriendshipSchema, other_owner_id, owner_id)
 
     owner_list = None
-    if (
-        friendship.state == FriendshipStateEnum.SENT
-        and other_friendship.state == FriendshipStateEnum.RECEIVED
-    ):
+    if friendship.state == FriendshipStateEnum.SENT and other_friendship.state == FriendshipStateEnum.RECEIVED:
         friendship.state = FriendshipStateEnum.RETRACTED
         other_friendship.state = FriendshipStateEnum.RETRACTED
-    elif (
-        friendship.state == FriendshipStateEnum.RECEIVED
-        and other_friendship.state == FriendshipStateEnum.SENT
-    ):
+    elif friendship.state == FriendshipStateEnum.RECEIVED and other_friendship.state == FriendshipStateEnum.SENT:
         friendship.state = FriendshipStateEnum.BLOCKED
         other_friendship.state = FriendshipStateEnum.REJECTED
-    elif (
-        friendship.state == FriendshipStateEnum.ACCEPTED
-        and other_friendship.state == FriendshipStateEnum.ACCEPTED
-    ):
+    elif friendship.state == FriendshipStateEnum.ACCEPTED and other_friendship.state == FriendshipStateEnum.ACCEPTED:
         friendship.state = FriendshipStateEnum.UNINVITED
         other_friendship.state = FriendshipStateEnum.UNINVITED
         owner_list = [owner, other_owner]
@@ -43,6 +36,4 @@ async def delete(
     await session.flush()
     await session.refresh(friendship)
     await session.refresh(other_friendship)
-    return FriendshipFriendIdDeleteResponseModel(
-        friendship_list=[friendship, other_friendship], owner_list=owner_list
-    )
+    return FriendshipFriendIdDeleteResponseModel(friendship_list=[friendship, other_friendship], owner_list=owner_list)

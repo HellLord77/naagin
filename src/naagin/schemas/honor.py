@@ -11,9 +11,7 @@ from .owner import OwnerSchema
 class HonorSchema(BaseSchema):
     __tablename__ = "honor"
 
-    owner_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True
-    )
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     honor_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
     times_received: Mapped[int] = mapped_column(Integer, default=1)
     parent_honor_mid: Mapped[int] = mapped_column(Integer, default=0)

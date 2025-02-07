@@ -9,9 +9,7 @@ router = APIRouter(prefix="/wallet")
 
 
 @router.get("")
-async def get(
-    session: SessionDependency, owner_id: OwnerIdDependency
-) -> WalletGetResponseModel:
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> WalletGetResponseModel:
     wallet = await session.get(WalletSchema, owner_id)
 
     if wallet is None:

@@ -27,18 +27,16 @@ async def get(
                 PrivateItemSchema.girl_mid == girl_mid,
                 PrivateItemSchema.type == type,
                 PrivateItemSchema.favorite,
-            )
+            ),
         )
     ).all()
-    return GirlGirlMidPrivateFavoriteTypeGetResponseModel(
-        favorite_private_item_list=favorite_private_item_list
-    )
+    return GirlGirlMidPrivateFavoriteTypeGetResponseModel(favorite_private_item_list=favorite_private_item_list)
 
 
 @router.post("")
 async def post(
     girl_mid: int,
-    type: PrivateItemTypeEnum,
+    type: PrivateItemTypeEnum,  # noqa: ARG001
     request: GirlGirlMidPrivateFavoriteTypePostRequestModel,
     session: SessionDependency,
     owner_id: OwnerIdDependency,
@@ -46,9 +44,7 @@ async def post(
     if len(request.item_list) > 1:
         raise InternalServerErrorException
 
-    private_item = await session.get_one(
-        PrivateItemSchema, owner_id, girl_mid, request.item_list[0].item_mid
-    )
+    private_item = await session.get_one(PrivateItemSchema, owner_id, girl_mid, request.item_list[0].item_mid)
 
     private_item.favorite = request.item_list[0].is_favorite
     if private_item.favorite:

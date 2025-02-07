@@ -14,12 +14,6 @@ router.include_router(__event_mid__.router)
 
 
 @router.get("")
-async def get(
-    session: SessionDependency, owner_id: OwnerIdDependency
-) -> TutorialGetResponseModel:
-    tutorial_list = (
-        await session.scalars(
-            select(TutorialSchema).where(TutorialSchema.owner_id == owner_id)
-        )
-    ).all()
+async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> TutorialGetResponseModel:
+    tutorial_list = (await session.scalars(select(TutorialSchema).where(TutorialSchema.owner_id == owner_id))).all()
     return TutorialGetResponseModel(tutorial_list=tutorial_list)
