@@ -1,4 +1,3 @@
-from .boolean import BooleanEnum as BooleanEnum
 from .checked_license_level import CheckedLicenseLevelEnum as CheckedLicenseLevelEnum
 from .client_type import ClientTypeEnum as ClientTypeEnum
 from .database_driver import DatabaseDriverEnum as DatabaseDriverEnum
