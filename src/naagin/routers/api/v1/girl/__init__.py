@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy import select
 
 from naagin.models.api import GirlGetResponseModel
 from naagin.schemas import GirlSchema
@@ -23,5 +22,5 @@ router.include_router(ywrk_skill.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> GirlGetResponseModel:
-    girl_list = (await session.scalars(select(GirlSchema).where(GirlSchema.owner_id == owner_id))).all()
+    girl_list = await session.get_all(GirlSchema, GirlSchema.owner_id == owner_id)
     return GirlGetResponseModel(girl_list=girl_list)

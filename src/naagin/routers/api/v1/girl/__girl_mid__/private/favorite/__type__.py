@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy import select
 
 from naagin.enums import PrivateItemTypeEnum
 from naagin.exceptions import InternalServerErrorException
@@ -17,16 +16,13 @@ router = APIRouter(prefix="/{type}")
 async def get(
     girl_mid: int, type: PrivateItemTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
 ) -> GirlGirlMidPrivateFavoriteTypeGetResponseModel:
-    favorite_private_item_list = (
-        await session.scalars(
-            select(PrivateItemSchema).where(
-                PrivateItemSchema.owner_id == owner_id,
-                PrivateItemSchema.girl_mid == girl_mid,
-                PrivateItemSchema.type == type,
-                PrivateItemSchema.favorite,
-            )
-        )
-    ).all()
+    favorite_private_item_list = await session.get_all(
+        PrivateItemSchema,
+        PrivateItemSchema.owner_id == owner_id,
+        PrivateItemSchema.girl_mid == girl_mid,
+        PrivateItemSchema.type == type,
+        PrivateItemSchema.favorite,
+    )
     return GirlGirlMidPrivateFavoriteTypeGetResponseModel(favorite_private_item_list=favorite_private_item_list)
 
 

@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy import select
 
 from naagin.models.api import TutorialGetResponseModel
 from naagin.schemas import TutorialSchema
@@ -15,5 +14,5 @@ router.include_router(__event_mid__.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> TutorialGetResponseModel:
-    tutorial_list = (await session.scalars(select(TutorialSchema).where(TutorialSchema.owner_id == owner_id))).all()
+    tutorial_list = await session.get_all(TutorialSchema, TutorialSchema.owner_id == owner_id)
     return TutorialGetResponseModel(tutorial_list=tutorial_list)

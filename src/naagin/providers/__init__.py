@@ -3,13 +3,13 @@ from collections.abc import AsyncGenerator
 from fastapi import Depends
 from fastapi import Request
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from naagin import settings
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import SessionSchema
 from naagin.types.cookies import PINKSIDCookie
 from naagin.types.headers import AccessTokenHeader
+from naagin.utils import AsyncSession
 
 
 async def provide_session() -> AsyncGenerator[AsyncSession]:

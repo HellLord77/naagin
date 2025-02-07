@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy import select
 
 from naagin.enums import SpecialOrderTypeEnum
 from naagin.exceptions import InternalServerErrorException
@@ -24,9 +23,7 @@ async def get(
         )
     else:
         whereclause = SpecialOrderSchema.type == type
-    special_order_list = (
-        await session.scalars(select(SpecialOrderSchema).where(SpecialOrderSchema.owner_id == owner_id, whereclause))
-    ).all()
+    special_order_list = await session.get_all(SpecialOrderSchema, SpecialOrderSchema.owner_id == owner_id, whereclause)
     response = SpecialOrderTypeGetResponseModel()
     if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:
         response.sp_timestop_item_list = special_order_list

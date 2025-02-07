@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from sqlalchemy import select
 
 from naagin.models.api import ItemConsumeGetResponseModel
 from naagin.schemas import ItemConsumeSchema
@@ -15,7 +14,5 @@ router.include_router(negative.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> ItemConsumeGetResponseModel:
-    item_consume_list = (
-        await session.scalars(select(ItemConsumeSchema).where(ItemConsumeSchema.owner_id == owner_id))
-    ).all()
+    item_consume_list = await session.get_all(ItemConsumeSchema, ItemConsumeSchema.owner_id == owner_id)
     return ItemConsumeGetResponseModel(item_consume_list=item_consume_list)
