@@ -40,6 +40,7 @@ async def post(
     friendship = await session.get(FriendshipSchema, owner_id, request.friend_id)
     friendship_other = await session.get(FriendshipSchema, request.friend_id, owner_id)
 
+    success = True
     if friendship is None and friendship_other is None:
         friendship = FriendshipSchema(owner_id=owner_id, friend_id=request.friend_id, state=FriendshipStateEnum.SENT)
         friendship_other = FriendshipSchema(
@@ -62,8 +63,12 @@ async def post(
     ):
         friendship.state = FriendshipStateEnum.SENT
         friendship_other.state = FriendshipStateEnum.RECEIVED
+    else:
+        success = False
 
-    await session.flush()
-    await session.refresh(friendship)
-    await session.refresh(friendship_other)
+    if success:
+        await session.flush()
+        await session.refresh(friendship)
+        await session.refresh(friendship_other)
+
     return FriendshipPostResponseModel(friendship_list=[friendship, friendship_other], owner_list=[owner, owner_other])

@@ -29,6 +29,7 @@ async def post(
     await session.flush()
     await session.refresh(friendship)
     await session.refresh(friendship_other)
+
     return FriendshipAcceptPostResponseModel(
         friendship_list=[friendship, friendship_other], owner_list=[owner, owner_other]
     )

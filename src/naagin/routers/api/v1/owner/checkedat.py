@@ -16,7 +16,6 @@ async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> OwnerC
         owner_checked_at = OwnerCheckedAtSchema(owner_id=owner_id)
         session.add(owner_checked_at)
 
-        await session.commit()
-        await session.refresh(owner_checked_at)
-
+    await session.commit()
+    await session.refresh(owner_checked_at)
     return OwnerCheckedAtGetResponseModel(owner_checked_at=owner_checked_at)

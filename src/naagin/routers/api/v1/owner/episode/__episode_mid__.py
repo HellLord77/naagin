@@ -31,6 +31,7 @@ async def put(
 
     await session.flush()
     await session.refresh(episode)
+
     return OwnerEpisodeEpisodeMidPutResponseModel(episode_list=[episode])
 
 
@@ -60,6 +61,7 @@ async def post(
     await session.flush()
     await session.refresh(owner)
     await session.refresh(episode)
+
     episode_result_owner = EpisodeResultOwnerModel(
         experience_before=experience_before,
         experience_gain=experience_gain,

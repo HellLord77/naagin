@@ -45,4 +45,5 @@ async def put(
     session_.session_key = session_key
 
     await session.flush()
+
     return SessionKeyPutResponseModel(session="encrypt key saved")

@@ -49,6 +49,7 @@ async def post(
 
     await session.flush()
     await session.refresh(private_item)
+
     return GirlGirlMidPrivateFavoriteTypeGetResponseModel(
         favorite_private_item_list=favorite_private_item_list,
         favorite_delete_private_item_list=favorite_delete_private_item_list,
