@@ -5,7 +5,11 @@ from naagin.schemas import SwimsuitArrangeFlagSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
 
+from . import __owner_id__
+
 router = APIRouter(prefix="/swimsuit_arrange_flag")
+
+router.include_router(__owner_id__.router)
 
 
 @router.get("")
