@@ -8,8 +8,8 @@ from .base import BaseSchema
 from .owner import OwnerSchema
 
 
-class DishevelmentSchema(BaseSchema):
-    __tablename__ = "dishevelment"
+class DishevelmentSwimsuitSchema(BaseSchema):
+    __tablename__ = "dishevelment_swimsuit"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     item_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
