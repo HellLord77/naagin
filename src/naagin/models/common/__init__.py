@@ -5,3 +5,4 @@ from .friendship import FriendshipModel as FriendshipModel
 from .item_consume import ItemConsumeModel as ItemConsumeModel
 from .owner import OwnerModel as OwnerModel
 from .owner_other import OwnerOtherModel as OwnerOtherModel
+from .swimsuit_arrange_flag import SwimsuitArrangeFlagModel as SwimsuitArrangeFlagModel
