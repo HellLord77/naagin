@@ -86,6 +86,9 @@ from .v1.shop.paymentlog.incomplete.get.response import (
     ShopPaymentLogIncompleteGetResponseModel as ShopPaymentLogIncompleteGetResponseModel,
 )
 from .v1.special_order.__type__.get.resposne import SpecialOrderTypeGetResponseModel as SpecialOrderTypeGetResponseModel
+from .v1.swimsuit_arrange_flag.get.response import (
+    SwimsuitArrangeFlagGetResponseModel as SwimsuitArrangeFlagGetResponseModel,
+)
 from .v1.tutorial.__event_mid__.put.request import TutorialEventMidPutRequestModel as TutorialEventMidPutRequestModel
 from .v1.tutorial.__event_mid__.put.response import TutorialEventMidPutResponseModel as TutorialEventMidPutResponseModel
 from .v1.tutorial.get.response import TutorialGetResponseModel as TutorialGetResponseModel

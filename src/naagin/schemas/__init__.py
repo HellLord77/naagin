@@ -15,6 +15,7 @@ from .private_item import PrivateItemSchema as PrivateItemSchema
 from .pvp_girl_equipment import PvpGirlEquipmentSchema as PvpGirlEquipmentSchema
 from .session import SessionSchema as SessionSchema
 from .special_order import SpecialOrderSchema as SpecialOrderSchema
+from .swimsuit_arrange_flag import SwimsuitArrangeFlagSchema as SwimsuitArrangeFlagSchema
 from .tutorial import TutorialSchema as TutorialSchema
 from .wallet import WalletSchema as WalletSchema
 from .ywrk_skill import YwrkSkillSchema as YwrkSkillSchema
