@@ -1,5 +1,5 @@
 from .bromide import BromideSchema as BromideSchema
-from .dishevelment import DishevelmentSchema as DishevelmentSchema
+from .dishevelment_swimsuit import DishevelmentSwimsuitSchema as DishevelmentSwimsuitSchema
 from .episode import EpisodeSchema as EpisodeSchema
 from .friendship import FriendshipSchema as FriendshipSchema
 from .girl import GirlSchema as GirlSchema
