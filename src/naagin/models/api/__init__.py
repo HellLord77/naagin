@@ -35,6 +35,12 @@ from .v1.girl.private.favorite.__type__.get.response import (
 from .v1.girl.private.get.response import GirlPrivateGetResponseModel as GirlPrivateGetResponseModel
 from .v1.girl.ywrk_skill.get.resposne import GirlYwrkSkillGetResponseModel as GirlYwrkSkillGetResponseModel
 from .v1.honor.get.response import HonorGetResponseModel as HonorGetResponseModel
+from .v1.information.global_.post.request import InformationGlobalPostRequestModel as InformationGlobalPostRequestModel
+from .v1.information.global_.post.response import (
+    InformationGlobalPostResponseModel as InformationGlobalPostResponseModel,
+)
+from .v1.information.put.request import InformationPutRequestModel as InformationPutRequestModel
+from .v1.information.put.response import InformationPutResponseModel as InformationPutResponseModel
 from .v1.item.consume.get.response import ItemConsumeGetResponseModel as ItemConsumeGetResponseModel
 from .v1.item.consume.negative.get.response import (
     ItemConsumeNegativeGetResponseModel as ItemConsumeNegativeGetResponseModel,
