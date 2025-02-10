@@ -17,7 +17,7 @@ async def get(
     if type == PrivateItemTypeEnum._VALUE_80:  # noqa: SLF001
         raise InternalServerErrorException
 
-    favorite_private_item_list = await session.get_all(
+    favorite_private_item_list = await session.find_all(
         PrivateItemSchema, PrivateItemSchema.owner_id == owner_id, PrivateItemSchema.type == type
     )
     return GirlPrivateFavoriteTypeGetResponseModel(favorite_private_item_list=favorite_private_item_list)

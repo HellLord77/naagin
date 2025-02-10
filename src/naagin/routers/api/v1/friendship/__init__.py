@@ -25,7 +25,7 @@ router.include_router(sent.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> FriendshipGetResponseModel:
-    friendship_list = await session.get_all(
+    friendship_list = await session.find_all(
         FriendshipSchema, FriendshipSchema.owner_id == owner_id, FriendshipSchema.state == FriendshipStateEnum.ACCEPTED
     )
     return FriendshipGetResponseModel(friendship_list=friendship_list)

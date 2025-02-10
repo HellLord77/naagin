@@ -23,7 +23,7 @@ async def get(
         )
     else:
         whereclause = ItemEquipmentSchema.type == type
-    item_equipment_list = await session.get_all(
+    item_equipment_list = await session.find_all(
         ItemEquipmentSchema, ItemEquipmentSchema.owner_id == owner_id, whereclause
     )
     return ItemEquipmentTypeTypeGetResponseModel(item_equipment_list=item_equipment_list)

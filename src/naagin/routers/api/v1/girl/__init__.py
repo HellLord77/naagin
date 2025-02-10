@@ -22,5 +22,5 @@ router.include_router(ywrk_skill.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> GirlGetResponseModel:
-    girl_list = await session.get_all(GirlSchema, GirlSchema.owner_id == owner_id)
+    girl_list = await session.find_all(GirlSchema, GirlSchema.owner_id == owner_id)
     return GirlGetResponseModel(girl_list=girl_list)

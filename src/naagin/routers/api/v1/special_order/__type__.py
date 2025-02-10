@@ -23,7 +23,9 @@ async def get(
         )
     else:
         whereclause = SpecialOrderSchema.type == type
-    special_order_list = await session.get_all(SpecialOrderSchema, SpecialOrderSchema.owner_id == owner_id, whereclause)
+    special_order_list = await session.find_all(
+        SpecialOrderSchema, SpecialOrderSchema.owner_id == owner_id, whereclause
+    )
     response = SpecialOrderTypeGetResponseModel()
     if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:
         response.sp_timestop_item_list = special_order_list

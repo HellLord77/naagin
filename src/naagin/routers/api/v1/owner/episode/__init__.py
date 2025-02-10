@@ -14,5 +14,5 @@ router.include_router(__episode_mid__.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> OwnerEpisodeGetResponseModel:
-    episode_list = await session.get_all(EpisodeSchema, EpisodeSchema.owner_id == owner_id)
+    episode_list = await session.find_all(EpisodeSchema, EpisodeSchema.owner_id == owner_id)
     return OwnerEpisodeGetResponseModel(episode_list=episode_list)
