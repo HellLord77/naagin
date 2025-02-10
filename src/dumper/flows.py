@@ -101,7 +101,7 @@ def aggregate_json(path: str):
     variables = {parse_result[1] for parse_result in formatter.parse(path)}
     variable_path = str(get_json_dir() / path)
     variable_path_dst = variable_path.format(
-        **{variable: f"_{variable}_" for variable in variables}
+        **{variable: f"__{variable}__" for variable in variables}
     )
     for variable_path_src in glob.iglob(
         variable_path.format(**{variable: "[0-9]*" for variable in variables})

@@ -40,7 +40,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     await settings.database.engine.dispose()
 
 
-app = FastAPI(title="naagin", version=__version__, lifespan=lifespan)
+app = FastAPI(title="naagin", version=__version__, redoc_url=None, lifespan=lifespan)
 
 app.mount("/game", apps.game.app)
 
