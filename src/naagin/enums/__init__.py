@@ -3,8 +3,10 @@ from .client_type import ClientTypeEnum as ClientTypeEnum
 from .database_driver import DatabaseDriverEnum as DatabaseDriverEnum
 from .encoding import EncodingEnum as EncodingEnum
 from .friendship_state import FriendshipStateEnum as FriendshipStateEnum
+from .information_category import InformationCategoryEnum as InformationCategoryEnum
 from .item_consume_type import ItemConsumeTypeEnum as ItemConsumeTypeEnum
 from .item_equipment_type import ItemEquipmentTypeEnum as ItemEquipmentTypeEnum
+from .language import LanguageEnum as LanguageEnum
 from .license_level import LicenseLevelEnum as LicenseLevelEnum
 from .owner_status import OwnerStatusEnum as OwnerStatusEnum
 from .private_item import PrivateItemTypeEnum as PrivateItemTypeEnum

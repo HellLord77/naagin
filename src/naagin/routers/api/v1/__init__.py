@@ -7,6 +7,7 @@ from . import dishevelment
 from . import friendship
 from . import girl
 from . import honor
+from . import information
 from . import item
 from . import option
 from . import owner
@@ -29,6 +30,7 @@ router.include_router(dishevelment.router)
 router.include_router(friendship.router)
 router.include_router(girl.router)
 router.include_router(honor.router)
+router.include_router(information.router)
 router.include_router(item.router)
 router.include_router(option.router)
 router.include_router(owner.router)

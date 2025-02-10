@@ -6,6 +6,8 @@ from .girl import GirlSchema as GirlSchema
 from .girl_equipment import GirlEquipmentSchema as GirlEquipmentSchema
 from .girl_potential import GirlPotentialSchema as GirlPotentialSchema
 from .honor import HonorSchema as HonorSchema
+from .information import InformationSchema as InformationSchema
+from .information_read import InformationReadSchema as InformationReadSchema
 from .item_consume import ItemConsumeSchema as ItemConsumeSchema
 from .item_equipemnt import ItemEquipmentSchema as ItemEquipmentSchema
 from .option_item_auto_lock import OptionItemAutoLockSchema as OptionItemAutoLockSchema
