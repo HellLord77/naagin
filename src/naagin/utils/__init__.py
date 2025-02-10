@@ -9,9 +9,12 @@ from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
+from fastapi import APIRouter
 from fastapi import Request
-from fastapi.responses import StreamingResponse
 from starlette.datastructures import MutableHeaders
+from starlette.middleware.base import _StreamingResponse
+from starlette.routing import Match
+from starlette.types import Scope
 
 from naagin.enums import EncodingEnum
 
@@ -46,6 +49,18 @@ async def iter_encrypt_data(
     yield encryptor.finalize()
 
 
+def api_router_matches(self: APIRouter, scope: Scope) -> tuple[Match, Scope]:
+    partial_matches = Match.NONE, {}
+    for route in self.routes:
+        matches = route.matches(scope)
+        match matches[0]:
+            case Match.FULL:
+                return matches
+            case Match.PARTIAL if partial_matches[0] == Match.NONE:
+                partial_matches = matches
+    return partial_matches
+
+
 def request_headers(self: Request) -> MutableHeaders:
     headers = self.headers
     if not isinstance(headers, MutableHeaders):
@@ -72,7 +87,7 @@ async def request_decompress_body(self: Request) -> None:
     headers["Content-Length"] = str(len(decompressed))
 
 
-def response_compress_body(self: StreamingResponse) -> None:
+def response_compress_body(self: _StreamingResponse) -> None:
     self.body_iterator = iter_compress_data(self.body_iterator)
 
     del self.headers["Content-Length"]
@@ -80,7 +95,7 @@ def response_compress_body(self: StreamingResponse) -> None:
     DOAXVVHeader.set(self, "Encoding", EncodingEnum.DEFLATE)
 
 
-def response_encrypt_body(self: StreamingResponse, key: bytes) -> None:
+def response_encrypt_body(self: _StreamingResponse, key: bytes) -> None:
     initialization_vector = token_bytes(16)
     self.body_iterator = iter_encrypt_data(self.body_iterator, key, initialization_vector)
 
