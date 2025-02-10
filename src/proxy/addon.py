@@ -31,11 +31,11 @@ class AddonDOAXVV:
     def requestheaders(flow: HTTPFlow):
         match flow.request.pretty_host:
             case consts.API_HOST:
-                utils.redirect_request(flow.request, "api")
+                if consts.MITMWEB:
+                    utils.redirect_request(flow.request, "api")
                 utils.renounce_request(flow.request)
             case consts.API01_HOST:
-                if flow.request.path_components[:3] != ("v1", "johren", "authJohren"):
-                    utils.redirect_request(flow.request, "api01")
+                utils.redirect_request(flow.request, "api01")
             case consts.GAME_HOST:
                 utils.redirect_request(flow.request, "game")
 
