@@ -75,15 +75,16 @@ def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
 
 def redirect_request(request: Request, path: str):
     logging.debug("[%s] %s %s", request.method, path, request.path)
-
     pretty_host = request.pretty_host
+
     pretty_url = request.pretty_url
     request.scheme = consts.SERVER_URL.scheme
     request.host = consts.SERVER_URL.hostname
     request.port = consts.SERVER_URL.port
     request.path_components = path, *request.path_components
-    request.headers["Host"] = pretty_host
+
     logging.info("[url] %s -> %s", pretty_url, request.pretty_url)
+    request.headers["Host"] = pretty_host
 
 
 def renounce_request(request: Request):
