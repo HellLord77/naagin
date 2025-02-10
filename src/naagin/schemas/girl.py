@@ -1,3 +1,5 @@
+from typing import Literal
+
 from sqlalchemy import Boolean
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
@@ -14,7 +16,7 @@ class GirlSchema(BaseSchema):
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     girl_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
-    mood: Mapped[int] = mapped_column(Integer, default=0)
+    mood: Mapped[Literal[0]] = mapped_column(Integer, default=0)
     experience: Mapped[int] = mapped_column(Integer, default=0)
     level: Mapped[int] = mapped_column(Integer, default=1)
     power: Mapped[int] = mapped_column(Integer)
@@ -39,10 +41,10 @@ class GirlSchema(BaseSchema):
     visual_state_flag_d: Mapped[bool] = mapped_column(Boolean, default=False)
     sunburn: Mapped[int] = mapped_column(Integer, default=0)
     wet: Mapped[int] = mapped_column(Integer, default=0)
-    hip_swing: Mapped[int] = mapped_column(Integer, default=0)
-    hip_press: Mapped[int] = mapped_column(Integer, default=0)
-    bust_swing: Mapped[int] = mapped_column(Integer, default=0)
-    bust_press: Mapped[int] = mapped_column(Integer, default=0)
+    hip_swing: Mapped[Literal[0]] = mapped_column(Integer, default=0)
+    hip_press: Mapped[Literal[0]] = mapped_column(Integer, default=0)
+    bust_swing: Mapped[Literal[0]] = mapped_column(Integer, default=0)
+    bust_press: Mapped[Literal[0]] = mapped_column(Integer, default=0)
     hip_swing_lock: Mapped[bool] = mapped_column(Boolean, default=False)
     hip_press_lock: Mapped[bool] = mapped_column(Boolean, default=False)
     bust_swing_lock: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -52,9 +54,9 @@ class GirlSchema(BaseSchema):
     affection_level: Mapped[int] = mapped_column(Integer, default=1)
     affection_point: Mapped[int] = mapped_column(Integer, default=0)
     venus_memory: Mapped[int] = mapped_column(Integer, default=0)
-    girly: Mapped[int] = mapped_column(Integer, default=0)
-    skin_color: Mapped[int] = mapped_column(Integer, default=0)
-    nail_color: Mapped[int] = mapped_column(Integer, default=0)
+    girly: Mapped[Literal[0]] = mapped_column(Integer, default=0)
+    skin_color: Mapped[Literal[0]] = mapped_column(Integer, default=0)
+    nail_color: Mapped[Literal[0]] = mapped_column(Integer, default=0)
     partner_count: Mapped[int] = mapped_column(Integer, default=0)
 
     __table_args__ = (
