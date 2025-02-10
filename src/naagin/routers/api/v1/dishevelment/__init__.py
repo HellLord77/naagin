@@ -14,7 +14,7 @@ router.include_router(__owner_id__.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> DishevelmentGetResponseModel:
-    dishevelment_swimsuit_list = await session.get_all(
+    dishevelment_swimsuit_list = await session.find_all(
         DishevelmentSwimsuitSchema, DishevelmentSwimsuitSchema.owner_id == owner_id
     )
     return DishevelmentGetResponseModel(dishevelment_swimsuit_list=dishevelment_swimsuit_list)

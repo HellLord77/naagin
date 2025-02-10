@@ -14,5 +14,5 @@ router.include_router(favorite.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> GirlPrivateGetResponseModel:
-    private_item_list = await session.get_all(PrivateItemSchema, PrivateItemSchema.owner_id == owner_id)
+    private_item_list = await session.find_all(PrivateItemSchema, PrivateItemSchema.owner_id == owner_id)
     return GirlPrivateGetResponseModel(private_item_list=private_item_list)

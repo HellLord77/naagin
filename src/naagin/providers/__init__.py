@@ -2,7 +2,6 @@ from collections.abc import AsyncGenerator
 
 from fastapi import Depends
 from fastapi import Request
-from sqlalchemy import select
 
 from naagin import settings
 from naagin.classes import AsyncSession
@@ -45,7 +44,7 @@ async def provide_session_cached(
         else:
             raise AuthenticationFailedException
 
-        session_ = await session.scalar(select(SessionSchema).where(whereclause))
+        session_ = await session.find(SessionSchema, whereclause)
         if session_ is None:
             raise AuthenticationFailedException
         session.expunge(session_)

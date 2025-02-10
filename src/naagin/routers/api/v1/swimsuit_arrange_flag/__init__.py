@@ -14,7 +14,7 @@ router.include_router(__owner_id__.router)
 
 @router.get("")
 async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> SwimsuitArrangeFlagGetResponseModel:
-    swimsuit_arrage_flag_list = await session.get_all(
+    swimsuit_arrage_flag_list = await session.find_all(
         SwimsuitArrangeFlagSchema, SwimsuitArrangeFlagSchema.owner_id == owner_id
     )
     return SwimsuitArrangeFlagGetResponseModel(swimsuit_arrage_flag_list=swimsuit_arrage_flag_list)
