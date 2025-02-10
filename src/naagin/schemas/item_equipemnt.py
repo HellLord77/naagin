@@ -1,3 +1,5 @@
+from typing import Literal
+
 from sqlalchemy import Boolean
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
@@ -23,7 +25,7 @@ class ItemEquipmentSchema(BaseSchema):
     level: Mapped[int] = mapped_column(Integer, default=1)
     experience: Mapped[int] = mapped_column(Integer, default=0)
     girl_mid: Mapped[int] = mapped_column(Integer, default=0)
-    favorite: Mapped[bool] = mapped_column(Boolean, default=False)
+    favorite: Mapped[Literal[False]] = mapped_column(Boolean, default=False)
     in_lock: Mapped[bool] = mapped_column(Boolean, default=False)
     unlock_count: Mapped[int] = mapped_column(Integer, default=0)
     upgrade_count: Mapped[int] = mapped_column(Integer, default=0)
