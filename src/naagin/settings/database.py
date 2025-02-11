@@ -1,4 +1,5 @@
 from functools import cached_property
+from typing import Literal
 
 from pydantic import Field
 from pydantic import SecretStr
@@ -15,7 +16,7 @@ from .base import BaseSettings
 
 
 class DatabaseSettings(BaseSettings):
-    driver: DatabaseDriverEnum = DatabaseDriverEnum.POSTGRESQL
+    driver: Literal[DatabaseDriverEnum.POSTGRESQL] = DatabaseDriverEnum.POSTGRESQL
     user: str | None = None
     pass_: SecretStr | None = Field(None, alias="db_pass")
     host: str | None = None
@@ -32,9 +33,6 @@ class DatabaseSettings(BaseSettings):
 
     @cached_property
     def url(self) -> URL:
-        if self.driver != DatabaseDriverEnum.POSTGRESQL:
-            raise NotImplementedError
-
         driver = {
             DatabaseDriverEnum.SQLITE: "sqlite+aiosqlite",
             DatabaseDriverEnum.POSTGRESQL: "postgresql+asyncpg",

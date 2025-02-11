@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from naagin.models.base import BaseModel
+from naagin.models.common import EpisodeModel
 from naagin.models.common import OwnerOtherModel
 
 
@@ -21,12 +20,6 @@ class EpisodeResultOwnerModel(BaseModel):
 class EpisodeResultModel(BaseModel):
     episode: EpisodeResultEpisodeModel
     owner: EpisodeResultOwnerModel
-
-
-class EpisodeModel(BaseModel):
-    episode_mid: int
-    count: int
-    created_at: datetime
 
 
 class OwnerEpisodeEpisodeMidPostResponseModel(BaseModel):

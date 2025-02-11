@@ -4,11 +4,13 @@ from .data import DataSettings
 from .database import DatabaseSettings
 from .environment import EnvironmentSettings
 from .game import GameSettings
+from .logging import LoggingSettings
 from .version import VersionSettings
 
 environment = EnvironmentSettings()
-version = VersionSettings(_env_file=environment.file)
+logging = LoggingSettings(_env_file=environment.file)
 
+version = VersionSettings(_env_file=environment.file)
 data = DataSettings(_env_file=environment.file)
 database = DatabaseSettings(_env_file=environment.file)
 

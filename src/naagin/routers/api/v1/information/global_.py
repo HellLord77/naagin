@@ -5,6 +5,7 @@ from sqlalchemy import func
 
 from naagin.enums import InformationCategoryEnum
 from naagin.enums import LanguageEnum
+from naagin.exceptions import InternalServerErrorException
 from naagin.models.api import InformationGlobalPostRequestModel
 from naagin.models.api import InformationGlobalPostResponseModel
 from naagin.schemas import InformationReadSchema
@@ -19,38 +20,44 @@ router = APIRouter(prefix="/global")
 def get_categories(
     language: LanguageEnum,
 ) -> tuple[InformationCategoryEnum, InformationCategoryEnum, InformationCategoryEnum, InformationCategoryEnum]:
-    return {
-        LanguageEnum.JPN: (
-            InformationCategoryEnum.IMPORTANT_JPN,
-            InformationCategoryEnum.NOTICE_JPN,
-            InformationCategoryEnum.EVENT_JPN,
-            InformationCategoryEnum.GACHA_JPN,
-        ),
-        LanguageEnum.ENG: (
-            InformationCategoryEnum.IMPORTANT_ENG,
-            InformationCategoryEnum.NOTICE_ENG,
-            InformationCategoryEnum.EVENT_ENG,
-            InformationCategoryEnum.GACHA_ENG,
-        ),
-        LanguageEnum.CHN: (
-            InformationCategoryEnum.IMPORTANT_CHN,
-            InformationCategoryEnum.NOTICE_CHN,
-            InformationCategoryEnum.EVENT_CHN,
-            InformationCategoryEnum.GACHA_CHN,
-        ),
-        LanguageEnum.ZHN: (
-            InformationCategoryEnum.IMPORTANT_ZHN,
-            InformationCategoryEnum.NOTICE_ZHN,
-            InformationCategoryEnum.EVENT_ZHN,
-            InformationCategoryEnum.GACHA_ZHN,
-        ),
-        LanguageEnum.KOR: (
-            InformationCategoryEnum.IMPORTANT_KOR,
-            InformationCategoryEnum.NOTICE_KOR,
-            InformationCategoryEnum.EVENT_KOR,
-            InformationCategoryEnum.GACHA_KOR,
-        ),
-    }[language]
+    match language:
+        case LanguageEnum.JPN:
+            return (
+                InformationCategoryEnum.IMPORTANT_JPN,
+                InformationCategoryEnum.NOTICE_JPN,
+                InformationCategoryEnum.EVENT_JPN,
+                InformationCategoryEnum.GACHA_JPN,
+            )
+        case LanguageEnum.ENG:
+            return (
+                InformationCategoryEnum.IMPORTANT_ENG,
+                InformationCategoryEnum.NOTICE_ENG,
+                InformationCategoryEnum.EVENT_ENG,
+                InformationCategoryEnum.GACHA_ENG,
+            )
+        case LanguageEnum.CHN:
+            return (
+                InformationCategoryEnum.IMPORTANT_CHN,
+                InformationCategoryEnum.NOTICE_CHN,
+                InformationCategoryEnum.EVENT_CHN,
+                InformationCategoryEnum.GACHA_CHN,
+            )
+        case LanguageEnum.ZHN:
+            return (
+                InformationCategoryEnum.IMPORTANT_ZHN,
+                InformationCategoryEnum.NOTICE_ZHN,
+                InformationCategoryEnum.EVENT_ZHN,
+                InformationCategoryEnum.GACHA_ZHN,
+            )
+        case LanguageEnum.KOR:
+            return (
+                InformationCategoryEnum.IMPORTANT_KOR,
+                InformationCategoryEnum.NOTICE_KOR,
+                InformationCategoryEnum.EVENT_KOR,
+                InformationCategoryEnum.GACHA_KOR,
+            )
+        case _:
+            raise InternalServerErrorException
 
 
 @router.post("")
