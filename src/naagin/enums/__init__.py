@@ -8,6 +8,7 @@ from .item_consume_type import ItemConsumeTypeEnum as ItemConsumeTypeEnum
 from .item_equipment_type import ItemEquipmentTypeEnum as ItemEquipmentTypeEnum
 from .language import LanguageEnum as LanguageEnum
 from .license_level import LicenseLevelEnum as LicenseLevelEnum
+from .logging_level import LoggingLevelEnum as LoggingLevelEnum
 from .owner_status import OwnerStatusEnum as OwnerStatusEnum
 from .private_item import PrivateItemTypeEnum as PrivateItemTypeEnum
 from .special_order_type import SpecialOrderTypeEnum as SpecialOrderTypeEnum

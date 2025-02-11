@@ -1,12 +1,17 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from http import HTTPStatus
+from inspect import getfile
+from inspect import getsourcelines
+from logging import Formatter
 from logging import getLogger
 
+from aiopath import AsyncPath
 from fastapi import Depends
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.gzip import GZipMiddleware
+from rich.logging import RichHandler
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from . import __version__
@@ -19,17 +24,38 @@ from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions.base import BaseException
+from .models.base import BaseModel
 from .schemas.base import BaseSchema
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import moved_permanently_handler
 from .utils.exception_handlers import not_found_handler
 
+logger = settings.logging.logger
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
-    logger = getLogger("sqlalchemy.engine.Engine")
-    handler = SQLAlchemyHandler(show_path=False)
+    logger.setLevel(settings.logging.level)
+    handler = RichHandler(markup=True, rich_tracebacks=True)
+    formatter = Formatter("%(message)s", datefmt="[%X]")
+    handler.setFormatter(formatter)
     logger.addHandler(handler)
+
+    sqlalchemy_logger = getLogger("sqlalchemy.engine.Engine")
+    sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
+    sqlalchemy_logger.addHandler(sqlalchemy_handler)
+
+    if settings.logging.duplicate_model:
+        for models in BaseModel.model_map.values():
+            if len(models) > 1:
+                message = "Possible duplicate models"
+                for model in models:
+                    path = getfile(model)
+                    lines, lineno = getsourcelines(model)
+                    link = AsyncPath(path).as_uri()
+                    message += f"\n[link={link}]{path}[/link]:[link={link}#{lineno}]{lineno}[/link]"
+                    message += f"\n    {lines[0].rstrip()}"
+                logger.warning(message)
 
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(BaseSchema.metadata.drop_all)
