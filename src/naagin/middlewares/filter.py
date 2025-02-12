@@ -7,10 +7,9 @@ from starlette.middleware.base import DispatchFunction
 from starlette.middleware.base import RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
-from starlette.routing import Match
 from starlette.types import ASGIApp
 
-from naagin.utils import router_matches
+from naagin.utils import request_match
 
 
 class FilterMiddleware(BaseHTTPMiddleware):
@@ -40,7 +39,7 @@ class FilterMiddleware(BaseHTTPMiddleware):
             else:
                 raise NotImplementedError
         else:
-            matches = router_matches(self.router, request.scope)[0] == Match.FULL
+            matches = await request_match(request, self.router)
 
         if matches:
             response = await self.dispatch_func_filter(request, call_next)
