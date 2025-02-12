@@ -48,6 +48,10 @@ from .v1.item.consume.negative.get.response import (
 from .v1.item.equipment.type.__type__.get.response import (
     ItemEquipmentTypeTypeGetResponseModel as ItemEquipmentTypeTypeGetResponseModel,
 )
+from .v1.max_combine.__owner_id__.__item_id__.response import (
+    MaxCombineOwnerIdItemMidGetResponseModel as MaxCombineOwnerIdItemMidGetResponseModel,
+)
+from .v1.max_combine.get.response import MaxCombineGetResponseModel as MaxCombineGetResponseModel
 from .v1.option.item_auto_lock.post.request import (
     OptionItemAutoLockPostRequestModel as OptionItemAutoLockPostRequestModel,
 )
