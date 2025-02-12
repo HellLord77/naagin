@@ -10,6 +10,7 @@ from .information import InformationSchema as InformationSchema
 from .information_read import InformationReadSchema as InformationReadSchema
 from .item_consume import ItemConsumeSchema as ItemConsumeSchema
 from .item_equipemnt import ItemEquipmentSchema as ItemEquipmentSchema
+from .item_furniture import ItemFurnitureSchema as ItemFurnitureSchema
 from .max_combine_swimsuit import MaxCombineSwimsuitSchema as MaxCombineSwimsuitSchema
 from .option_item_auto_lock import OptionItemAutoLockSchema as OptionItemAutoLockSchema
 from .owner import OwnerSchema as OwnerSchema

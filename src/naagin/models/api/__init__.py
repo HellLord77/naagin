@@ -17,6 +17,7 @@ from .v1.friendship.received.get.response import (
     FriendshipReceivedGetResponseModel as FriendshipReceivedGetResponseModel,
 )
 from .v1.friendship.sent.get.response import FriendshipSentGetResponseModel as FriendshipSentGetResponseModel
+from .v1.furniture.get.response import FurnitureGetResponseModel as FurnitureGetResponseModel
 from .v1.girl.__girl_mid__.private.favorite.__type__.get.response import (
     GirlGirlMidPrivateFavoriteTypeGetResponseModel as GirlGirlMidPrivateFavoriteTypeGetResponseModel,
 )
