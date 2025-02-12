@@ -70,8 +70,8 @@ app = FastAPI(title="naagin", version=__version__, redoc_url=None, lifespan=life
 
 app.mount("/game", apps.game.app)
 
-app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decrypt_body, router=routers.api.router)
 app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decompress_body, router=routers.api.router)
+app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decrypt_body, router=routers.api.router)
 if settings.api.compress:
     app.add_middleware(FilterMiddleware, dispatch=middlewares.response.compress_body, router=routers.api.router)
 if settings.api.encrypt:
