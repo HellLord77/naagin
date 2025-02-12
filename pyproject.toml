@@ -1,9 +1,10 @@
 [project]
 name = "naagin"
-requires-python = "== 3.13.*"
+requires-python = "~=3.13.0"
 dynamic = ["version"]
 
 [tool.ruff]
+src = ["src/naagin"]
 line-length = 120
 
 [tool.ruff.lint]
@@ -24,6 +25,11 @@ force-single-line = true
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.BaseSchema instead."
+"pydantic.BaseModel".msg = "Use naagin.base.models.BaseModel instead."
+"pydantic_settings.BaseSettings".msg = "Use naagin.settings.base.BaseSettings instead."
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true

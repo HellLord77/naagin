@@ -3,7 +3,7 @@ from typing import Any
 from typing import ClassVar
 from typing import Unpack
 
-from pydantic import BaseModel
+from pydantic import BaseModel  # noqa: TID251
 from pydantic import ConfigDict
 
 from naagin import settings

@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import DateTime
 from sqlalchemy import MetaData
 from sqlalchemy import func
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase  # noqa: TID251
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
