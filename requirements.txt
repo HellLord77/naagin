@@ -7,7 +7,7 @@ genson
 datamodel-code-generator
 
 # proxy
-mitmproxy
+mitmproxy==11.1.0
 
 # naagin
 async-lru

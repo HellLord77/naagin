@@ -8,7 +8,7 @@ from .base import BaseSettings
 
 class VersionSettings(BaseSettings):
     master: Literal[10] = 10
-    application: int = 64500
+    application: int = 64501
 
     model_config = SettingsConfigDict(env_prefix="ver_")
 
