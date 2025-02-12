@@ -5,7 +5,11 @@ from naagin.schemas import ItemFurnitureSchema
 from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
 
+from . import myset
+
 router = APIRouter(prefix="/furniture")
+
+router.include_router(myset.router)
 
 
 @router.get("")

@@ -18,6 +18,10 @@ from .v1.friendship.received.get.response import (
 )
 from .v1.friendship.sent.get.response import FriendshipSentGetResponseModel as FriendshipSentGetResponseModel
 from .v1.furniture.get.response import FurnitureGetResponseModel as FurnitureGetResponseModel
+from .v1.furniture.myset.__owner_id__.list.get.response import (
+    FurnitureMySetOwnerIdListGetResponseModel as FurnitureMySetOwnerIdListGetResponseModel,
+)
+from .v1.furniture.myset.get.response import FurnitureMySetGetResponseModel as FurnitureMySetGetResponseModel
 from .v1.girl.__girl_mid__.private.favorite.__type__.get.response import (
     GirlGirlMidPrivateFavoriteTypeGetResponseModel as GirlGirlMidPrivateFavoriteTypeGetResponseModel,
 )

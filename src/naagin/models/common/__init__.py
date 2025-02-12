@@ -3,6 +3,7 @@ from .episode import EpisodeModel as EpisodeModel
 from .exception import ExceptionModel as ExceptionModel
 from .favorite_private_item import FavoritePrivateItemModel as FavoritePrivateItemModel
 from .friendship import FriendshipModel as FriendshipModel
+from .furniture_my_set import FurnitureMySetModel as FurnitureMySetModel
 from .girl_equipment_model import GirlEquipmentModel as GirlEquipmentModel
 from .item_consume import ItemConsumeModel as ItemConsumeModel
 from .owner import OwnerModel as OwnerModel
