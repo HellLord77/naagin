@@ -17,6 +17,7 @@ from starlette.routing import Match
 from starlette.routing import Router
 from starlette.types import Scope
 
+from naagin.decorators import async_request_cache
 from naagin.enums import EncodingEnum
 
 from .doaxvv_header import DOAXVVHeader as DOAXVVHeader
@@ -50,7 +51,6 @@ async def iter_encrypt_data(
     yield encryptor.finalize()
 
 
-# TODO: cache in request
 def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
     partial_matches = Match.NONE, {}
     for route in self.routes:
@@ -61,6 +61,12 @@ def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
             case Match.PARTIAL if partial_matches[0] == Match.NONE:
                 partial_matches = matches
     return partial_matches
+
+
+@async_request_cache
+async def request_match(request: Request, router: Router, match: Match = Match.FULL) -> bool:
+    matches = router_matches(router, request.scope)
+    return matches[0].value >= match.value
 
 
 def request_headers(self: Request) -> MutableHeaders:
@@ -76,7 +82,7 @@ async def request_headers_try_set_item_content_type_application_json(self: Reque
     if content_type == "application/octet-stream":
         try:
             await self.json()
-        except JSONDecodeError:
+        except (UnicodeDecodeError, JSONDecodeError):
             pass
         else:
             headers = request_headers(self)
