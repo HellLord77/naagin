@@ -1,6 +1,7 @@
 from base64 import b64encode
 from collections.abc import AsyncGenerator
 from collections.abc import AsyncIterable
+from json import JSONDecodeError
 from secrets import token_bytes
 from zlib import compressobj
 from zlib import decompress
@@ -9,11 +10,11 @@ from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
-from fastapi import APIRouter
 from fastapi import Request
 from starlette.datastructures import MutableHeaders
 from starlette.middleware.base import _StreamingResponse
 from starlette.routing import Match
+from starlette.routing import Router
 from starlette.types import Scope
 
 from naagin.enums import EncodingEnum
@@ -49,7 +50,8 @@ async def iter_encrypt_data(
     yield encryptor.finalize()
 
 
-def api_router_matches(self: APIRouter, scope: Scope) -> tuple[Match, Scope]:
+# TODO: cache in request
+def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
     partial_matches = Match.NONE, {}
     for route in self.routes:
         matches = route.matches(scope)
@@ -69,6 +71,18 @@ def request_headers(self: Request) -> MutableHeaders:
     return headers
 
 
+async def request_headers_try_set_item_content_type_application_json(self: Request) -> None:
+    content_type = self.headers.get("Content-Type")
+    if content_type == "application/octet-stream":
+        try:
+            await self.json()
+        except JSONDecodeError:
+            pass
+        else:
+            headers = request_headers(self)
+            headers["Content-Type"] = "application/json"
+
+
 async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes) -> None:
     body = await self.body()
     decrypted = decrypt_data(body, key, initialization_vector)
@@ -76,6 +90,7 @@ async def request_decrypt_body(self: Request, key: bytes, initialization_vector:
 
     headers = request_headers(self)
     headers["Content-Length"] = str(len(decrypted))
+    await request_headers_try_set_item_content_type_application_json(self)
 
 
 async def request_decompress_body(self: Request) -> None:
@@ -85,6 +100,7 @@ async def request_decompress_body(self: Request) -> None:
 
     headers = request_headers(self)
     headers["Content-Length"] = str(len(decompressed))
+    await request_headers_try_set_item_content_type_application_json(self)
 
 
 def response_compress_body(self: _StreamingResponse) -> None:

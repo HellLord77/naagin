@@ -12,7 +12,6 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.gzip import GZipMiddleware
 from rich.logging import RichHandler
-from starlette.middleware.base import BaseHTTPMiddleware
 
 from . import __version__
 from . import apps
@@ -24,6 +23,7 @@ from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions.base import BaseException
+from .middlewares import FilterMiddleware
 from .models.base import BaseModel
 from .schemas.base import BaseSchema
 from .utils import SQLAlchemyHandler
@@ -70,8 +70,12 @@ app = FastAPI(title="naagin", version=__version__, redoc_url=None, lifespan=life
 
 app.mount("/game", apps.game.app)
 
-app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.request.decode_body)
-app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.response.encode_body)
+app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decrypt_body, router=routers.api.router)
+app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decompress_body, router=routers.api.router)
+if settings.api.compress:
+    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.compress_body, router=routers.api.router)
+if settings.api.encrypt:
+    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.encrypt_body, router=routers.api.router)
 app.add_middleware(GZipMiddleware)
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)

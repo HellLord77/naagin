@@ -30,6 +30,7 @@ async def provide_session_cached(
     pinksid: PINKSIDCookie = None,
     session: AsyncSession = Depends(provide_session),
 ) -> SessionSchema:
+    # TODO: cache in request
     state = request.state
     if not hasattr(state, "session"):
         if access_token is None:
