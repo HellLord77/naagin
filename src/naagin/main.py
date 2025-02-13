@@ -45,17 +45,16 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
     sqlalchemy_logger.addHandler(sqlalchemy_handler)
 
-    if settings.logging.duplicate_model:
-        for models in BaseModel.model_map.values():
-            if len(models) > 1:
-                message = "Possible duplicate models"
-                for model in models:
-                    path = getfile(model)
-                    lines, lineno = getsourcelines(model)
-                    link = AsyncPath(path).as_uri()
-                    message += f"\n[link={link}]{path}[/link]:[link={link}#{lineno}]{lineno}[/link]"
-                    message += f"\n    {lines[0].rstrip()}"
-                logger.warning(message)
+    for models in BaseModel.model_map.values():
+        if len(models) > 1:
+            message = "Possible duplicate models"
+            for model in models:
+                path = getfile(model)
+                lines, lineno = getsourcelines(model)
+                link = AsyncPath(path).as_uri()
+                message += f"\n[link={link}]{path}[/link]:[link={link}#{lineno}]{lineno}[/link]"
+                message += f"\n    {lines[0].rstrip()}"
+            logger.warning(message)
 
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(BaseSchema.metadata.drop_all)

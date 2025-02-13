@@ -10,8 +10,8 @@ from naagin import settings
 
 
 class BaseModel(BaseModel):
+    model_map: ClassVar[dict[frozenset[tuple[str, Any]], set[type[BaseModel]]]] = {}
     if settings.logging.duplicate_model:
-        model_map: ClassVar[dict[frozenset[tuple[str, Any]], set[type[BaseModel]]]] = {}
 
         def __init_subclass__(cls, /, **kwargs: Unpack[ConfigDict]) -> None:
             annotations = frozenset(cls.__annotations__.items())
