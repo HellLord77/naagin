@@ -1,6 +1,6 @@
-from .base import BaseException
+from .base import CustomBaseException
 
 
-class AuthenticationFailedException(BaseException):
+class AuthenticationFailedException(CustomBaseException):
     code = 11
     message = "authentication failed"

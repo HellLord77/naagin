@@ -13,11 +13,11 @@ from sqlalchemy.orm import mapped_column
 
 from naagin.enums import InformationCategoryEnum
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .enums import InformationCategoryEnumSchema
 
 
-class InformationSchema(BaseSchema):
+class InformationSchema(CustomBaseSchema):
     __tablename__ = "information"
 
     information_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -35,6 +35,6 @@ class InformationSchema(BaseSchema):
         CheckConstraint(information_id >= 1, "information_id_min"),
         CheckConstraint(publish_at <= close_at, "publish_at_lte_close_at"),
         CheckConstraint(announce_at == None, "announce_at_const"),  # noqa: E711
-        CheckConstraint(not prohibit_popup, "prohibit_popup_const"),
+        CheckConstraint(prohibit_popup == False, "prohibit_popup_const"),  # noqa: E712
         CheckConstraint(priority == 1, "priority_const"),
     )

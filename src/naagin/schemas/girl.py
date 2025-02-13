@@ -7,11 +7,11 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .owner import OwnerSchema
 
 
-class GirlSchema(BaseSchema):
+class GirlSchema(CustomBaseSchema):
     __tablename__ = "girl"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

@@ -25,6 +25,10 @@ class FilterMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.dispatch_func_filter = dispatch
 
+        args = (prefix, pattern, router)
+        if args.count(None) != len(args) - 1:
+            raise NotImplementedError
+
         self.prefix = prefix
         self.pattern = pattern
         self.router = router

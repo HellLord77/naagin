@@ -1,5 +1,5 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class ItemConsumeNegativeGetResponseModel(BaseModel):
+class ItemConsumeNegativeGetResponseModel(CustomBaseModel):
     item_negative_consume_list: list

@@ -1,7 +1,7 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class SessionPostRequestModel(BaseModel):
+class SessionPostRequestModel(CustomBaseModel):
     client_type: int
     environment: str | None = None
     is_first: int | None = None

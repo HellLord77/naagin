@@ -1,6 +1,6 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 from naagin.models.common import EpisodeModel
 
 
-class OwnerEpisodeEpisodeMidPutResponseModel(BaseModel):
+class OwnerEpisodeEpisodeMidPutResponseModel(CustomBaseModel):
     episode_list: list[EpisodeModel]

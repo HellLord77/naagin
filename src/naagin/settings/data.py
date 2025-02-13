@@ -5,10 +5,10 @@ from aiopath import AsyncPath
 from pydantic import DirectoryPath
 from pydantic_settings import SettingsConfigDict
 
-from .base import BaseSettings
+from .base import CustomBaseSettings
 
 
-class DataSettings(BaseSettings):
+class DataSettings(CustomBaseSettings):
     dir: DirectoryPath = Path.cwd() / "data"
 
     model_config = SettingsConfigDict(env_prefix="data_")

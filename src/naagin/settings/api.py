@@ -1,9 +1,9 @@
 from pydantic_settings import SettingsConfigDict
 
-from .base import BaseSettings
+from .base import CustomBaseSettings
 
 
-class APISettings(BaseSettings):
+class APISettings(CustomBaseSettings):
     compress: bool = True
     compress_level: int = 1
 

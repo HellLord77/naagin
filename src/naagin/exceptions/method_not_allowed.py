@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
-from .base import BaseException
+from .base import CustomBaseException
 
 
-class MethodNotAllowedException(BaseException):
+class MethodNotAllowedException(CustomBaseException):
     code = HTTPStatus.METHOD_NOT_ALLOWED
     message = "method not allowed"

@@ -9,7 +9,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .owner import OwnerSchema
 from .utils.factories import access_token_factory
 from .utils.factories import pinksid_factory
@@ -19,7 +19,7 @@ def choices(population: str, *, k: int = 1) -> list[str]:
     return [choice(population) for _ in range(k)]
 
 
-class SessionSchema(BaseSchema):
+class SessionSchema(CustomBaseSchema):
     __tablename__ = "session"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

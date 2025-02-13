@@ -8,11 +8,11 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .owner import OwnerSchema
 
 
-class OwnerCheckedAtSchema(BaseSchema):
+class OwnerCheckedAtSchema(CustomBaseSchema):
     __tablename__ = "owner_checked_at"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

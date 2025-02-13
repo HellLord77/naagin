@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class TutorialModel(BaseModel):
+class TutorialModel(CustomBaseModel):
     owner_id: int
     event_mid: int
     flag: int

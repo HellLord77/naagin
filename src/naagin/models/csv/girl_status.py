@@ -1,7 +1,7 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class GirlStatusCSVModel(BaseModel):
+class GirlStatusCSVModel(CustomBaseModel):
     appeal: int
     power_or_technic: int
     stamina: int

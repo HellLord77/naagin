@@ -1,7 +1,7 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class ItemEquipmentModel(BaseModel):
+class ItemEquipmentModel(CustomBaseModel):
     id: int
     item_mid: int
     type: int
@@ -15,5 +15,5 @@ class ItemEquipmentModel(BaseModel):
     combine_count: int
 
 
-class ItemEquipmentTypeTypeGetResponseModel(BaseModel):
+class ItemEquipmentTypeTypeGetResponseModel(CustomBaseModel):
     item_equipment_list: list[ItemEquipmentModel]

@@ -15,14 +15,14 @@ from naagin.enums import CheckedLicenseLevelEnum
 from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .enums import CheckedLicenseLevelEnumSchema
 from .enums import LicenseLevelEnumSchema
 from .enums import OwnerStatusEnumSchema
 from .utils.factories import friend_code_factory
 
 
-class OwnerSchema(BaseSchema):
+class OwnerSchema(CustomBaseSchema):
     __tablename__ = "owner"
 
     owner_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)

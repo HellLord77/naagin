@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
-from .base import BaseException
+from .base import CustomBaseException
 
 
-class InternalServerErrorException(BaseException):
+class InternalServerErrorException(CustomBaseException):
     code = HTTPStatus.INTERNAL_SERVER_ERROR
     message = "internal server error"

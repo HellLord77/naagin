@@ -3,10 +3,10 @@ from functools import cached_property
 from httpx import AsyncClient
 from pydantic_settings import SettingsConfigDict
 
-from .base import BaseSettings
+from .base import CustomBaseSettings
 
 
-class GameSettings(BaseSettings):
+class GameSettings(CustomBaseSettings):
     offline_mode: bool = False
     no_proxy: bool = True
 

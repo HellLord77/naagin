@@ -1,6 +1,6 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class QuestFesInfoGetResponseModel(BaseModel):
+class QuestFesInfoGetResponseModel(CustomBaseModel):
     open_bonus_fes_list: list
     quest_daily_info_list: list

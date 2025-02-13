@@ -3,10 +3,10 @@ from functools import cached_property
 from httpx import AsyncClient
 from pydantic_settings import SettingsConfigDict
 
-from .base import BaseSettings
+from .base import CustomBaseSettings
 
 
-class API01Settings(BaseSettings):
+class API01Settings(CustomBaseSettings):
     no_proxy: bool = True
 
     base_url: str = "https://api01.doaxvv.com"

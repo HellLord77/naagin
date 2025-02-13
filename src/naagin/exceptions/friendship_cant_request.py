@@ -1,6 +1,6 @@
-from .base import BaseException
+from .base import CustomBaseException
 
 
-class FriendshipCantRequestException(BaseException):
+class FriendshipCantRequestException(CustomBaseException):
     code = 804
     message = "friendship can't request"
