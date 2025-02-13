@@ -1,7 +1,7 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class SessionPostResponseModel(BaseModel):
+class SessionPostResponseModel(CustomBaseModel):
     auth: bool
     owner_id: int
     owner_status: int

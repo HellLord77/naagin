@@ -1,6 +1,6 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 from naagin.models.common import TutorialModel
 
 
-class TutorialGetResponseModel(BaseModel):
+class TutorialGetResponseModel(CustomBaseModel):
     tutorial_list: list[TutorialModel]

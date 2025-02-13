@@ -1,5 +1,5 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class FriendshipAcceptPostRequestModel(BaseModel):
+class FriendshipAcceptPostRequestModel(CustomBaseModel):
     friend_id: int

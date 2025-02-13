@@ -1,2 +1,2 @@
-from .api_router import APIRouter as APIRouter
-from .async_session import AsyncSession as AsyncSession
+from .api_router import CustomAPIRouter as CustomAPIRouter
+from .async_session import CustomAsyncSession as CustomAsyncSession

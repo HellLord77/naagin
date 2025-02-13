@@ -1,10 +1,10 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class ItemFurnitureModel(BaseModel):
+class ItemFurnitureModel(CustomBaseModel):
     item_mid: int
     count: int
 
 
-class FurnitureGetResponseModel(BaseModel):
+class FurnitureGetResponseModel(CustomBaseModel):
     item_furniture_list: list[ItemFurnitureModel]

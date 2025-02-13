@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class FriendshipModel(BaseModel):
+class FriendshipModel(CustomBaseModel):
     owner_id: int
     friend_id: int
     state: int

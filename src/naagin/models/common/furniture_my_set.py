@@ -1,7 +1,7 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class FurnitureMySetModel(BaseModel):
+class FurnitureMySetModel(CustomBaseModel):
     id: int
     item_mid: int
     layout_mid: int

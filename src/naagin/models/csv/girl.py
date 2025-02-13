@@ -1,7 +1,7 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class GirlCSVModel(BaseModel):
+class GirlCSVModel(CustomBaseModel):
     girl_mid: int
     _column_2: int
     power: int

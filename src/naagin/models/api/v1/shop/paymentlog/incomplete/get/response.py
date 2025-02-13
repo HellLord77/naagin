@@ -1,5 +1,5 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class ShopPaymentLogIncompleteGetResponseModel(BaseModel):
+class ShopPaymentLogIncompleteGetResponseModel(CustomBaseModel):
     payment_log_list: list

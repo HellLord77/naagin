@@ -4,11 +4,11 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .owner import OwnerSchema
 
 
-class FurnitureMySetSchema(BaseSchema):
+class FurnitureMySetSchema(CustomBaseSchema):
     __tablename__ = "furniture_myset"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), index=True)

@@ -11,12 +11,12 @@ from sqlalchemy.orm import mapped_column
 
 from naagin.enums import FriendshipStateEnum
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .enums import FriendshipStateEnumSchema
 from .owner import OwnerSchema
 
 
-class FriendshipSchema(BaseSchema):
+class FriendshipSchema(CustomBaseSchema):
     __tablename__ = "friendship"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

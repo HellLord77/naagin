@@ -22,10 +22,10 @@ from . import settings
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
-from .exceptions.base import BaseException
+from .exceptions.base import CustomBaseException
 from .middlewares.common import FilterMiddleware
-from .models.base import BaseModel
-from .schemas.base import BaseSchema
+from .models.base import CustomBaseModel
+from .schemas.base import CustomBaseSchema
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import moved_permanently_handler
 from .utils.exception_handlers import not_found_handler
@@ -45,7 +45,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
     sqlalchemy_logger.addHandler(sqlalchemy_handler)
 
-    for models in BaseModel.model_map.values():
+    for models in CustomBaseModel.model_map.values():
         if len(models) > 1:
             message = "Possible duplicate models"
             for model in models:
@@ -58,7 +58,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(BaseSchema.metadata.drop_all)
-        await connection.run_sync(BaseSchema.metadata.create_all)
+        await connection.run_sync(CustomBaseSchema.metadata.create_all)
 
     yield
 
@@ -82,7 +82,7 @@ app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
 app.add_exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler)
 app.add_exception_handler(RequestValidationError, InvalidParameterException.handler)
-app.add_exception_handler(BaseException, BaseException.handler)
+app.add_exception_handler(CustomBaseException, CustomBaseException.handler)
 
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(

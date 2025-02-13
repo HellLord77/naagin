@@ -1,6 +1,6 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 from naagin.models.common import GirlEquipmentModel
 
 
-class GirlEquipmentGetResponseModel(BaseModel):
+class GirlEquipmentGetResponseModel(CustomBaseModel):
     girl_equipment_list: list[GirlEquipmentModel]

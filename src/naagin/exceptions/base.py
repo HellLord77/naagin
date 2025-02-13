@@ -10,7 +10,7 @@ from naagin.models.common import ExceptionModel
 from naagin.utils import DOAXVVHeader
 
 
-class BaseException(Exception):  # noqa: N818
+class CustomBaseException(Exception):  # noqa: N818
     code: ClassVar[int]
     message: ClassVar[str]
 
@@ -26,7 +26,7 @@ class BaseException(Exception):  # noqa: N818
 
     @classmethod
     def handler(cls, _: Request | None = None, exception: Exception | None = None) -> JSONResponse:
-        if isinstance(exception, BaseException):
+        if isinstance(exception, CustomBaseException):
             return cls.handler()
         else:
             response = JSONResponse(*cls.get_args())

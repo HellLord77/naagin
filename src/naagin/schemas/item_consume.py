@@ -6,12 +6,12 @@ from sqlalchemy.orm import mapped_column
 
 from naagin.enums import ItemConsumeTypeEnum
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .enums import ItemConsumeTypeEnumSchema
 from .owner import OwnerSchema
 
 
-class ItemConsumeSchema(BaseSchema):
+class ItemConsumeSchema(CustomBaseSchema):
     __tablename__ = "item_consume"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

@@ -6,10 +6,10 @@ from pydantic_settings import SettingsConfigDict
 
 from naagin.enums import LoggingLevelEnum
 
-from .base import BaseSettings
+from .base import CustomBaseSettings
 
 
-class LoggingSettings(BaseSettings):
+class LoggingSettings(CustomBaseSettings):
     level: LoggingLevelEnum = LoggingLevelEnum.NOTSET
 
     duplicate_model: bool = False

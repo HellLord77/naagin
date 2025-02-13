@@ -3,10 +3,10 @@ from typing import Any
 
 from pydantic import field_validator
 
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class OwnerOtherModel(BaseModel):
+class OwnerOtherModel(CustomBaseModel):
     owner_id: int
     status: int
     name: str | None

@@ -3,7 +3,6 @@ from functools import lru_cache
 from http import HTTPStatus
 from shutil import rmtree
 
-from fastapi import HTTPException
 from fastapi import Request
 from fastapi import Response
 from fastapi.responses import FileResponse
@@ -25,7 +24,7 @@ def get_path_lock(_: str) -> Lock:
     return Lock()
 
 
-async def not_found_handler(request: Request, _: HTTPException) -> Response:
+async def not_found_handler(request: Request, _: Exception) -> Response:
     if settings.game.offline_mode:
         return not_found_response()
     else:

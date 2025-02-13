@@ -1,12 +1,12 @@
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class DishevelmentOtherModel(BaseModel):
+class DishevelmentOtherModel(CustomBaseModel):
     owner_id: int
     item_mid: int
     variation: int
     dishevelment: int
 
 
-class DishevelmentOwnerIdItemMidGetResponseModel(BaseModel):
+class DishevelmentOwnerIdItemMidGetResponseModel(CustomBaseModel):
     dishevelment_other: DishevelmentOtherModel

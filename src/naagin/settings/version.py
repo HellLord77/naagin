@@ -3,10 +3,10 @@ from typing import Literal
 
 from pydantic_settings import SettingsConfigDict
 
-from .base import BaseSettings
+from .base import CustomBaseSettings
 
 
-class VersionSettings(BaseSettings):
+class VersionSettings(CustomBaseSettings):
     master: Literal[10] = 10
     application: int = 64501
 

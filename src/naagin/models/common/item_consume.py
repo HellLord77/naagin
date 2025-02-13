@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class ItemConsumeModel(BaseModel):
+class ItemConsumeModel(CustomBaseModel):
     item_mid: int
     count: int
     type: int

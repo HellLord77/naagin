@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class EpisodeCSVModel(BaseModel):
+class EpisodeCSVModel(CustomBaseModel):
     _column_1: int
     episode_mid: int
     _column_3: int

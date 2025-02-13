@@ -9,12 +9,12 @@ from sqlalchemy.orm import mapped_column
 
 from naagin.enums import ItemEquipmentTypeEnum
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .enums import ItemEquipmentTypeEnumSchema
 from .owner import OwnerSchema
 
 
-class ItemEquipmentSchema(BaseSchema):
+class ItemEquipmentSchema(CustomBaseSchema):
     __tablename__ = "item_equipment"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), index=True)
@@ -36,7 +36,7 @@ class ItemEquipmentSchema(BaseSchema):
         CheckConstraint(type != ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION, "type_const"),
         CheckConstraint(level.between(1, 90), "level_range"),
         CheckConstraint(experience.between(0, 480000), "experience_range"),
-        CheckConstraint(not favorite, "favorite_const"),
+        CheckConstraint(favorite == False, "favorite_const"),  # noqa: E712
         CheckConstraint(unlock_count.between(0, 4), "unlock_count_range"),
         CheckConstraint(upgrade_count >= 0, "upgrade_count_min"),
         CheckConstraint(combine_count.between(0, 4), "combine_count_range"),

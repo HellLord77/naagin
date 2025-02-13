@@ -6,12 +6,12 @@ from sqlalchemy.orm import mapped_column
 
 from naagin.enums import PrivateItemTypeEnum
 
-from .base import BaseSchema
+from .base import CustomBaseSchema
 from .enums import PrivateItemTypeEnumSchema
 from .owner import OwnerSchema
 
 
-class PrivateItemSchema(BaseSchema):
+class PrivateItemSchema(CustomBaseSchema):
     __tablename__ = "private_item"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

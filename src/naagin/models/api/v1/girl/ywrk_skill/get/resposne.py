@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import BaseModel
+from naagin.models.base import CustomBaseModel
 
 
-class YwrkSkillModel(BaseModel):
+class YwrkSkillModel(CustomBaseModel):
     id: int
     girl_mid: int
     item_mid: int
@@ -13,5 +13,5 @@ class YwrkSkillModel(BaseModel):
     updated_at: datetime | None
 
 
-class GirlYwrkSkillGetResponseModel(BaseModel):
+class GirlYwrkSkillGetResponseModel(CustomBaseModel):
     ywrk_skill_list: list[YwrkSkillModel]

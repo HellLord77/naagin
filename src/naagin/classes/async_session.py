@@ -6,7 +6,7 @@ from sqlalchemy.orm.session import _EntityBindKey
 from sqlalchemy.sql._typing import _ColumnExpressionArgument
 
 
-class AsyncSession(AsyncSession):
+class CustomAsyncSession(AsyncSession):
     async def find[T](self, entity: _EntityBindKey[type[T]], *whereclause: _ColumnExpressionArgument[bool]) -> T | None:
         return await self.scalar(select(entity).where(*whereclause))
 

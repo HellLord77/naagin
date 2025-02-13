@@ -6,6 +6,11 @@ dynamic = ["version"]
 [tool.mypy]
 cache_dir = "$MYPY_CONFIG_FILE_DIR/.cache/mypy"
 mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["aiopath"]
+follow_untyped_imports = true
 
 [tool.ruff]
 cache-dir = ".cache/ruff"
@@ -32,9 +37,9 @@ force-single-line = true
 extend-immutable-calls = ["fastapi.Depends"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
-"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.BaseSchema instead."
-"pydantic.BaseModel".msg = "Use naagin.base.models.BaseModel instead."
-"pydantic_settings.BaseSettings".msg = "Use naagin.settings.base.BaseSettings instead."
+"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.CustomBaseSchema instead."
+"pydantic.BaseModel".msg = "Use naagin.base.models.CustomBaseModel instead."
+"pydantic_settings.BaseSettings".msg = "Use naagin.settings.base.CustomBaseSettings instead."
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
