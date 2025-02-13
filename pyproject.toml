@@ -3,21 +3,26 @@ name = "naagin"
 requires-python = "~=3.13.0"
 dynamic = ["version"]
 
+[tool.mypy]
+cache_dir = "$MYPY_CONFIG_FILE_DIR/.cache/mypy"
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+
 [tool.ruff]
+cache-dir = ".cache/ruff"
 src = ["src/naagin"]
 line-length = 120
 
 [tool.ruff.lint]
 extend-select = ["ALL"]
 ignore = [
-    "A", # flake8-builtins *
-    "D1", # pydocstyle undocumented-*
-    "D203", # pydocstyle incorrect-blank-line-before-class
-    "D212", # pydocstyle multi-line-summary-first-line
-    "COM812", # flake8-commas missing-trailing-comma
-    "RET505", # flake8-return superfluous-else-return
-    "ERA001", # eradicate commented-out-code
+    "A",       # flake8-builtins *
+    "COM812",  # flake8-commas missing-trailing-comma
+    "D1",      # pydocstyle undocumented-*
+    "D203",    # pydocstyle incorrect-blank-line-before-class
+    "D212",    # pydocstyle multi-line-summary-first-line
+    "ERA001",  # eradicate commented-out-code
     "PLC0414", # Convention useless-import-alias
+    "RET505",  # flake8-return superfluous-else-return
 ]
 
 [tool.ruff.lint.isort]

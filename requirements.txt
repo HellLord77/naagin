@@ -1,13 +1,14 @@
 # tool
+mypy
 ruff
 
-# dumper
-frozendict
-genson
-datamodel-code-generator
-
-# proxy
-mitmproxy==11.1.0
+# stubs
+types-PyYAML
+types-Pygments
+types-greenlet
+types-pyasn1
+types-pywin32
+types-ujson
 
 # naagin
 async-lru
@@ -23,3 +24,11 @@ httpx
 starlette
 fastapi[standard]
 # !httptools
+
+# dumper
+frozendict
+genson
+datamodel-code-generator
+
+# proxy
+mitmproxy==11.1.0
