@@ -26,15 +26,15 @@ async def get(
     special_order_list = await session.find_all(
         SpecialOrderSchema, SpecialOrderSchema.owner_id == owner_id, whereclause
     )
-    response = SpecialOrderTypeGetResponseModel()
     if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:
-        response.sp_timestop_item_list = special_order_list
+        return SpecialOrderTypeGetResponseModel(sp_timestop_item_list=special_order_list)
     elif type == SpecialOrderTypeEnum.ORDER_TICKET:
-        response.order_ticket_list = special_order_list
+        return SpecialOrderTypeGetResponseModel(order_ticket_list=special_order_list)
     elif type == SpecialOrderTypeEnum.POSE_CARD_ITEM:
-        response.pose_card_item_list = special_order_list
+        return SpecialOrderTypeGetResponseModel(pose_card_item_list=special_order_list)
     elif type == SpecialOrderTypeEnum.SP_FAN_ITEM:
-        response.sp_fan_item_list = special_order_list
+        return SpecialOrderTypeGetResponseModel(sp_fan_item_list=special_order_list)
     elif type == SpecialOrderTypeEnum.SP_ORDER_ITEM:
-        response.sp_order_item_list = special_order_list
-    return response
+        return SpecialOrderTypeGetResponseModel(sp_order_item_list=special_order_list)
+    else:
+        raise NotImplementedError

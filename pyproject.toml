@@ -9,7 +9,7 @@ mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["aiopath"]
+module = ["aiopath", "sqlparse"]
 follow_untyped_imports = true
 
 [tool.ruff]
@@ -24,8 +24,8 @@ select = ["ALL"]
 extend-select = ["PLC0415"]
 ignore = [
     "A",       # flake8-builtins *
-    "COM812",  # flake8-commas   missing-trailing-comma
     "D1",      # pydocstyle      undocumented-*
+    "COM812",  # flake8-commas   missing-trailing-comma
     "D203",    # pydocstyle      incorrect-blank-line-before-class
     "D212",    # pydocstyle      multi-line-summary-first-line
     "ERA001",  # eradicate       commented-out-code

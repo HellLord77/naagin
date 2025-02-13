@@ -19,15 +19,13 @@ class ExceptionBase(Exception):  # noqa: N818
 
         self = cls()
         content = ExceptionModel.model_validate(self).model_dump()
-        status_code = HTTPStatus.OK
-        if cls.code in HTTPStatus:
-            status_code = cls.code
+        status_code = cls.code if cls.code in HTTPStatus else HTTPStatus.OK
         return content, status_code
 
     @classmethod
     def handler(cls, _: Request | None = None, exception: Exception | None = None) -> JSONResponse:
         if isinstance(exception, ExceptionBase):
-            return cls.handler()
+            return exception.handler()
         else:
             response = JSONResponse(*cls.get_args())
             DOAXVVHeader.set(response, "Status", cls.code)

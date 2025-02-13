@@ -37,7 +37,7 @@ async def post(
     if len(request.item_list) > 1:
         raise InternalServerErrorException
 
-    private_item = await session.get_one(PrivateItemSchema, owner_id, girl_mid, request.item_list[0].item_mid)
+    private_item = await session.get_one(PrivateItemSchema, (owner_id, girl_mid, request.item_list[0].item_mid))
 
     private_item.favorite = request.item_list[0].is_favorite
     if private_item.favorite:
@@ -50,7 +50,7 @@ async def post(
     await session.flush()
     await session.refresh(private_item)
 
-    return GirlGirlMidPrivateFavoriteTypeGetResponseModel(
+    return GirlGirlMidPrivateFavoriteTypePostResponseModel(
         favorite_private_item_list=favorite_private_item_list,
         favorite_delete_private_item_list=favorite_delete_private_item_list,
     )

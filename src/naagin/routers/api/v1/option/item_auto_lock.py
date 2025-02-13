@@ -18,9 +18,9 @@ async def post(
     if option_item_auto_lock is None:
         option_item_auto_lock = OptionItemAutoLockSchema(owner_id=owner_id)
         session.add(option_item_auto_lock)
-    option_item_auto_lock.option_lock_only = request.option_lock_only
-    option_item_auto_lock.option_lock_sr = request.option_lock_sr
-    option_item_auto_lock.option_lock_ssr = request.option_lock_ssr
+    option_item_auto_lock.option_lock_only = bool(request.option_lock_only)
+    option_item_auto_lock.option_lock_sr = bool(request.option_lock_sr)
+    option_item_auto_lock.option_lock_ssr = bool(request.option_lock_ssr)
 
     await session.flush()
 
