@@ -1,6 +1,6 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 from naagin.models.common import OwnerModel
 
 
-class OwnerGetResponseModel(CustomBaseModel):
+class OwnerGetResponseModel(ModelBase):
     owner: OwnerModel

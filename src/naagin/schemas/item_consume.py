@@ -4,14 +4,14 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.bases import SchemaBase
 from naagin.enums import ItemConsumeTypeEnum
 
-from .base import CustomBaseSchema
 from .enums import ItemConsumeTypeEnumSchema
 from .owner import OwnerSchema
 
 
-class ItemConsumeSchema(CustomBaseSchema):
+class ItemConsumeSchema(SchemaBase):
     __tablename__ = "item_consume"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

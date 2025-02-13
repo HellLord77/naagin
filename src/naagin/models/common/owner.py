@@ -1,10 +1,10 @@
 from datetime import date
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class OwnerModel(CustomBaseModel):
+class OwnerModel(ModelBase):
     owner_id: int
     status: int
     name: str | None

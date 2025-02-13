@@ -4,12 +4,11 @@ from logging import getLogger
 
 from pydantic_settings import SettingsConfigDict
 
+from naagin.bases import SettingsBase
 from naagin.enums import LoggingLevelEnum
 
-from .base import CustomBaseSettings
 
-
-class LoggingSettings(CustomBaseSettings):
+class LoggingSettings(SettingsBase):
     level: LoggingLevelEnum = LoggingLevelEnum.NOTSET
 
     duplicate_model: bool = False

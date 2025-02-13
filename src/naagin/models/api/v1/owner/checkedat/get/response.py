@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class OwnerCheckedAtModel(CustomBaseModel):
+class OwnerCheckedAtModel(ModelBase):
     owner_id: int
     news_checked_at: datetime
     quest_checked_at: datetime
@@ -24,5 +24,5 @@ class OwnerCheckedAtModel(CustomBaseModel):
     updated_at: datetime | None
 
 
-class OwnerCheckedAtGetResponseModel(CustomBaseModel):
+class OwnerCheckedAtGetResponseModel(ModelBase):
     owner_checked_at: OwnerCheckedAtModel

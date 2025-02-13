@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class CheatLogCheckGetResponseModel(CustomBaseModel):
+class CheatLogCheckGetResponseModel(ModelBase):
     count: int

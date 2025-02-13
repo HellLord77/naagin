@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class OwnerCountLoginGetResponseModel(CustomBaseModel):
+class OwnerCountLoginGetResponseModel(ModelBase):
     login_count: int

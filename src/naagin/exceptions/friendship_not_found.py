@@ -1,6 +1,6 @@
-from .base import CustomBaseException
+from naagin.bases import ExceptionBase
 
 
-class FriendshipNotFoundException(CustomBaseException):
+class FriendshipNotFoundException(ExceptionBase):
     code = 802
     message = "friendship not found"

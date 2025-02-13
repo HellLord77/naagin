@@ -9,14 +9,14 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.bases import SchemaBase
 from naagin.enums import FriendshipStateEnum
 
-from .base import CustomBaseSchema
 from .enums import FriendshipStateEnumSchema
 from .owner import OwnerSchema
 
 
-class FriendshipSchema(CustomBaseSchema):
+class FriendshipSchema(SchemaBase):
     __tablename__ = "friendship"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

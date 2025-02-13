@@ -1,6 +1,6 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 from naagin.models.common import SwimsuitArrangeFlagModel
 
 
-class SwimsuitArrangeFlagGetResponseModel(CustomBaseModel):
+class SwimsuitArrangeFlagGetResponseModel(ModelBase):
     swimsuit_arrage_flag_list: list[SwimsuitArrangeFlagModel]

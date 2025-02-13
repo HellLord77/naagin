@@ -1,7 +1,7 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class OwnerPutRequestModel(CustomBaseModel):
+class OwnerPutRequestModel(ModelBase):
     name: str | None = None
     island_name: str | None = None
     message: str | None = None

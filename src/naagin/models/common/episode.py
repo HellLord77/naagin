@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class EpisodeModel(CustomBaseModel):
+class EpisodeModel(ModelBase):
     episode_mid: int
     count: int
     created_at: datetime

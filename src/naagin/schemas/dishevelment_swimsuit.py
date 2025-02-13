@@ -6,11 +6,12 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import CustomBaseSchema
+from naagin.bases import SchemaBase
+
 from .owner import OwnerSchema
 
 
-class DishevelmentSwimsuitSchema(CustomBaseSchema):
+class DishevelmentSwimsuitSchema(SchemaBase):
     __tablename__ = "dishevelment_swimsuit"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

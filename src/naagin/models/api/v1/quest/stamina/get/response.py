@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class QuestStaminaGetResponseModel(CustomBaseModel):
+class QuestStaminaGetResponseModel(ModelBase):
     quest_girl_stamina_list: list

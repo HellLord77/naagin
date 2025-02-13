@@ -5,11 +5,12 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import CustomBaseSchema
+from naagin.bases import SchemaBase
+
 from .owner import OwnerSchema
 
 
-class BromideSchema(CustomBaseSchema):
+class BromideSchema(SchemaBase):
     __tablename__ = "bromide"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

@@ -9,13 +9,12 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from naagin.classes import CustomAsyncSession
+from naagin.bases import SettingsBase
+from naagin.classes import AsyncSession
 from naagin.enums import DatabaseDriverEnum
 
-from .base import CustomBaseSettings
 
-
-class DatabaseSettings(CustomBaseSettings):
+class DatabaseSettings(SettingsBase):
     driver: Literal[DatabaseDriverEnum.POSTGRESQL] = DatabaseDriverEnum.POSTGRESQL
     user: str | None = None
     pass_: SecretStr | None = Field(None, alias="db_pass")
@@ -52,9 +51,9 @@ class DatabaseSettings(CustomBaseSettings):
         )
 
     @cached_property
-    def session(self) -> CustomAsyncSession:
-        return CustomAsyncSession(self.engine, autoflush=False)
+    def session(self) -> AsyncSession:
+        return AsyncSession(self.engine, autoflush=False)
 
     @cached_property
     def sessionmaker(self) -> async_sessionmaker:
-        return async_sessionmaker(self.engine, class_=CustomAsyncSession, autoflush=False)
+        return async_sessionmaker(self.engine, class_=AsyncSession, autoflush=False)

@@ -3,11 +3,12 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import CustomBaseSchema
+from naagin.bases import SchemaBase
+
 from .owner import OwnerSchema
 
 
-class YwrkSkillSchema(CustomBaseSchema):
+class YwrkSkillSchema(SchemaBase):
     __tablename__ = "ywrk_skill"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), index=True)

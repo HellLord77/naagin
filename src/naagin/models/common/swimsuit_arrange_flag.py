@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class SwimsuitArrangeFlagModel(CustomBaseModel):
+class SwimsuitArrangeFlagModel(ModelBase):
     owner_id: int
     girl_mid: int
     variation: int

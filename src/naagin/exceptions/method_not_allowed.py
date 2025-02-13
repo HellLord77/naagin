@@ -1,8 +1,8 @@
 from http import HTTPStatus
 
-from .base import CustomBaseException
+from naagin.bases import ExceptionBase
 
 
-class MethodNotAllowedException(CustomBaseException):
+class MethodNotAllowedException(ExceptionBase):
     code = HTTPStatus.METHOD_NOT_ALLOWED
     message = "method not allowed"

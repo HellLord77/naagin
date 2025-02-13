@@ -1,6 +1,6 @@
-from .base import CustomBaseException
+from naagin.bases import ExceptionBase
 
 
-class AuthenticationFailedException(CustomBaseException):
+class AuthenticationFailedException(ExceptionBase):
     code = 11
     message = "authentication failed"

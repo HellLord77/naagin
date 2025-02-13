@@ -1,14 +1,14 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class HonorModel(CustomBaseModel):
+class HonorModel(ModelBase):
     honor_mid: int
     times_received: int
     parent_honor_mid: int
     created_at: datetime
 
 
-class HonorGetResponseModel(CustomBaseModel):
+class HonorGetResponseModel(ModelBase):
     honor_list: list[HonorModel]

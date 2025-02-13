@@ -1,10 +1,10 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class PrivateItemModel(CustomBaseModel):
+class PrivateItemModel(ModelBase):
     girl_mid: int
     item_mid: int
 
 
-class GirlPrivateGetResponseModel(CustomBaseModel):
+class GirlPrivateGetResponseModel(ModelBase):
     private_item_list: list[PrivateItemModel]

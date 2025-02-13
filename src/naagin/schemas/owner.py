@@ -11,18 +11,18 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.bases import SchemaBase
 from naagin.enums import CheckedLicenseLevelEnum
 from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
 
-from .base import CustomBaseSchema
 from .enums import CheckedLicenseLevelEnumSchema
 from .enums import LicenseLevelEnumSchema
 from .enums import OwnerStatusEnumSchema
 from .utils.factories import friend_code_factory
 
 
-class OwnerSchema(CustomBaseSchema):
+class OwnerSchema(SchemaBase):
     __tablename__ = "owner"
 
     owner_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)

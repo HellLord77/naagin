@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class DishevelmentSwimsuitModel(CustomBaseModel):
+class DishevelmentSwimsuitModel(ModelBase):
     item_mid: int
     variation: int
     created_at: datetime
 
 
-class DishevelmentGetResponseModel(CustomBaseModel):
+class DishevelmentGetResponseModel(ModelBase):
     dishevelment_swimsuit_list: list[DishevelmentSwimsuitModel]

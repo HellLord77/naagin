@@ -1,9 +1,9 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class InformationMarkAsReadModel(CustomBaseModel):
+class InformationMarkAsReadModel(ModelBase):
     information_id: int
 
 
-class InformationPutResponseModel(CustomBaseModel):
+class InformationPutResponseModel(ModelBase):
     information_mark_as_read: InformationMarkAsReadModel

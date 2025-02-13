@@ -11,13 +11,13 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.bases import SchemaBase
 from naagin.enums import InformationCategoryEnum
 
-from .base import CustomBaseSchema
 from .enums import InformationCategoryEnumSchema
 
 
-class InformationSchema(CustomBaseSchema):
+class InformationSchema(SchemaBase):
     __tablename__ = "information"
 
     information_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)

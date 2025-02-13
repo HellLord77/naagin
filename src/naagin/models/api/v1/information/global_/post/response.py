@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class InformationModel(CustomBaseModel):
+class InformationModel(ModelBase):
     information_id: int
     title: str
     description: str
@@ -17,5 +17,5 @@ class InformationModel(CustomBaseModel):
     priority: int
 
 
-class InformationGlobalPostResponseModel(CustomBaseModel):
+class InformationGlobalPostResponseModel(ModelBase):
     information_list: list[InformationModel]
