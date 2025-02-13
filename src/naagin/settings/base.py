@@ -3,4 +3,4 @@ from pydantic_settings import SettingsConfigDict
 
 
 class CustomBaseSettings(BaseSettings):
-    model_config = SettingsConfigDict(extra="ignore")
+    model_config = SettingsConfigDict(frozen=True, extra="ignore")
