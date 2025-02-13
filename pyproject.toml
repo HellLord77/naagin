@@ -21,13 +21,13 @@ line-length = 120
 extend-select = ["ALL"]
 ignore = [
     "A",       # flake8-builtins *
-    "COM812",  # flake8-commas missing-trailing-comma
-    "D1",      # pydocstyle undocumented-*
-    "D203",    # pydocstyle incorrect-blank-line-before-class
-    "D212",    # pydocstyle multi-line-summary-first-line
-    "ERA001",  # eradicate commented-out-code
-    "PLC0414", # Convention useless-import-alias
-    "RET505",  # flake8-return superfluous-else-return
+    "COM812",  # flake8-commas   missing-trailing-comma
+    "D1",      # pydocstyle      undocumented-*
+    "D203",    # pydocstyle      incorrect-blank-line-before-class
+    "D212",    # pydocstyle      multi-line-summary-first-line
+    "ERA001",  # eradicate       commented-out-code
+    "PLC0414", # Convention      useless-import-alias
+    "RET505",  # flake8-return   superfluous-else-return
 ]
 
 [tool.ruff.lint.isort]
