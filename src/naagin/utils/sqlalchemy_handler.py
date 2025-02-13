@@ -1,6 +1,7 @@
 from functools import cache
 from logging import INFO
 from logging import LogRecord
+from typing import override
 
 from rich.console import ConsoleRenderable
 from rich.logging import RichHandler
@@ -25,12 +26,14 @@ def get_syntax() -> Syntax:
 
 
 class SQLAlchemyHandler(RichHandler):
+    @override
     def emit(self, record: LogRecord) -> None:
         if record.levelno == INFO and record.msg != "[%s] %r":
             record.format = settings.database.echo_lint
             record.syntax = settings.database.echo_color
         super().emit(record)
 
+    @override
     def render_message(self, record: LogRecord, message: str) -> ConsoleRenderable:
         if getattr(record, "format", False):
             message = format(message, reindent=True, keyword_case="upper")

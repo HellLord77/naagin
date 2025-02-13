@@ -18,7 +18,10 @@ src = ["src/naagin"]
 line-length = 120
 
 [tool.ruff.lint]
-extend-select = ["ALL"]
+preview = true
+explicit-preview-rules = true
+select = ["ALL"]
+extend-select = ["PLC0415"]
 ignore = [
     "A",       # flake8-builtins *
     "COM812",  # flake8-commas   missing-trailing-comma
@@ -34,7 +37,10 @@ ignore = [
 force-single-line = true
 
 [tool.ruff.lint.flake8-bugbear]
-extend-immutable-calls = ["fastapi.Depends"]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
+
+[tool.ruff.lint.flake8-boolean-trap]
+extend-allowed-calls = ["fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.CustomBaseSchema instead."
