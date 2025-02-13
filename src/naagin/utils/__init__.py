@@ -51,6 +51,12 @@ async def iter_encrypt_data(
     yield encryptor.finalize()
 
 
+@async_request_cache
+async def match_request(request: Request, router: Router, match: Match = Match.FULL) -> bool:
+    matches = router_matches(router, request.scope)
+    return matches[0].value >= match.value
+
+
 def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
     partial_matches = Match.NONE, {}
     for route in self.routes:
@@ -61,12 +67,6 @@ def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
             case Match.PARTIAL if partial_matches[0] == Match.NONE:
                 partial_matches = matches
     return partial_matches
-
-
-@async_request_cache
-async def request_match(request: Request, router: Router, match: Match = Match.FULL) -> bool:
-    matches = router_matches(router, request.scope)
-    return matches[0].value >= match.value
 
 
 def request_headers(self: Request) -> MutableHeaders:
