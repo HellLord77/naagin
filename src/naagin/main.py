@@ -23,7 +23,7 @@ from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions.base import BaseException
-from .middlewares import FilterMiddleware
+from .middlewares.common import FilterMiddleware
 from .models.base import BaseModel
 from .schemas.base import BaseSchema
 from .utils import SQLAlchemyHandler
