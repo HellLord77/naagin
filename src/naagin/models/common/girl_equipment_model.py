@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class GirlEquipmentModel(CustomBaseModel):
+class GirlEquipmentModel(ModelBase):
     owner_id: int
     girl_mid: int
     swimsuit_equipment_item_id: int

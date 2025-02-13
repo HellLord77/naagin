@@ -1,6 +1,6 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 from naagin.models.common import FurnitureMySetModel
 
 
-class FurnitureMySetOwnerIdListGetResponseModel(CustomBaseModel):
+class FurnitureMySetOwnerIdListGetResponseModel(ModelBase):
     other_furniture_myset_list: list[FurnitureMySetModel]

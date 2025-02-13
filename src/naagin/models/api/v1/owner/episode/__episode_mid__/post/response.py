@@ -1,14 +1,14 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 from naagin.models.common import EpisodeModel
 from naagin.models.common import OwnerOtherModel
 
 
-class EpisodeResultEpisodeModel(CustomBaseModel):
+class EpisodeResultEpisodeModel(ModelBase):
     episode_mid: int
     count: int
 
 
-class EpisodeResultOwnerModel(CustomBaseModel):
+class EpisodeResultOwnerModel(ModelBase):
     experience_before: int
     experience_gain: int
     experience_after: int
@@ -17,12 +17,12 @@ class EpisodeResultOwnerModel(CustomBaseModel):
     level_after: int
 
 
-class EpisodeResultModel(CustomBaseModel):
+class EpisodeResultModel(ModelBase):
     episode: EpisodeResultEpisodeModel
     owner: EpisodeResultOwnerModel
 
 
-class OwnerEpisodeEpisodeMidPostResponseModel(CustomBaseModel):
+class OwnerEpisodeEpisodeMidPostResponseModel(ModelBase):
     episode_result: EpisodeResultModel
     owner_list: list[OwnerOtherModel]
     episode_list: list[EpisodeModel]

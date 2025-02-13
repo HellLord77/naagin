@@ -1,7 +1,7 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class ResourceModel(CustomBaseModel):
+class ResourceModel(ModelBase):
     version: int
     directory: str
     file_name: str
@@ -9,12 +9,12 @@ class ResourceModel(CustomBaseModel):
     hash: str
 
 
-class ResourceListModel(CustomBaseModel):
+class ResourceListModel(ModelBase):
     low: list[ResourceModel]
     common: list[ResourceModel]
     high: list[ResourceModel]
     exe: list[ResourceModel]
 
 
-class ResourceListGetResponseModel(CustomBaseModel):
+class ResourceListGetResponseModel(ModelBase):
     resource_list: ResourceListModel

@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class GirlModel(CustomBaseModel):
+class GirlModel(ModelBase):
     owner_id: int
     girl_mid: int
     mood: int
@@ -52,5 +52,5 @@ class GirlModel(CustomBaseModel):
     updated_at: datetime | None
 
 
-class GirlGetResponseModel(CustomBaseModel):
+class GirlGetResponseModel(ModelBase):
     girl_list: list[GirlModel]

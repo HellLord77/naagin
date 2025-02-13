@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class OwnerEpisodeEpisodeMidPutRequestModel(CustomBaseModel):
+class OwnerEpisodeEpisodeMidPutRequestModel(ModelBase):
     count: int

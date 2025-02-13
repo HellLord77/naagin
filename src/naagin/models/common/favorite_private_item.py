@@ -1,7 +1,7 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class FavoritePrivateItemModel(CustomBaseModel):
+class FavoritePrivateItemModel(ModelBase):
     girl_mid: int
     type: int
     item_mid: int

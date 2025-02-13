@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class GamestartGetResponseModel(CustomBaseModel):
+class GamestartGetResponseModel(ModelBase):
     gamestart: bool

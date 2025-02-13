@@ -1,12 +1,12 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class MaxCombineOtherModel(CustomBaseModel):
+class MaxCombineOtherModel(ModelBase):
     owner_id: int
     item_mid: int
     variation: int
     max_combine: int
 
 
-class MaxCombineOwnerIdItemMidGetResponseModel(CustomBaseModel):
+class MaxCombineOwnerIdItemMidGetResponseModel(ModelBase):
     max_combine_other: MaxCombineOtherModel

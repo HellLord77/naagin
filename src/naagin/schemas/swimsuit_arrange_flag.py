@@ -4,11 +4,12 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import CustomBaseSchema
+from naagin.bases import SchemaBase
+
 from .owner import OwnerSchema
 
 
-class SwimsuitArrangeFlagSchema(CustomBaseSchema):
+class SwimsuitArrangeFlagSchema(SchemaBase):
     __tablename__ = "swimsuit_arrange_flag"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

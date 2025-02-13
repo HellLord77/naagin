@@ -1,9 +1,9 @@
 from pydantic import ConfigDict
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class CsvFileModel(CustomBaseModel):
+class CsvFileModel(ModelBase):
     __pydantic_extra__: dict[str, str]
 
     file_encrypt_key: str
@@ -11,5 +11,5 @@ class CsvFileModel(CustomBaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-class CsvListGetResponseModel(CustomBaseModel):
+class CsvListGetResponseModel(ModelBase):
     csv_file_list: CsvFileModel

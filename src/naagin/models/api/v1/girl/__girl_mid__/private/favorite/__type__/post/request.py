@@ -1,10 +1,10 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class ItemModel(CustomBaseModel):
+class ItemModel(ModelBase):
     is_favorite: int
     item_mid: int
 
 
-class GirlGirlMidPrivateFavoriteTypePostRequestModel(CustomBaseModel):
+class GirlGirlMidPrivateFavoriteTypePostRequestModel(ModelBase):
     item_list: list[ItemModel]

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 
-class CustomBaseSchema(DeclarativeBase):
+class SchemaBase(DeclarativeBase):
     metadata = MetaData(
         naming_convention={
             "ix": "ix_%(column_0_label)s",

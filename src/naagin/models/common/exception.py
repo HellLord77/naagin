@@ -1,6 +1,6 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class ExceptionModel(CustomBaseModel):
+class ExceptionModel(ModelBase):
     code: int
     message: str

@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class JohrenAuthJohrenOnetimeTokenGetResponse(CustomBaseModel):
+class JohrenAuthJohrenOnetimeTokenGetResponse(ModelBase):
     oauth_token_secret: str

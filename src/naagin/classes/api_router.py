@@ -1,11 +1,7 @@
-from collections.abc import Callable
-
 from fastapi import APIRouter
 
 
 class CustomAPIRouter(APIRouter):
-    def add_api_route[T, **P](
-        self, *args: P.args, _: Callable[P, T] = APIRouter.add_api_route, **kwargs: P.kwargs
-    ) -> T:
+    def add_api_route(self, *args, **kwargs) -> None:
         kwargs["response_model_exclude_defaults"] = True
-        return super().add_api_route(*args, **kwargs)
+        super().add_api_route(*args, **kwargs)

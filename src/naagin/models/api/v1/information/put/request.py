@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class InformationPutRequestModel(CustomBaseModel):
+class InformationPutRequestModel(ModelBase):
     information_id: int

@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class SessionKeyGetResponseModel(CustomBaseModel):
+class SessionKeyGetResponseModel(ModelBase):
     encrypt_key: str

@@ -1,6 +1,6 @@
-from .base import CustomBaseException
+from naagin.bases import ExceptionBase
 
 
-class InvalidParameterException(CustomBaseException):
+class InvalidParameterException(ExceptionBase):
     code = 1
     message = "invalid parameter(s)"

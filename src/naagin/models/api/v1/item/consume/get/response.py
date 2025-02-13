@@ -1,6 +1,6 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 from naagin.models.common import ItemConsumeModel
 
 
-class ItemConsumeGetResponseModel(CustomBaseModel):
+class ItemConsumeGetResponseModel(ModelBase):
     item_consume_list: list[ItemConsumeModel]

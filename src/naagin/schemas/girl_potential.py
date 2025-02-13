@@ -5,12 +5,13 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import CustomBaseSchema
+from naagin.bases import SchemaBase
+
 from .girl_equipment import ItemEquipmentSchema
 from .owner import OwnerSchema
 
 
-class GirlPotentialSchema(CustomBaseSchema):
+class GirlPotentialSchema(SchemaBase):
     __tablename__ = "girl_potential"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

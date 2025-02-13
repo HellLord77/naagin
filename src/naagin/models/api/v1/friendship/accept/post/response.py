@@ -1,8 +1,8 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 from naagin.models.common import FriendshipModel
 from naagin.models.common import OwnerOtherModel
 
 
-class FriendshipAcceptPostResponseModel(CustomBaseModel):
+class FriendshipAcceptPostResponseModel(ModelBase):
     friendship_list: list[FriendshipModel]
     owner_list: list[OwnerOtherModel]

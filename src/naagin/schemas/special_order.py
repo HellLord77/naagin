@@ -4,14 +4,14 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.bases import SchemaBase
 from naagin.enums import SpecialOrderTypeEnum
 
-from .base import CustomBaseSchema
 from .enums import SpecialOrderTypeEnumSchema
 from .owner import OwnerSchema
 
 
-class SpecialOrderSchema(CustomBaseSchema):
+class SpecialOrderSchema(SchemaBase):
     __tablename__ = "special_order"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

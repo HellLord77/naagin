@@ -4,7 +4,7 @@ from fastapi import Depends
 from fastapi import Request
 
 from naagin import settings
-from naagin.classes import CustomAsyncSession
+from naagin.classes import AsyncSession
 from naagin.decorators import async_request_cache
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import SessionSchema
@@ -12,7 +12,7 @@ from naagin.types.cookies import PINKSIDCookie
 from naagin.types.headers import AccessTokenHeader
 
 
-async def provide_session() -> AsyncGenerator[CustomAsyncSession]:
+async def provide_session() -> AsyncGenerator[AsyncSession]:
     session = settings.database.sessionmaker()
     try:
         yield session
@@ -30,7 +30,7 @@ async def provide_session_(
     request: Request,
     access_token: AccessTokenHeader | None = None,
     pinksid: PINKSIDCookie = None,
-    session: CustomAsyncSession = Depends(provide_session),
+    session: AsyncSession = Depends(provide_session),
 ) -> SessionSchema:
     if access_token is None:
         access_token = request.headers["X-DOAXVV-Access-Token"]

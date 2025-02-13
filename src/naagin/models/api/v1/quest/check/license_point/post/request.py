@@ -1,5 +1,5 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class QuestCheckLicensePointPostRequestModel(CustomBaseModel):
+class QuestCheckLicensePointPostRequestModel(ModelBase):
     is_adjust: bool

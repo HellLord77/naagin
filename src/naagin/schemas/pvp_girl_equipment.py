@@ -3,12 +3,13 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from .base import CustomBaseSchema
+from naagin.bases import SchemaBase
+
 from .item_equipemnt import ItemEquipmentSchema
 from .owner import OwnerSchema
 
 
-class PvpGirlEquipmentSchema(CustomBaseSchema):
+class PvpGirlEquipmentSchema(SchemaBase):
     __tablename__ = "pvp_girl_equipment"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)

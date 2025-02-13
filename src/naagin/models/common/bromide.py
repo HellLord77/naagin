@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class BromideModel(CustomBaseModel):
+class BromideModel(ModelBase):
     item_mid: int
     variation: int
     is_generate_seal: int

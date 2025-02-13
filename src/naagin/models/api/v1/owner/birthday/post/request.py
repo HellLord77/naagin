@@ -2,10 +2,10 @@ from datetime import date
 
 from pydantic import field_validator
 
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class OwnerBirthdayPostRequestModel(CustomBaseModel):
+class OwnerBirthdayPostRequestModel(ModelBase):
     birthday: date
 
     @field_validator("birthday", mode="before")

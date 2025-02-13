@@ -1,7 +1,7 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 
 
-class WalletModel(CustomBaseModel):
+class WalletModel(ModelBase):
     owner_id: int
     zack_money: int
     guest_point: int
@@ -11,5 +11,5 @@ class WalletModel(CustomBaseModel):
     vip_coin: int
 
 
-class WalletGetResponseModel(CustomBaseModel):
+class WalletGetResponseModel(ModelBase):
     wallet: WalletModel

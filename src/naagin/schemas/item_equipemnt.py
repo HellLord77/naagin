@@ -7,14 +7,14 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin.bases import SchemaBase
 from naagin.enums import ItemEquipmentTypeEnum
 
-from .base import CustomBaseSchema
 from .enums import ItemEquipmentTypeEnumSchema
 from .owner import OwnerSchema
 
 
-class ItemEquipmentSchema(CustomBaseSchema):
+class ItemEquipmentSchema(SchemaBase):
     __tablename__ = "item_equipment"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), index=True)

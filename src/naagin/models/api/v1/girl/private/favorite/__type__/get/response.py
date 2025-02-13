@@ -1,6 +1,6 @@
-from naagin.models.base import CustomBaseModel
+from naagin.bases import ModelBase
 from naagin.models.common import FavoritePrivateItemModel
 
 
-class GirlPrivateFavoriteTypeGetResponseModel(CustomBaseModel):
+class GirlPrivateFavoriteTypeGetResponseModel(ModelBase):
     favorite_private_item_list: list[FavoritePrivateItemModel]
