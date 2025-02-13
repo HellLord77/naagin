@@ -19,7 +19,7 @@ class DatabaseSettings(SettingsBase):
     user: str | None = None
     pass_: SecretStr | None = Field(None, alias="db_pass")
     host: str | None = None
-    port: str | None = None
+    port: int | None = None
     name: str | None = None
 
     echo_sql: bool = False
@@ -32,17 +32,17 @@ class DatabaseSettings(SettingsBase):
 
     @cached_property
     def url(self) -> URL:
-        driver = {
+        drivername = {
             DatabaseDriverEnum.SQLITE: "sqlite+aiosqlite",
             DatabaseDriverEnum.POSTGRESQL: "postgresql+asyncpg",
             DatabaseDriverEnum.MYSQL: "mysql+aiomysql",
             DatabaseDriverEnum.MARIADB: "mysql+aiomysql",
         }.get(self.driver, self.driver)
-        password = self.pass_
-        if password is not None:
-            password = password.get_secret_value()
+        password = None
+        if self.pass_ is not None:
+            password = self.pass_.get_secret_value()
 
-        return URL.create(driver, self.user, password, self.host, self.port, self.name)
+        return URL.create(drivername, self.user, password, self.host, self.port, self.name)
 
     @cached_property
     def engine(self) -> AsyncEngine:

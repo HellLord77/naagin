@@ -16,8 +16,8 @@ async def delete(
 ) -> FriendshipFriendIdDeleteResponseModel:
     owner = await session.get_one(OwnerSchema, owner_id)
     owner_other = await session.get_one(OwnerSchema, owner_other_id)
-    friendship = await session.get_one(FriendshipSchema, owner_id, owner_other_id)
-    friendship_other = await session.get_one(FriendshipSchema, owner_other_id, owner_id)
+    friendship = await session.get_one(FriendshipSchema, (owner_id, owner_other_id))
+    friendship_other = await session.get_one(FriendshipSchema, (owner_other_id, owner_id))
 
     success = True
     owner_list = None

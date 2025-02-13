@@ -1,3 +1,4 @@
+from collections.abc import Awaitable
 from collections.abc import Callable
 from functools import wraps
 from inspect import signature
@@ -5,7 +6,7 @@ from inspect import signature
 from fastapi import Request
 
 
-def async_request_cache[T, **P](awaitable: Callable[P, T]) -> Callable[P, T]:
+def async_request_cache[T, **P](awaitable: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
     @wraps(awaitable)
     async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
         sig = signature(awaitable)

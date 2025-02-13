@@ -21,17 +21,19 @@ class FilterMiddleware(BaseHTTPMiddleware):
         dispatch: DispatchFunction,
         *,
         prefix: str | None = None,
+        suffix: str | None = None,
         pattern: Pattern | None = None,
         router: APIRouter | None = None,
     ) -> None:
         super().__init__(app)
         self.dispatch_func_filter = dispatch
 
-        args = (prefix, pattern, router)
+        args = (prefix, suffix, pattern, router)
         if args.count(None) != len(args) - 1:
             raise NotImplementedError
 
         self.prefix = prefix
+        self.suffix = suffix
         self.pattern = pattern
         self.router = router
 
@@ -40,7 +42,9 @@ class FilterMiddleware(BaseHTTPMiddleware):
         if self.router is None:
             route_path = get_route_path(request.scope)
             if self.prefix is not None:
-                matches = self.prefix.startswith(route_path)
+                matches = route_path.startswith(self.prefix)
+            elif self.suffix is not None:
+                matches = route_path.endswith(self.suffix)
             elif self.pattern is not None:
                 matches = self.pattern.match(route_path) is not None
             else:

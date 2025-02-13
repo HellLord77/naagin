@@ -13,7 +13,7 @@ from naagin.utils import response_encrypt_body
 
 async def compress_body(request: Request, call_next: RequestResponseEndpoint) -> Response:
     response = await call_next(request)
-    if response.status_code == HTTPStatus.OK:
+    if HTTPStatus(response.status_code).is_success:
         if not isinstance(response, _StreamingResponse):
             raise NotImplementedError
 
@@ -23,7 +23,7 @@ async def compress_body(request: Request, call_next: RequestResponseEndpoint) ->
 
 async def encrypt_body(request: Request, call_next: RequestResponseEndpoint) -> Response:
     response = await call_next(request)
-    if response.status_code == HTTPStatus.OK:
+    if HTTPStatus(response.status_code).is_success:
         if not isinstance(response, _StreamingResponse):
             raise NotImplementedError
 

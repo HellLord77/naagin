@@ -58,7 +58,7 @@ async def match_request(request: Request, router: Router, match: Match = Match.F
 
 
 def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
-    partial_matches = Match.NONE, {}
+    partial_matches: tuple[Match, Scope] = Match.NONE, {}
     for route in self.routes:
         matches = route.matches(scope)
         match matches[0]:
@@ -89,16 +89,6 @@ async def request_headers_try_set_item_content_type_application_json(self: Reque
             headers["Content-Type"] = "application/json"
 
 
-async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes) -> None:
-    body = await self.body()
-    decrypted = decrypt_data(body, key, initialization_vector)
-    self._body = decrypted
-
-    headers = request_headers(self)
-    headers["Content-Length"] = str(len(decrypted))
-    await request_headers_try_set_item_content_type_application_json(self)
-
-
 async def request_decompress_body(self: Request) -> None:
     body = await self.body()
     decompressed = decompress(body)
@@ -106,6 +96,16 @@ async def request_decompress_body(self: Request) -> None:
 
     headers = request_headers(self)
     headers["Content-Length"] = str(len(decompressed))
+    await request_headers_try_set_item_content_type_application_json(self)
+
+
+async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes) -> None:
+    body = await self.body()
+    decrypted = decrypt_data(body, key, initialization_vector)
+    self._body = decrypted
+
+    headers = request_headers(self)
+    headers["Content-Length"] = str(len(decrypted))
     await request_headers_try_set_item_content_type_application_json(self)
 
 

@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 from csv import QUOTE_ALL
 from csv import DictReader
 from csv import reader
@@ -10,7 +11,7 @@ async def get_lines(master_version: int, name: str) -> list[str]:
     return data.splitlines()
 
 
-async def get_reader(master_version: int, name: str) -> reader:
+async def get_reader(master_version: int, name: str) -> Iterator[list[str]]:
     lines = await get_lines(master_version, name)
     return reader(lines, quoting=QUOTE_ALL)
 
