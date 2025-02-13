@@ -31,4 +31,4 @@ genson
 datamodel-code-generator
 
 # proxy
-mitmproxy==11.1.0
+mitmproxy==11.1.2
