@@ -1,5 +1,6 @@
 from typing import Any
 from typing import Self
+from typing import override
 
 from fastapi import Response
 
@@ -7,9 +8,11 @@ from fastapi import Response
 class DOAXVVHeader(str):
     __slots__ = ()
 
+    @override
     def __new__(cls, alias: str) -> Self:
         return super().__new__(cls, f"X-DOAXVV-{alias}")
 
+    @override
     def lower(self) -> Self:
         return self
 

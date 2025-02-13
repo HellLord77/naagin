@@ -1,4 +1,5 @@
 from re import Pattern
+from typing import override
 
 from fastapi import APIRouter
 from starlette._utils import get_route_path
@@ -13,6 +14,7 @@ from naagin.utils import match_request
 
 
 class FilterMiddleware(BaseHTTPMiddleware):
+    @override
     def __init__(
         self,
         app: ASGIApp,
@@ -33,6 +35,7 @@ class FilterMiddleware(BaseHTTPMiddleware):
         self.pattern = pattern
         self.router = router
 
+    @override
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         if self.router is None:
             route_path = get_route_path(request.scope)

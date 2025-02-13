@@ -14,8 +14,8 @@ class ExceptionBase(Exception):  # noqa: N818
 
     @classmethod
     @cache
-    def get_args(cls) -> tuple[dict, int]:
-        from naagin.models.common import ExceptionModel  # TODO
+    def get_args(cls) -> tuple[dict[str, int | str], int]:
+        from naagin.models.common import ExceptionModel  # noqa: PLC0415
 
         self = cls()
         content = ExceptionModel.model_validate(self).model_dump()
