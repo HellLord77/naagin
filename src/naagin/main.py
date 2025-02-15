@@ -28,7 +28,8 @@ from .bases import SchemaBase
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
-from .middlewares.common import FilterMiddleware
+from .middlewares.common import FilteredMiddleware
+from .middlewares.request import RequestLimitBodyMiddleware
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import moved_permanently_handler
 from .utils.exception_handlers import not_found_handler
@@ -77,20 +78,32 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     await settings.database.engine.dispose()
 
 
+kwargs = {}
+if not settings.fastapi.swagger_ui:
+    kwargs["openapi_url"] = None
+    kwargs["docs_url"] = None
+
 app = FastAPI(
-    title="naagin", version=__version__, redoc_url=None, lifespan=lifespan, default_response_class=ORJSONResponse
+    title="naagin",
+    version=__version__,
+    redoc_url=None,
+    lifespan=lifespan,
+    default_response_class=ORJSONResponse,
+    **kwargs,
 )
 
 app.mount("/game", apps.game.app)
 
 pattern = compile(r"^/api/v1/(?!session($|/))")
 
-app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decompress_body, pattern=pattern)
-app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decrypt_body, pattern=pattern)
+if settings.fastapi.reqeust_max_size is not None:
+    app.add_middleware(RequestLimitBodyMiddleware, max_size=settings.fastapi.reqeust_max_size)
+app.add_middleware(FilteredMiddleware, dispatch=middlewares.request.decompress_body, pattern=pattern)
+app.add_middleware(FilteredMiddleware, dispatch=middlewares.request.decrypt_body, pattern=pattern)
 if settings.api.compress:
-    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.compress_body, pattern=pattern)
+    app.add_middleware(FilteredMiddleware, dispatch=middlewares.response.compress_body, pattern=pattern)
 if settings.api.encrypt:
-    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.encrypt_body, pattern=pattern)
+    app.add_middleware(FilteredMiddleware, dispatch=middlewares.response.encrypt_body, pattern=pattern)
 app.add_middleware(GZipMiddleware)
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
