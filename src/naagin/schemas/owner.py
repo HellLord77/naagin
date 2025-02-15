@@ -11,6 +11,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin import factories
 from naagin.bases import SchemaBase
 from naagin.enums import CheckedLicenseLevelEnum
 from naagin.enums import LicenseLevelEnum
@@ -19,7 +20,6 @@ from naagin.enums import OwnerStatusEnum
 from .enums import CheckedLicenseLevelEnumSchema
 from .enums import LicenseLevelEnumSchema
 from .enums import OwnerStatusEnumSchema
-from .utils.factories import friend_code_factory
 
 
 class OwnerSchema(SchemaBase):
@@ -48,7 +48,7 @@ class OwnerSchema(SchemaBase):
     birthday: Mapped[date | None] = mapped_column(Date, default=None)
     stamina_checked_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())
     last_logged_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp())
-    friend_code: Mapped[str] = mapped_column(String(11), default=friend_code_factory, unique=True)
+    friend_code: Mapped[str] = mapped_column(String(11), default=factories.schema.friend_code_factory, unique=True)
 
     __table_args__ = (
         CheckConstraint(owner_id >= 1, "owner_id_min"),

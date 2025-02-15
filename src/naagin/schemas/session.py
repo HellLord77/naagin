@@ -9,11 +9,10 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from naagin import factories
 from naagin.bases import SchemaBase
 
 from .owner import OwnerSchema
-from .utils.factories import access_token_factory
-from .utils.factories import pinksid_factory
 
 
 def choices(population: str, *, k: int = 1) -> list[str]:
@@ -24,8 +23,8 @@ class SessionSchema(SchemaBase):
     __tablename__ = "session"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
-    access_token: Mapped[str] = mapped_column(String(32), default=access_token_factory, index=True)
-    pinksid: Mapped[str] = mapped_column(String(26), default=pinksid_factory, index=True)
+    access_token: Mapped[str] = mapped_column(String(32), default=factories.schema.access_token_factory, index=True)
+    pinksid: Mapped[str] = mapped_column(String(26), default=factories.schema.pinksid_factory, index=True)
     session_key: Mapped[bytes | None] = mapped_column(LargeBinary(32), default=None)
 
     __table_args__ = (

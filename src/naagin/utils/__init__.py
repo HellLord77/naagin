@@ -1,7 +1,9 @@
 from base64 import b64encode
 from collections.abc import AsyncGenerator
 from collections.abc import AsyncIterable
+from collections.abc import Sequence
 from json import JSONDecodeError
+from secrets import choice
 from secrets import token_bytes
 from zlib import compressobj
 from zlib import decompress
@@ -22,6 +24,10 @@ from naagin.enums import EncodingEnum
 
 from .doaxvv_header import DOAXVVHeader as DOAXVVHeader
 from .sqlalchemy_handler import SQLAlchemyHandler as SQLAlchemyHandler
+
+
+def choices[T: Sequence](population: T, *, k: int = 1) -> list[T]:
+    return [choice(population) for _ in range(k)]
 
 
 def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes:

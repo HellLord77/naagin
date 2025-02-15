@@ -3,7 +3,7 @@ from secrets import token_hex
 from string import ascii_lowercase
 from string import digits
 
-from . import choices
+from naagin.utils import choices
 
 
 def access_token_factory() -> str:
