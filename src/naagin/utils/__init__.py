@@ -20,6 +20,7 @@ from starlette.routing import Match
 from starlette.routing import Router
 from starlette.types import Scope
 
+from naagin import settings
 from naagin.decorators import async_request_cache_unsafe
 from naagin.enums import EncodingEnum
 
@@ -41,7 +42,7 @@ def decrypt_data(data: bytes, key: bytes, initialization_vector: bytes) -> bytes
 
 
 async def iter_compress_data(data_stream: AsyncIterable[bytes]) -> AsyncGenerator[bytes]:
-    compressor = compressobj()
+    compressor = compressobj(settings.api.compress_level)
     async for data in data_stream:
         yield compressor.compress(data)
     yield compressor.flush()
