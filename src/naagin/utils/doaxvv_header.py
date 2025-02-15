@@ -9,8 +9,8 @@ class DOAXVVHeader(str):
     __slots__ = ()
 
     @override
-    def __new__(cls, alias: str) -> Self:
-        return super().__new__(cls, f"X-DOAXVV-{alias}")
+    def __new__(cls, key: str) -> Self:
+        return super().__new__(cls, f"X-DOAXVV-{key}")
 
     @override
     def lower(self) -> Self:

@@ -83,7 +83,7 @@ def redirect_request(request: Request, path: str):
     request.port = consts.SERVER_URL.port
     request.path_components = path, *request.path_components
 
-    logging.info("[url] %s -> %s", pretty_url, request.pretty_url)
+    logging.info("[url] %s -> %s", pretty_url, request.url)
     request.headers["Host"] = pretty_host
 
 

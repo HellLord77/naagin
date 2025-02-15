@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from http import HTTPStatus
 from inspect import getfile
 from inspect import getsourcelines
+from logging import WARNING
 from logging import Formatter
 from logging import getLogger
 
@@ -46,7 +47,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
     sqlalchemy_logger.addHandler(sqlalchemy_handler)
 
-    if settings.logging.duplicate_model:
+    if settings.logging.duplicate_model and logger.isEnabledFor(WARNING):
         model_map = defaultdict(list)
         for model in ModelBase.__subclasses__():
             annotations = frozenset(model.__annotations__.items())
@@ -55,7 +56,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
         for models in model_map.values():
             if len(models) > 1:
-                message = "Possible duplicate models"
+                message = "Possible duplicate models:"
                 for model in models:
                     path = getfile(model)
                     lines, lineno = getsourcelines(model)
