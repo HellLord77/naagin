@@ -13,11 +13,13 @@ from aiopath import AsyncPath
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import ORJSONResponse
 from rich.logging import RichHandler
 
 from . import __version__
 from . import apps
 from . import middlewares
+from . import patches
 from . import routers
 from . import settings
 from .bases import ExceptionBase
@@ -64,6 +66,8 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
                     message += f"\n    {lines[0].rstrip()}"
                 logger.warning(message)
 
+    patches.apply()
+
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(SchemaBase.metadata.drop_all)
         await connection.run_sync(SchemaBase.metadata.create_all)
@@ -73,7 +77,9 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     await settings.database.engine.dispose()
 
 
-app = FastAPI(title="naagin", version=__version__, redoc_url=None, lifespan=lifespan)
+app = FastAPI(
+    title="naagin", version=__version__, redoc_url=None, lifespan=lifespan, default_response_class=ORJSONResponse
+)
 
 app.mount("/game", apps.game.app)
 
