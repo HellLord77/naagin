@@ -16,7 +16,7 @@ from . import owner
 from . import pvp_fes_deck
 from . import pvp_girl
 from . import quest
-from . import session  # noqa: F401
+from . import session
 from . import shop
 from . import special_order
 from . import swimsuit_arrange_flag
@@ -41,7 +41,7 @@ router.include_router(owner.router)
 router.include_router(pvp_fes_deck.router)
 router.include_router(pvp_girl.router)
 router.include_router(quest.router)
-# router.include_router(session.router)
+router.include_router(session.router)
 router.include_router(shop.router)
 router.include_router(special_order.router)
 router.include_router(swimsuit_arrange_flag.router)

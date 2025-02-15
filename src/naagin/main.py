@@ -7,9 +7,9 @@ from inspect import getsourcelines
 from logging import WARNING
 from logging import Formatter
 from logging import getLogger
+from re import compile
 
 from aiopath import AsyncPath
-from fastapi import Depends
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.gzip import GZipMiddleware
@@ -17,7 +17,6 @@ from rich.logging import RichHandler
 
 from . import __version__
 from . import apps
-from . import injectors
 from . import middlewares
 from . import routers
 from . import settings
@@ -78,12 +77,14 @@ app = FastAPI(title="naagin", version=__version__, redoc_url=None, lifespan=life
 
 app.mount("/game", apps.game.app)
 
-app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decompress_body, router=routers.api.router)
-app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decrypt_body, router=routers.api.router)
+pattern = compile(r"^/api/v1/(?!session($|/))")
+
+app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decompress_body, pattern=pattern)
+app.add_middleware(FilterMiddleware, dispatch=middlewares.request.decrypt_body, pattern=pattern)
 if settings.api.compress:
-    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.compress_body, router=routers.api.router)
+    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.compress_body, pattern=pattern)
 if settings.api.encrypt:
-    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.encrypt_body, router=routers.api.router)
+    app.add_middleware(FilterMiddleware, dispatch=middlewares.response.encrypt_body, pattern=pattern)
 app.add_middleware(GZipMiddleware)
 
 app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
@@ -94,10 +95,4 @@ app.add_exception_handler(RequestValidationError, InvalidParameterException.hand
 app.add_exception_handler(ExceptionBase, ExceptionBase.handler)
 
 app.include_router(routers.api.router, tags=["api"])
-app.include_router(
-    routers.api.v1.session.router,
-    prefix="/api/v1",
-    tags=["api", "session"],
-    dependencies=[Depends(injectors.response.add_doaxvv_headers)],
-)
 app.include_router(routers.api01.router, tags=["api01"])

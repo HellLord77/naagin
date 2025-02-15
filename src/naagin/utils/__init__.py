@@ -3,6 +3,7 @@ from collections.abc import AsyncGenerator
 from collections.abc import AsyncIterable
 from collections.abc import Sequence
 from json import JSONDecodeError
+from re import Pattern
 from secrets import choice
 from secrets import token_bytes
 from zlib import compressobj
@@ -13,13 +14,14 @@ from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
 from fastapi import Request
+from starlette._utils import get_route_path
 from starlette.datastructures import MutableHeaders
 from starlette.middleware.base import _StreamingResponse
 from starlette.routing import Match
 from starlette.routing import Router
 from starlette.types import Scope
 
-from naagin.decorators import async_request_cache
+from naagin.decorators import async_request_cache_unsafe
 from naagin.enums import EncodingEnum
 
 from .doaxvv_header import DOAXVVHeader as DOAXVVHeader
@@ -57,10 +59,26 @@ async def iter_encrypt_data(
     yield encryptor.finalize()
 
 
-@async_request_cache
-async def match_request(request: Request, router: Router, match: Match = Match.FULL) -> bool:
-    matches = router_matches(router, request.scope)
-    return matches[0].value >= match.value
+@async_request_cache_unsafe
+async def match_request(
+    request: Request,
+    prefix: str | None = None,
+    suffix: str | None = None,
+    pattern: Pattern | None = None,
+    router: Router | None = None,
+) -> bool:
+    if router is None:
+        route_path = get_route_path(request.scope)
+        if prefix is not None:
+            return route_path.startswith(prefix)
+        elif suffix is not None:
+            return route_path.endswith(suffix)
+        elif pattern is not None:
+            return pattern.match(route_path) is not None
+        else:
+            raise NotImplementedError
+    else:
+        return router_matches(router, request.scope)[0] == Match.FULL
 
 
 def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
@@ -83,15 +101,15 @@ def request_headers(self: Request) -> MutableHeaders:
     return headers
 
 
-async def request_headers_try_set_item_content_type_application_json(self: Request) -> None:
-    content_type = self.headers.get("Content-Type")
+async def try_decode_request_header(request: Request) -> None:
+    content_type = request.headers.get("Content-Type")
     if content_type == "application/octet-stream":
         try:
-            await self.json()
+            await request.json()
         except (UnicodeDecodeError, JSONDecodeError):
             pass
         else:
-            headers = request_headers(self)
+            headers = request_headers(request)
             headers["Content-Type"] = "application/json"
 
 
@@ -102,7 +120,7 @@ async def request_decompress_body(self: Request) -> None:
 
     headers = request_headers(self)
     headers["Content-Length"] = str(len(decompressed))
-    await request_headers_try_set_item_content_type_application_json(self)
+    await try_decode_request_header(self)
 
 
 async def request_decrypt_body(self: Request, key: bytes, initialization_vector: bytes) -> None:
@@ -112,7 +130,7 @@ async def request_decrypt_body(self: Request, key: bytes, initialization_vector:
 
     headers = request_headers(self)
     headers["Content-Length"] = str(len(decrypted))
-    await request_headers_try_set_item_content_type_application_json(self)
+    await try_decode_request_header(self)
 
 
 def response_compress_body(self: _StreamingResponse) -> None:
