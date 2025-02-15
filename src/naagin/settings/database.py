@@ -19,7 +19,7 @@ class DatabaseSettings(SettingsBase):
     user: str | None = None
     pass_: SecretStr | None = Field(None, alias="db_pass")
     host: str | None = None
-    port: int | None = None
+    port: int | None = Field(None, ge=0, le=65535)
     name: str | None = None
 
     echo_sql: bool = False

@@ -1,4 +1,3 @@
-from asyncio import iscoroutinefunction
 from collections.abc import Awaitable
 from collections.abc import Callable
 from functools import wraps
@@ -8,9 +7,6 @@ from fastapi import Request
 
 
 def async_request_cache_unsafe[T, **P](awaitable: Callable[P, Awaitable[T]], /) -> Callable[P, Awaitable[T]]:
-    if not iscoroutinefunction(awaitable):
-        raise NotImplementedError
-
     sig = signature(awaitable)
     key = awaitable.__name__
 
