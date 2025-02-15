@@ -3,7 +3,7 @@ from http import HTTPStatus
 from typing import ClassVar
 
 from fastapi import Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import ORJSONResponse
 
 from naagin.utils import DOAXVVHeader
 
@@ -23,10 +23,10 @@ class ExceptionBase(Exception):  # noqa: N818
         return content, status_code
 
     @classmethod
-    def handler(cls, _: Request | None = None, exception: Exception | None = None) -> JSONResponse:
+    def handler(cls, _: Request | None = None, exception: Exception | None = None) -> ORJSONResponse:
         if isinstance(exception, ExceptionBase):
             return exception.handler()
         else:
-            response = JSONResponse(*cls.get_args())
+            response = ORJSONResponse(*cls.get_args())
             DOAXVVHeader.set(response, "Status", cls.code)
             return response

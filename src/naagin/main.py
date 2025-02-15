@@ -31,7 +31,6 @@ from .exceptions import MethodNotAllowedException
 from .middlewares.common import FilteredMiddleware
 from .middlewares.request import RequestLimitBodyMiddleware
 from .utils import SQLAlchemyHandler
-from .utils.exception_handlers import moved_permanently_handler
 from .utils.exception_handlers import not_found_handler
 
 logger = settings.logging.logger
@@ -106,7 +105,6 @@ if settings.api.encrypt:
     app.add_middleware(FilteredMiddleware, dispatch=middlewares.response.encrypt_body, pattern=pattern)
 app.add_middleware(GZipMiddleware)
 
-app.add_exception_handler(HTTPStatus.MOVED_PERMANENTLY, moved_permanently_handler)
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
 app.add_exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler)
