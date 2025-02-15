@@ -1,1 +1,1 @@
-from .filter import FilterMiddleware as FilterMiddleware
+from .filtered import FilteredMiddleware as FilteredMiddleware

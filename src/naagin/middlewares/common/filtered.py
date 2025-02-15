@@ -12,7 +12,7 @@ from starlette.types import ASGIApp
 from naagin.utils import match_request
 
 
-class FilterMiddleware(BaseHTTPMiddleware):
+class FilteredMiddleware(BaseHTTPMiddleware):
     @override
     def __init__(
         self,

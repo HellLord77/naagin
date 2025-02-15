@@ -10,6 +10,8 @@ from naagin.providers import provide_session_
 from naagin.utils import request_decompress_body
 from naagin.utils import request_decrypt_body
 
+from .limit_body import RequestLimitBodyMiddleware as RequestLimitBodyMiddleware
+
 
 async def decompress_body(request: Request, call_next: RequestResponseEndpoint) -> Response:
     if await request.body():
