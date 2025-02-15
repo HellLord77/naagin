@@ -5,7 +5,7 @@ from fastapi import Request
 
 from naagin import settings
 from naagin.classes import AsyncSession
-from naagin.decorators import async_request_cache
+from naagin.decorators import async_request_cache_unsafe
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import SessionSchema
 from naagin.types.cookies import PINKSIDCookie
@@ -25,7 +25,7 @@ async def provide_session() -> AsyncGenerator[AsyncSession]:
         await session.close()
 
 
-@async_request_cache
+@async_request_cache_unsafe
 async def provide_session_(
     request: Request,
     access_token: AccessTokenHeader | None = None,

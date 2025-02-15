@@ -1,3 +1,4 @@
+from asyncio import iscoroutinefunction
 from collections.abc import Awaitable
 from collections.abc import Callable
 from functools import wraps
@@ -6,10 +7,15 @@ from inspect import signature
 from fastapi import Request
 
 
-def async_request_cache[T, **P](awaitable: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
+def async_request_cache_unsafe[T, **P](awaitable: Callable[P, Awaitable[T]], /) -> Callable[P, Awaitable[T]]:
+    if not iscoroutinefunction(awaitable):
+        raise NotImplementedError
+
+    sig = signature(awaitable)
+    key = awaitable.__name__
+
     @wraps(awaitable)
     async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
-        sig = signature(awaitable)
         bound = sig.bind(*args, **kwargs)
         bound.apply_defaults()
 
@@ -17,10 +23,9 @@ def async_request_cache[T, **P](awaitable: Callable[P, Awaitable[T]]) -> Callabl
         if not isinstance(request, Request):
             raise NotImplementedError
 
-        if not hasattr(request.state, awaitable.__name__):
+        if not hasattr(request.state, key):
             result = await awaitable(*args, **kwargs)
-            setattr(request.state, awaitable.__name__, result)
-
-        return getattr(request.state, awaitable.__name__)
+            setattr(request.state, key, result)
+        return getattr(request.state, key)
 
     return wrapper
