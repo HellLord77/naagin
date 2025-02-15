@@ -21,6 +21,7 @@ sqlparse
 asyncpg
 sqlalchemy
 httpx
+orjson
 starlette
 fastapi[standard]
 # !httptools

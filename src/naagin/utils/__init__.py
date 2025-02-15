@@ -2,7 +2,6 @@ from base64 import b64encode
 from collections.abc import AsyncGenerator
 from collections.abc import AsyncIterable
 from collections.abc import Sequence
-from json import JSONDecodeError
 from re import Pattern
 from secrets import choice
 from secrets import token_bytes
@@ -106,7 +105,7 @@ async def try_decode_request_header(request: Request) -> None:
     if content_type == "application/octet-stream":
         try:
             await request.json()
-        except (UnicodeDecodeError, JSONDecodeError):
+        except ValueError:
             pass
         else:
             headers = request_headers(request)
