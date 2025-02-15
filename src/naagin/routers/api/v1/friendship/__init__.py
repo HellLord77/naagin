@@ -41,7 +41,7 @@ async def post(
     friendship_other = await session.get(FriendshipSchema, (request.friend_id, owner_id))
 
     success = True
-    if friendship is None or friendship_other is None:
+    if friendship is None and friendship_other is None:
         friendship = FriendshipSchema(owner_id=owner_id, friend_id=request.friend_id, state=FriendshipStateEnum.SENT)
         friendship_other = FriendshipSchema(
             owner_id=request.friend_id, friend_id=owner_id, state=FriendshipStateEnum.RECEIVED
