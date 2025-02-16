@@ -17,8 +17,8 @@ class FilteredMiddleware(BaseHTTPMiddleware):
     def __init__(
         self,
         app: ASGIApp,
-        dispatch: DispatchFunction,
         *,
+        dispatch: DispatchFunction,
         prefix: str | None = None,
         suffix: str | None = None,
         pattern: Pattern | None = None,
