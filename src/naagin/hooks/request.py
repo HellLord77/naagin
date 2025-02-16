@@ -14,5 +14,5 @@ async def json(self: Request) -> JSONDecodeType:
     return self._json
 
 
-def apply() -> None:
+def attach() -> None:
     Request.json = json

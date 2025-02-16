@@ -18,8 +18,8 @@ from rich.logging import RichHandler
 
 from . import __version__
 from . import apps
+from . import hooks
 from . import middlewares
-from . import patches
 from . import routers
 from . import settings
 from .bases import ExceptionBase
@@ -29,7 +29,7 @@ from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .middlewares.common import FilteredMiddleware
-from .middlewares.request import RequestLimitBodyMiddleware
+from .middlewares.request import LimitBodyRequestMiddleware
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import not_found_handler
 
@@ -66,7 +66,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
                     message += f"\n    {lines[0].rstrip()}"
                 logger.warning(message)
 
-    patches.apply()
+    hooks.attach()
 
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(SchemaBase.metadata.drop_all)
@@ -96,7 +96,7 @@ app.mount("/game", apps.game.app)
 pattern = compile(r"^/api/v1/(?!session($|/))")
 
 if settings.fastapi.reqeust_max_size is not None:
-    app.add_middleware(RequestLimitBodyMiddleware, max_size=settings.fastapi.reqeust_max_size)
+    app.add_middleware(LimitBodyRequestMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
 app.add_middleware(FilteredMiddleware, dispatch=middlewares.request.decompress_body, pattern=pattern)
 app.add_middleware(FilteredMiddleware, dispatch=middlewares.request.decrypt_body, pattern=pattern)
 if settings.api.compress:

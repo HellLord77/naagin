@@ -12,11 +12,11 @@ from starlette.types import ASGIApp
 from naagin.exceptions import InternalServerErrorException
 
 
-class RequestLimitBodyMiddleware(BaseHTTPMiddleware):
+class LimitBodyRequestMiddleware(BaseHTTPMiddleware):
     @override
-    def __init__(self, app: ASGIApp, *, max_size: int) -> None:
+    def __init__(self, app: ASGIApp, *, maximum_size: int) -> None:
         super().__init__(app)
-        self.max_size = max_size
+        self.maximum_size = maximum_size
 
     @override
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
@@ -27,6 +27,6 @@ class RequestLimitBodyMiddleware(BaseHTTPMiddleware):
         stream_size = 0
         async for chunk in stream():  # TODO: requires iter decompress, decrypt
             stream_size += len(chunk)
-            if stream_size > self.max_size:
+            if stream_size > self.maximum_size:
                 raise InternalServerErrorException
             yield chunk
