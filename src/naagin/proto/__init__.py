@@ -1,0 +1,4 @@
+from .compress_flush import SupportsCompressFlush as SupportsCompressFlush
+from .decompress_flush import SupportsDecompressFlush as SupportsDecompressFlush
+from .update_finalize import SupportsUpdateFinalize as SupportsUpdateFinalize
+from .update_flush_ex import SupportsUpdateFlushEx as SupportsUpdateFlushEx
