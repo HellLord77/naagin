@@ -32,6 +32,7 @@ from .exceptions import MethodNotAllowedException
 from .middlewares import AESMiddleware
 from .middlewares import DeflateMiddleware
 from .middlewares import FilteredMiddleware
+from .middlewares import LimitingBodyMiddleware
 from .middlewares import RenewedMiddleware
 from .middlewares import StackedMiddleware
 from .utils import SQLAlchemyHandler
@@ -99,8 +100,10 @@ app.mount("/game", apps.game.app)
 
 pattern = compile(r"^/api/v1/(?!session($|/))")
 
-# if settings.fastapi.reqeust_max_size is not None:
-#     app.add_middleware(LimitBodyRequestMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
+if settings.fastapi.reqeust_max_size is not None:
+    app.add_middleware(
+        RenewedMiddleware, middleware=Middleware(LimitingBodyMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
+    )
 app.add_middleware(
     FilteredMiddleware,
     middleware=Middleware(

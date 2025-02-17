@@ -6,6 +6,6 @@ from naagin.bases import SettingsBase
 
 class FastAPISettings(SettingsBase):
     swagger: bool = False
-    reqeust_max_size: NonNegativeInt | None = 1_000_000
+    reqeust_max_size: NonNegativeInt | None = 1000
 
     model_config = SettingsConfigDict(env_prefix="app_")
