@@ -1,2 +1,1 @@
 from .compress_flush import CompressFlushEncoder as CompressFlushEncoder
-from .update_finalize import UpdateFinalizeEncoder as UpdateFinalizeEncoder

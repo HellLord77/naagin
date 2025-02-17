@@ -12,6 +12,8 @@ from re import compile
 from aiopath import AsyncPath
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import StarletteHTTPException
+from fastapi.middleware import Middleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import ORJSONResponse
 from rich.logging import RichHandler
@@ -19,7 +21,6 @@ from rich.logging import RichHandler
 from . import __version__
 from . import apps
 from . import hooks
-from . import middlewares
 from . import routers
 from . import settings
 from .bases import ExceptionBase
@@ -28,8 +29,11 @@ from .bases import SchemaBase
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
-from .middlewares.common import FilteredMiddleware
-from .middlewares.request import LimitBodyRequestMiddleware
+from .middlewares import AESMiddleware
+from .middlewares import DeflateMiddleware
+from .middlewares import FilteredMiddleware
+from .middlewares import RenewedMiddleware
+from .middlewares import StackedMiddleware
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import not_found_handler
 
@@ -78,7 +82,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
 
 kwargs = {}
-if not settings.fastapi.swagger_ui:
+if not settings.fastapi.swagger:
     kwargs["openapi_url"] = None
     kwargs["docs_url"] = None
 
@@ -95,20 +99,32 @@ app.mount("/game", apps.game.app)
 
 pattern = compile(r"^/api/v1/(?!session($|/))")
 
-if settings.fastapi.reqeust_max_size is not None:
-    app.add_middleware(LimitBodyRequestMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
-app.add_middleware(FilteredMiddleware, dispatch=middlewares.request.decompress_body, pattern=pattern)
-app.add_middleware(FilteredMiddleware, dispatch=middlewares.request.decrypt_body, pattern=pattern)
-if settings.api.compress:
-    app.add_middleware(FilteredMiddleware, dispatch=middlewares.response.compress_body, pattern=pattern)
-if settings.api.encrypt:
-    app.add_middleware(FilteredMiddleware, dispatch=middlewares.response.encrypt_body, pattern=pattern)
+# if settings.fastapi.reqeust_max_size is not None:
+#     app.add_middleware(LimitBodyRequestMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
+app.add_middleware(
+    FilteredMiddleware,
+    middleware=Middleware(
+        StackedMiddleware,
+        Middleware(
+            RenewedMiddleware,
+            middleware=Middleware(
+                DeflateMiddleware, send_encoded=settings.api.compress, compress_level=settings.api.compress_level
+            ),
+        ),
+        Middleware(
+            RenewedMiddleware,
+            middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, session=settings.database.session),
+        ),
+    ),
+    pattern=pattern,
+)
 app.add_middleware(GZipMiddleware)
 
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
 app.add_exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler)
 app.add_exception_handler(RequestValidationError, InvalidParameterException.handler)
+app.add_exception_handler(StarletteHTTPException, InternalServerErrorException.handler)
 app.add_exception_handler(ExceptionBase, ExceptionBase.handler)
 
 app.include_router(routers.api.router, tags=["api"])

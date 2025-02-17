@@ -5,7 +5,7 @@ from naagin.bases import SettingsBase
 
 
 class FastAPISettings(SettingsBase):
-    swagger_ui: bool = False
+    swagger: bool = False
     reqeust_max_size: NonNegativeInt | None = 1_000_000
 
     model_config = SettingsConfigDict(env_prefix="app_")

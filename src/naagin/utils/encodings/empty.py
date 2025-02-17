@@ -3,9 +3,9 @@ from naagin.decorators import singleton
 
 
 @singleton
-class DummyEncoding(BaseEncoding):
+class EmptyEncoding(BaseEncoding):
     def update(self, data: bytes) -> bytes:
-        return data
+        raise NotImplementedError
 
     def flush(self) -> bytes:
-        return b""
+        raise NotImplementedError

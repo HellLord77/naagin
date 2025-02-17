@@ -6,9 +6,10 @@ from fastapi import Request
 from fastapi.responses import ORJSONResponse
 
 from naagin.utils import DOAXVVHeader
+from naagin.utils import SingletonMeta
 
 
-class ExceptionBase(Exception):  # noqa: N818
+class ExceptionBase(Exception, metaclass=SingletonMeta):  # noqa: N818
     code: ClassVar[int]
     message: ClassVar[str]
 
@@ -26,7 +27,7 @@ class ExceptionBase(Exception):  # noqa: N818
     def handler(cls, _: Request | None = None, exception: Exception | None = None) -> ORJSONResponse:
         if isinstance(exception, ExceptionBase):
             return exception.handler()
-        else:
-            response = ORJSONResponse(*cls.get_args())
-            DOAXVVHeader.set(response, "Status", cls.code)
-            return response
+
+        response = ORJSONResponse(*cls.get_args())
+        DOAXVVHeader.set(response, "Status", cls.code)
+        return response

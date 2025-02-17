@@ -40,5 +40,5 @@ class SQLAlchemyHandler(RichHandler):
 
         if getattr(record, "syntax", False):
             return get_syntax().highlight(message)
-        else:
-            return super().render_message(record, message)
+
+        return super().render_message(record, message)

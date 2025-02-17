@@ -12,7 +12,6 @@ class DOAXVVHeader(str):
     def __new__(cls, key: str) -> Self:
         return super().__new__(cls, f"X-DOAXVV-{key}")
 
-    @override
     def lower(self) -> Self:
         return self
 

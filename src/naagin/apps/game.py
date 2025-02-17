@@ -42,8 +42,8 @@ async def not_found_handler(request: Request, _: Exception) -> Response:
             except HTTPStatusError as exception:
                 if exception.response.status_code == HTTPStatus.NOT_FOUND:
                     return not_found_response()
-                else:
-                    return InternalServerErrorException.handler(request, exception)
+
+                return InternalServerErrorException.handler(request, exception)
             else:
                 if await path.is_dir():
                     rmtree(path)
