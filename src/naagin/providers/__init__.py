@@ -28,16 +28,16 @@ async def provide_session() -> AsyncGenerator[AsyncSession]:
 @async_request_cache_unsafe
 async def provide_session_(
     request: Request,
-    access_token: AccessTokenHeader | None = None,
+    access_token: AccessTokenHeader = None,
     pinksid: PINKSIDCookie = None,
     session: AsyncSession = Depends(provide_session),
 ) -> SessionSchema:
     if access_token is None:
-        access_token = request.headers["X-DOAXVV-Access-Token"]
+        access_token = request.headers.get("X-DOAXVV-Access-Token")
     if pinksid is None:
         pinksid = request.cookies.get("PINKSID")
 
-    if access_token != "XPEACHACCESSTOKEN":  # noqa: S105
+    if access_token is not None and access_token != "XPEACHACCESSTOKEN":  # noqa: S105
         whereclause = SessionSchema.access_token == access_token
     elif pinksid is not None:
         whereclause = SessionSchema.pinksid == pinksid
