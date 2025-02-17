@@ -50,11 +50,11 @@ class BaseEncodingMiddleware(ABC):
             headers = Headers(raw=scope["headers"])
             if self.is_receive_encoding_set(headers):
                 self.receive = receive
-                receive = self.receive_with_decoder
+                receive = self.receive_with_encoding
 
             if self.send_encoded:
                 self.send = send
-                send = self.send_with_encoder
+                send = self.send_with_encoding
 
         await self.app(scope, receive, send)
 
@@ -62,7 +62,7 @@ class BaseEncodingMiddleware(ABC):
     async def get_receive_encoding(self, headers: MutableHeaders) -> BaseEncoding:
         raise NotImplementedError
 
-    async def receive_with_decoder(self) -> Message:
+    async def receive_with_encoding(self) -> Message:
         message = await self.receive()
         if message["type"] == "http.request":
             body = message.get("body", b"")
@@ -98,7 +98,7 @@ class BaseEncodingMiddleware(ABC):
     async def get_send_encoding(self, headers: MutableHeaders) -> BaseEncoding:
         raise NotImplementedError
 
-    async def send_with_encoder(self, message: Message) -> None:
+    async def send_with_encoding(self, message: Message) -> None:
         message_type = message["type"]
         if message_type == "http.response.start":
             self.initial_message = message
