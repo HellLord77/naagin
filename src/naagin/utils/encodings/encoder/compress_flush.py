@@ -9,7 +9,5 @@ class CompressFlushEncoder(BaseEncoder):
     def update(self, data: bytes) -> bytes:
         return self.compress_flush.compress(data)
 
-    def flush(self, data: bytes = b"") -> bytes:
-        if data:
-            data = self.update(data)
-        return data + self.compress_flush.flush()
+    def flush(self) -> bytes:
+        return self.compress_flush.flush()

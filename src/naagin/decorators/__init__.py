@@ -6,7 +6,20 @@ from inspect import signature
 from fastapi import Request
 
 
-def async_request_cache_unsafe[T, **P](awaitable: Callable[P, Awaitable[T]], /) -> Callable[P, Awaitable[T]]:
+def singleton[T, **P](cls: Callable[P, T], /) -> Callable[P, T]:
+    self = None
+
+    @wraps(cls)
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
+        nonlocal self
+        if self is None:
+            self = cls(*args, **kwargs)
+        return self
+
+    return wrapper
+
+
+def async_request_cache_unsafe[T: Awaitable, **P](awaitable: Callable[P, T], /) -> Callable[P, T]:
     sig = signature(awaitable)
     key = awaitable.__name__
 

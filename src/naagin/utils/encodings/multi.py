@@ -1,8 +1,9 @@
-from naagin.proto import SupportsUpdateFlushEx
+from naagin.abstract import BaseEncoding
+from naagin.proto import SupportsUpdateFlush
 
 
-class MultiEncoding(SupportsUpdateFlushEx):
-    def __init__(self, *encodings: SupportsUpdateFlushEx) -> None:
+class MultiEncoding(BaseEncoding):
+    def __init__(self, *encodings: SupportsUpdateFlush) -> None:
         self.encodings = encodings
 
     def update(self, data: bytes) -> bytes:
@@ -10,7 +11,8 @@ class MultiEncoding(SupportsUpdateFlushEx):
             data = encoding.update(data)
         return data
 
-    def flush(self, data: bytes = b"") -> bytes:
+    def flush(self) -> bytes:
+        data = b""
         for encoding in self.encodings:
-            data = encoding.flush(data)
+            data = encoding.update(data) + encoding.flush()
         return data

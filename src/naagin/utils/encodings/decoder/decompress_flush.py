@@ -9,7 +9,5 @@ class DecompressFlushDecoder(BaseDecoder):
     def update(self, data: bytes) -> bytes:
         return self.decompress_flush.decompress(data)
 
-    def flush(self, data: bytes = b"") -> bytes:
-        if data:
-            data = self.update(data)
-        return data + self.decompress_flush.flush()
+    def flush(self) -> bytes:
+        return self.decompress_flush.flush()

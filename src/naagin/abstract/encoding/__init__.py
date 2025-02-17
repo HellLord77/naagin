@@ -1,13 +1,12 @@
+from abc import ABC
 from abc import abstractmethod
 
-from naagin.proto import SupportsUpdateFlushEx
 
-
-class BaseEncoder(SupportsUpdateFlushEx):
+class BaseEncoding(ABC):
     @abstractmethod
     def update(self, data: bytes) -> bytes:
         raise NotImplementedError
 
     @abstractmethod
-    def flush(self, data: bytes = b"") -> bytes:
+    def flush(self) -> bytes:
         raise NotImplementedError

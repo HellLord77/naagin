@@ -31,10 +31,12 @@ ignore = [
     "E501",    # pycodestyle     line-too-long
     "ERA001",  # eradicate       commented-out-code
     "PLC0414", # Convention      useless-import-alias
-    "RET505",  # flake8-return   superfluous-else-return
 ]
 extend-safe-fixes = [
     "F401",    # Pyflakes        unused-import
+]
+extend-unsafe-fixes = [
+    "RET505",  # flake8-return   superfluous-else-return
 ]
 
 [tool.ruff.lint.isort]
@@ -47,8 +49,13 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 extend-allowed-calls = ["fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
-"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.CustomBaseSchema instead."
+"starlette.requests.Request".msg = "Use fastapi.Request instead."
+"starlette.responses.Response".msg = "Use fastapi.Response instead."
+"starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
+"starlette.datastructures.Headers".msg = "Use fastapi.datastructures.Headers instead."
+"starlette.exceptions.HTTPException".msg = "Use fastapi.exceptions.StarletteHTTPException instead."
 "pydantic.BaseModel".msg = "Use naagin.base.models.CustomBaseModel instead."
+"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.CustomBaseSchema instead."
 "pydantic_settings.BaseSettings".msg = "Use naagin.settings.base.CustomBaseSettings instead."
 
 [tool.ruff.format]

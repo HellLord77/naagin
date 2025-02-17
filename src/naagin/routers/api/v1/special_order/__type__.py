@@ -28,7 +28,7 @@ async def get(
     )
     if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:
         return SpecialOrderTypeGetResponseModel(sp_timestop_item_list=special_order_list)
-    elif type == SpecialOrderTypeEnum.ORDER_TICKET:
+    elif type == SpecialOrderTypeEnum.ORDER_TICKET:  # noqa: RET505
         return SpecialOrderTypeGetResponseModel(order_ticket_list=special_order_list)
     elif type == SpecialOrderTypeEnum.POSE_CARD_ITEM:
         return SpecialOrderTypeGetResponseModel(pose_card_item_list=special_order_list)
