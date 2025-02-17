@@ -4,26 +4,30 @@ from secrets import token_bytes
 from typing import override
 
 from cryptography.hazmat.primitives.ciphers import Cipher
+from cryptography.hazmat.primitives.ciphers import CipherContext
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
-from fastapi import Request
-from fastapi.datastructures import Headers
+from cryptography.hazmat.primitives.padding import PaddingContext
+from starlette.datastructures import Headers  # noqa: TID251
 from starlette.datastructures import MutableHeaders
+from starlette.requests import Request  # noqa: TID251
 from starlette.types import ASGIApp
 
-from naagin.abstract import BaseEncoding
 from naagin.abstract import BaseEncodingMiddleware
 from naagin.classes import AsyncSession
 from naagin.providers import provide_session_
 from naagin.utils import DOAXVVHeader
-from naagin.utils.encodings import MultiEncoding
-from naagin.utils.encodings import UpdateFinalizeEncoding
+
+send_header = DOAXVVHeader("Encrypted")
+receive_header = str(send_header)
 
 
 class AESMiddleware(BaseEncodingMiddleware):
-    send_header = DOAXVVHeader("Encrypted")
-    receive_header = str(send_header)
+    decryptor: CipherContext
+    unpadder: PaddingContext
+    padder: PaddingContext
+    encryptor: CipherContext
 
     @override
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True, session: AsyncSession) -> None:
@@ -31,29 +35,37 @@ class AESMiddleware(BaseEncodingMiddleware):
         self.session = session
 
     def is_receive_encoding_set(self, headers: Headers) -> bool:
-        return self.receive_header in headers
+        return receive_header in headers
 
-    async def get_receive_encoding(self, headers: MutableHeaders) -> BaseEncoding:
+    async def init_decoder(self, headers: MutableHeaders) -> None:
         request = Request(scope=self.connection_scope)
         session = await provide_session_(request, session=self.session)
-        initialization_vector = b64decode(request.headers[self.receive_header])
+        initialization_vector = b64decode(request.headers[receive_header])
 
-        del headers[self.receive_header]
-        return MultiEncoding(
-            UpdateFinalizeEncoding(Cipher(AES(session.session_key), CBC(initialization_vector)).decryptor()),
-            UpdateFinalizeEncoding(PKCS7(AES.block_size).unpadder()),
-        )
+        del headers[receive_header]
+        self.decryptor = Cipher(AES(session.session_key), CBC(initialization_vector)).decryptor()
+        self.unpadder = PKCS7(AES.block_size).unpadder()
+
+    def update_decoder(self, data: bytes) -> bytes:
+        return self.unpadder.update(self.decryptor.update(data))
+
+    def flush_decoder(self) -> bytes:
+        return self.unpadder.update(self.decryptor.finalize()) + self.unpadder.finalize()
 
     def is_send_encoding_set(self, headers: Headers) -> bool:
-        return self.send_header in headers
+        return send_header in headers
 
-    async def get_send_encoding(self, headers: MutableHeaders) -> BaseEncoding:
+    async def init_encoder(self, headers: MutableHeaders) -> None:
         request = Request(scope=self.connection_scope)
         session = await provide_session_(request, session=self.session)
         initialization_vector = token_bytes(16)
 
-        headers[self.send_header] = b64encode(initialization_vector).decode()
-        return MultiEncoding(
-            UpdateFinalizeEncoding(PKCS7(AES.block_size).padder()),
-            UpdateFinalizeEncoding(Cipher(AES(session.session_key), CBC(initialization_vector)).encryptor()),
-        )
+        headers[send_header] = b64encode(initialization_vector).decode()
+        self.padder = PKCS7(AES.block_size).padder()
+        self.encryptor = Cipher(AES(session.session_key), CBC(initialization_vector)).encryptor()
+
+    def update_encoder(self, data: bytes) -> bytes:
+        return self.encryptor.update(self.padder.update(data))
+
+    def flush_encoder(self) -> bytes:
+        return self.encryptor.update(self.padder.finalize()) + self.encryptor.finalize()

@@ -3,21 +3,23 @@ from zlib import Z_DEFAULT_COMPRESSION
 from zlib import compressobj
 from zlib import decompressobj
 
-from fastapi.datastructures import Headers
+from starlette.datastructures import Headers  # noqa: TID251
 from starlette.datastructures import MutableHeaders
 from starlette.types import ASGIApp
 
-from naagin.abstract import BaseEncoding
 from naagin.abstract import BaseEncodingMiddleware
 from naagin.enums import EncodingEnum
+from naagin.types import ZLibCompressor
+from naagin.types import ZLibDecompressor
 from naagin.utils import DOAXVVHeader
-from naagin.utils.encodings.decoder import DecompressFlushDecoder
-from naagin.utils.encodings.encoder import CompressFlushEncoder
+
+send_header = DOAXVVHeader("Encoding")
+receive_header = str(send_header)
 
 
 class DeflateMiddleware(BaseEncodingMiddleware):
-    send_header = DOAXVVHeader("Encoding")
-    receive_header = str(send_header)
+    decompressor: ZLibDecompressor
+    compressor: ZLibCompressor
 
     @override
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True, compress_level: int = Z_DEFAULT_COMPRESSION) -> None:
@@ -25,15 +27,27 @@ class DeflateMiddleware(BaseEncodingMiddleware):
         self.compress_level = compress_level
 
     def is_receive_encoding_set(self, headers: Headers) -> bool:
-        return EncodingEnum.DEFLATE in headers.getlist(self.receive_header)
+        return EncodingEnum.DEFLATE in headers.getlist(receive_header)
 
-    async def get_receive_encoding(self, headers: MutableHeaders) -> BaseEncoding:
-        del headers[self.receive_header]
-        return DecompressFlushDecoder(decompressobj())
+    async def init_decoder(self, headers: MutableHeaders) -> None:
+        del headers[receive_header]
+        self.decompressor = decompressobj()
+
+    def update_decoder(self, data: bytes) -> bytes:
+        return self.decompressor.decompress(data)
+
+    def flush_decoder(self) -> bytes:
+        return self.decompressor.flush()
 
     def is_send_encoding_set(self, headers: Headers) -> bool:
-        return EncodingEnum.DEFLATE in headers.getlist(self.send_header)
+        return EncodingEnum.DEFLATE in headers.getlist(send_header)
 
-    async def get_send_encoding(self, headers: MutableHeaders) -> BaseEncoding:
-        headers[self.send_header] = EncodingEnum.DEFLATE
-        return CompressFlushEncoder(compressobj(self.compress_level))
+    async def init_encoder(self, headers: MutableHeaders) -> None:
+        headers[send_header] = EncodingEnum.DEFLATE
+        self.compressor = compressobj(self.compress_level)
+
+    def update_encoder(self, data: bytes) -> bytes:
+        return self.compressor.compress(data)
+
+    def flush_encoder(self) -> bytes:
+        return self.compressor.flush()

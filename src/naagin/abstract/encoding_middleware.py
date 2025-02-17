@@ -11,18 +11,13 @@ from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
 
-from naagin.abstract import BaseEncoding
-from naagin.utils.encodings import EmptyEncoding
-
 
 class BaseEncodingMiddleware(ABC):
     receive: Receive
     connection_scope: Scope
-    receive_encoding: BaseEncoding
 
     send: Send
     initial_message: Message
-    send_encoding: BaseEncoding
 
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True) -> None:
         self.app = app
@@ -31,13 +26,11 @@ class BaseEncodingMiddleware(ABC):
         self.receive = empty_receive
         self.receive_started = False
         self.connection_scope = {}
-        self.receive_encoding = EmptyEncoding()
 
         self.send = empty_send
         self.send_started = False
         self.initial_message = {}
         self.encoding_set = True
-        self.send_encoding = EmptyEncoding()
 
     @abstractmethod
     def is_receive_encoding_set(self, headers: Headers) -> bool:
@@ -50,41 +43,49 @@ class BaseEncodingMiddleware(ABC):
             headers = Headers(raw=scope["headers"])
             if self.is_receive_encoding_set(headers):
                 self.receive = receive
-                receive = self.receive_with_encoding
+                receive = self.receive_with_encoder
 
             if self.send_encoded:
                 self.send = send
-                send = self.send_with_encoding
+                send = self.send_with_decoder
 
         await self.app(scope, receive, send)
 
     @abstractmethod
-    async def get_receive_encoding(self, headers: MutableHeaders) -> BaseEncoding:
+    async def init_decoder(self, headers: MutableHeaders) -> None:
         raise NotImplementedError
 
-    async def receive_with_encoding(self) -> Message:
+    @abstractmethod
+    def update_decoder(self, data: bytes) -> bytes:
+        raise NotImplementedError
+
+    @abstractmethod
+    def flush_decoder(self) -> bytes:
+        raise NotImplementedError
+
+    async def receive_with_encoder(self) -> Message:
         message = await self.receive()
         if message["type"] == "http.request":
             body = message.get("body", b"")
             more_body = message.get("more_body", False)
 
             if self.receive_started:
-                body = self.receive_encoding.update(body)
+                body = self.update_decoder(body)
                 if not more_body:
-                    body += self.receive_encoding.flush()
+                    body += self.flush_decoder()
             else:
                 self.receive_started = True
 
                 if body or more_body:
                     header = MutableHeaders(raw=self.connection_scope["headers"])
-                    self.receive_encoding = await self.get_receive_encoding(header)
+                    await self.init_decoder(header)
                     del header["Content-Type"]
 
-                    body = self.receive_encoding.update(body)
+                    body = self.update_decoder(body)
                     if more_body:
                         del header["Content-Length"]
                     else:
-                        body += self.receive_encoding.flush()
+                        body += self.flush_decoder()
                         header["Content-Length"] = str(len(body))
 
             message["body"] = body
@@ -95,10 +96,18 @@ class BaseEncodingMiddleware(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_send_encoding(self, headers: MutableHeaders) -> BaseEncoding:
+    async def init_encoder(self, headers: MutableHeaders) -> None:
         raise NotImplementedError
 
-    async def send_with_encoding(self, message: Message) -> None:
+    @abstractmethod
+    def update_encoder(self, data: bytes) -> bytes:
+        raise NotImplementedError
+
+    @abstractmethod
+    def flush_encoder(self) -> bytes:
+        raise NotImplementedError
+
+    async def send_with_decoder(self, message: Message) -> None:
         message_type = message["type"]
         if message_type == "http.response.start":
             self.initial_message = message
@@ -114,22 +123,22 @@ class BaseEncodingMiddleware(ABC):
                 more_body = message.get("more_body", False)
 
                 if self.send_started:
-                    body = self.send_encoding.update(body)
+                    body = self.update_encoder(body)
                     if not more_body:
-                        body += self.send_encoding.flush()
+                        body += self.flush_encoder()
                 else:
                     self.send_started = True
 
                     if body or more_body:
                         headers = MutableHeaders(raw=self.initial_message["headers"])
-                        self.send_encoding = await self.get_send_encoding(headers)
+                        await self.init_encoder(headers)
                         headers["Content-Type"] = "application/octet-stream"
 
-                        body = self.send_encoding.update(body)
+                        body = self.update_encoder(body)
                         if more_body:
                             del headers["Content-Length"]
                         else:
-                            body += self.send_encoding.flush()
+                            body += self.flush_encoder()
                             headers["Content-Length"] = str(len(body))
                     await self.send(self.initial_message)
 
