@@ -28,13 +28,12 @@ async def get(
     )
     if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:
         return SpecialOrderTypeGetResponseModel(sp_timestop_item_list=special_order_list)
-    elif type == SpecialOrderTypeEnum.ORDER_TICKET:  # noqa: RET505
+    if type == SpecialOrderTypeEnum.ORDER_TICKET:
         return SpecialOrderTypeGetResponseModel(order_ticket_list=special_order_list)
-    elif type == SpecialOrderTypeEnum.POSE_CARD_ITEM:
+    if type == SpecialOrderTypeEnum.POSE_CARD_ITEM:
         return SpecialOrderTypeGetResponseModel(pose_card_item_list=special_order_list)
-    elif type == SpecialOrderTypeEnum.SP_FAN_ITEM:
+    if type == SpecialOrderTypeEnum.SP_FAN_ITEM:
         return SpecialOrderTypeGetResponseModel(sp_fan_item_list=special_order_list)
-    elif type == SpecialOrderTypeEnum.SP_ORDER_ITEM:
+    if type == SpecialOrderTypeEnum.SP_ORDER_ITEM:
         return SpecialOrderTypeGetResponseModel(sp_order_item_list=special_order_list)
-    else:
-        raise NotImplementedError
+    raise NotImplementedError
