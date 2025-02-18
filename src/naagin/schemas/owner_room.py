@@ -18,6 +18,6 @@ class OwnerRoomSchema(SchemaBase):
     set_no: Mapped[int] = mapped_column(Integer, default=0)
 
     __table_args__ = (
-        CheckConstraint(main_girl_mid != sub_girl_mid, "main_girl_mid_ne_sub_girl_mid"),
+        # CheckConstraint(main_girl_mid != sub_girl_mid, "main_girl_mid_ne_sub_girl_mid"),
         CheckConstraint(set_no.between(0, 19), "set_no_range"),
     )

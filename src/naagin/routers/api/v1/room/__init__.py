@@ -21,7 +21,7 @@ async def post(session: SessionDependency, owner_id: OwnerIdDependency) -> RoomP
     if owner_room is None:
         owner_room = OwnerRoomSchema(owner_id=owner_id)
 
-        await session.add(owner_room)
+        session.add(owner_room)
         await session.flush()
 
     return RoomPostResponseModel(owner_room=owner_room)
