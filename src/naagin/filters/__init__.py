@@ -1,5 +1,6 @@
 from re import compile
 
+from fastapi.datastructures import Headers
 from starlette._utils import get_route_path
 from starlette.types import Scope
 
@@ -12,3 +13,11 @@ def encoding_filter(scope: Scope) -> bool:
 
     route_path = get_route_path(scope)
     return encoding_pattern.match(route_path) is not None
+
+
+def gzip_filter(scope: Scope) -> bool:
+    if scope["type"] != "http":
+        return False
+
+    headers = Headers(scope=scope)
+    return "Range" not in headers
