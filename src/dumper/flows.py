@@ -138,13 +138,22 @@ def to_model():
     rmtree_empty(get_json_dir())
 
     shutil.rmtree(get_schema_dir(), True)
-    json_to_schema = functools.partial(utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir())
-    json_dirs = set(map(operator.attrgetter("parent"), filter(Path.is_file, get_json_dir().rglob("*.json"))))
+    json_to_schema = functools.partial(
+        utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir()
+    )
+    json_dirs = set(
+        map(
+            operator.attrgetter("parent"),
+            filter(Path.is_file, get_json_dir().rglob("*.json")),
+        )
+    )
     with ThreadPoolExecutor() as executor:
         executor.map(json_to_schema, json_dirs)
 
     shutil.rmtree(get_model_dir(), True)
-    schema_to_model = functools.partial(utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir())
+    schema_to_model = functools.partial(
+        utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir()
+    )
     schema_paths = filter(Path.is_file, get_schema_dir().rglob("*.schema.json"))
     with ProcessPoolExecutor() as executor:
         executor.map(schema_to_model, schema_paths)

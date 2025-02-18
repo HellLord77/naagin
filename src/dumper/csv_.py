@@ -229,6 +229,22 @@ CSV_FILE_LISTS = {
 }
 CSV_FILE_HEADERS = {
     10: {
+        "CR_FriendlyReward.csv": [
+            None,
+            "friendly",
+            "level",
+            None,
+            "basic_item_mid",
+            "basic_item_count",
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            "photo_spot_mid",
+        ],
         "EpisodeList.csv": [
             None,
             "episode_mid",
@@ -266,8 +282,8 @@ CSV_FILE_HEADERS = {
         "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
         "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"],
         "ShopItemDetail.csv": [None, "product_mid", "item_mid", "count"],
-        "skill.csv": [None, None, "skill_mid", ...],
-        "YwrkSkillTable.csv": ["skill_mid", ...],
+        # "skill.csv": [None, None, "skill_mid", ...],
+        # "YwrkSkillTable.csv": ["skill_mid", ...],
     }
 }
 
@@ -345,6 +361,7 @@ CSV_FILE_HEADERS = {
 # 35246 Leifang Coin
 # 35252 Episode Coin
 # 35316 Fiona Coin
+# 35465 Closeness Medal
 # 35680 POW Accessory Upgrade Material (M)
 # 35681 POW Accessory Upgrade Material (L)
 # 35682 POW Accessory Upgrade Material (XL)
@@ -481,13 +498,22 @@ def to_model():
                 csv_to_json(csv_path)
 
     shutil.rmtree(get_schema_dir(), True)
-    json_to_schema = functools.partial(utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir())
-    json_dirs = set(map(operator.attrgetter("parent"), filter(Path.is_file, get_json_dir().rglob("*.json"))))
+    json_to_schema = functools.partial(
+        utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir()
+    )
+    json_dirs = set(
+        map(
+            operator.attrgetter("parent"),
+            filter(Path.is_file, get_json_dir().rglob("*.json")),
+        )
+    )
     with ThreadPoolExecutor() as executor:
         executor.map(json_to_schema, json_dirs)
 
     shutil.rmtree(get_model_dir(), True)
-    schema_to_model = functools.partial(utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir())
+    schema_to_model = functools.partial(
+        utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir()
+    )
     schema_paths = filter(Path.is_file, get_schema_dir().rglob("*.schema.json"))
     with ProcessPoolExecutor() as executor:
         executor.map(schema_to_model, schema_paths)
