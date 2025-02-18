@@ -1,4 +1,5 @@
 from functools import cached_property
+from typing import Annotated
 from typing import Literal
 
 from pydantic import Field
@@ -12,14 +13,15 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from naagin.bases import SettingsBase
 from naagin.classes import AsyncSession
 from naagin.enums import DatabaseDriverEnum
+from naagin.types.fields import PortField
 
 
 class DatabaseSettings(SettingsBase):
     driver: Literal[DatabaseDriverEnum.POSTGRESQL] = DatabaseDriverEnum.POSTGRESQL
     user: str | None = None
-    pass_: SecretStr | None = Field(None, alias="db_pass")
+    pass_: Annotated[SecretStr | None, Field(alias="db_pass")] = None
     host: str | None = None
-    port: int | None = Field(None, ge=0, le=65535)
+    port: PortField | None = None
     name: str | None = None
 
     echo_sql: bool = False
