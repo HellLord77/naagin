@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import TutorialModel
+from naagin.models import TutorialModel
 
 
 class TutorialGetResponseModel(ModelBase):

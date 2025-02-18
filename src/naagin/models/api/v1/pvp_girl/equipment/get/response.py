@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import GirlEquipmentModel
+from naagin.models import GirlEquipmentModel
 
 
 class PvpGirlEquipmentGetResponseModel(ModelBase):

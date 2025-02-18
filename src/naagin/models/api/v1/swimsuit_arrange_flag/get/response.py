@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import SwimsuitArrangeFlagModel
+from naagin.models import SwimsuitArrangeFlagModel
 
 
 class SwimsuitArrangeFlagGetResponseModel(ModelBase):

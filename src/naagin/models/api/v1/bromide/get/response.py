@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import BromideModel
+from naagin.models import BromideModel
 
 
 class BromideGetResponseModel(ModelBase):

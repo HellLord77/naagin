@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import OwnerOtherModel
+from naagin.models import OwnerOtherModel
 
 
 class OwnerPutResponseModel(ModelBase):

@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import FurnitureMySetModel
+from naagin.models import FurnitureMySetModel
 
 
 class FurnitureMySetOwnerIdListGetResponseModel(ModelBase):

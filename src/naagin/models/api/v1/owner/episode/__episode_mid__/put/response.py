@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import EpisodeModel
+from naagin.models import EpisodeModel
 
 
 class OwnerEpisodeEpisodeMidPutResponseModel(ModelBase):

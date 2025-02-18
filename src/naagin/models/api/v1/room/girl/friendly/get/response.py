@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import FriendlyValueModel
+from naagin.models import FriendlyValueModel
 
 
 class RoomGirlFriendlyGetResponseModel(ModelBase):
