@@ -38,7 +38,7 @@ async def post(
     elif request.island_name is not None:
         owner.island_name = request.island_name
     elif request.message is not None:
-        owner.initial_message = request.message
+        owner.start_message = request.message
     else:
         success = False
 

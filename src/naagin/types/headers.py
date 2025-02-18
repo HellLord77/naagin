@@ -1,4 +1,5 @@
 from typing import Annotated
+from typing import Literal
 
 from fastapi import Header
 
@@ -18,7 +19,8 @@ NonceHeader = Annotated[str, Header(alias="X-DOAXVV-Nonce")]
 ApplicationVersionHeader = Annotated[int, Header(alias="X-DOAXVV-ApplicationVersion")]
 ClientTypeHeader = Annotated[ClientTypeEnum, Header(alias="X-DOAXVV-ClientType")]
 EncodingHeader = Annotated[
-    EncodingEnum | None, Header(default_factory=factories.common.null_factory, alias="X-DOAXVV-Encoding")
+    Literal[EncodingEnum.DEFLATE] | None,
+    Header(default_factory=factories.common.null_factory, alias="X-DOAXVV-Encoding"),
 ]
 EncryptedHeader = Annotated[
     str | None, Header(default_factory=factories.common.null_factory, alias="X-DOAXVV-Encrypted")

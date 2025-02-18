@@ -5,7 +5,7 @@ from typing import override
 from fastapi import Response
 
 
-class DOAXVVHeader(str):
+class CustomHeader(str):
     __slots__ = ()
 
     @override

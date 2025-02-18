@@ -11,9 +11,9 @@ from naagin.abstract import BaseEncodingMiddleware
 from naagin.enums import EncodingEnum
 from naagin.types import ZLibCompressor
 from naagin.types import ZLibDecompressor
-from naagin.utils import DOAXVVHeader
+from naagin.utils import CustomHeader
 
-send_header = DOAXVVHeader("Encoding")
+send_header = CustomHeader("Encoding")
 receive_header = str(send_header)
 
 
@@ -26,8 +26,8 @@ class DeflateMiddleware(BaseEncodingMiddleware):
         super().__init__(app, send_encoded=send_encoded)
         self.compress_level = compress_level
 
-    def is_receive_encoding_set(self, headers: Headers) -> bool:
-        return EncodingEnum.DEFLATE in headers.getlist(receive_header)
+    def should_receive_with_decoder(self, headers: Headers) -> bool:
+        return headers.get(receive_header) == EncodingEnum.DEFLATE
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
         del headers[receive_header]
@@ -39,8 +39,8 @@ class DeflateMiddleware(BaseEncodingMiddleware):
     def flush_decoder(self) -> bytes:
         return self.decompressor.flush()
 
-    def is_send_encoding_set(self, headers: Headers) -> bool:
-        return EncodingEnum.DEFLATE in headers.getlist(send_header)
+    def should_send_with_encoder(self, headers: Headers) -> bool:
+        return send_header not in headers
 
     async def init_encoder(self, headers: MutableHeaders) -> None:
         headers[send_header] = EncodingEnum.DEFLATE
