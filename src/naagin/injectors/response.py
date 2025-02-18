@@ -4,13 +4,13 @@ from time import time
 from fastapi import Response
 
 from naagin import settings
-from naagin.utils import DOAXVVHeader
+from naagin.utils import CustomHeader
 
 
-def add_doaxvv_headers(response: Response) -> None:
-    DOAXVVHeader.set(response, "ServerTime", int(time()))
-    DOAXVVHeader.set(response, "Access-Token", "XPEACHACCESSTOKEN")
-    DOAXVVHeader.set(response, "Status", HTTPStatus.OK)
-    DOAXVVHeader.set(response, "ApplicationVersion", settings.version.application)
-    DOAXVVHeader.set(response, "MasterVersion", settings.version.master)
-    DOAXVVHeader.set(response, "ResourceVersion", settings.version.resource)
+def add_custom_headers(response: Response) -> None:
+    CustomHeader.set(response, "ServerTime", int(time()))
+    CustomHeader.set(response, "Access-Token", "XPEACHACCESSTOKEN")
+    CustomHeader.set(response, "Status", HTTPStatus.OK)
+    CustomHeader.set(response, "ApplicationVersion", settings.version.application)
+    CustomHeader.set(response, "MasterVersion", settings.version.master)
+    CustomHeader.set(response, "ResourceVersion", settings.version.resource)

@@ -5,7 +5,7 @@ from typing import ClassVar
 from fastapi import Request
 from fastapi.responses import ORJSONResponse
 
-from naagin.utils import DOAXVVHeader
+from naagin.utils import CustomHeader
 from naagin.utils import SingletonMeta
 
 
@@ -29,5 +29,5 @@ class ExceptionBase(Exception, metaclass=SingletonMeta):  # noqa: N818
             return exception.handler()
 
         response = ORJSONResponse(*cls.get_args())
-        DOAXVVHeader.set(response, "Status", cls.code)
+        CustomHeader.set(response, "Status", cls.code)
         return response

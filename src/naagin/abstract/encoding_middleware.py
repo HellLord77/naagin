@@ -17,7 +17,7 @@ class BaseEncodingMiddleware(ABC):
     connection_scope: Scope
 
     send: Send
-    initial_message: Message
+    start_message: Message
 
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True) -> None:
         self.app = app
@@ -29,11 +29,11 @@ class BaseEncodingMiddleware(ABC):
 
         self.send = empty_send
         self.send_started = False
-        self.initial_message = {}
-        self.encoding_set = True
+        self.start_message = {}
+        self.should_encode = False
 
     @abstractmethod
-    def is_receive_encoding_set(self, headers: Headers) -> bool:
+    def should_receive_with_decoder(self, headers: Headers) -> bool:
         raise NotImplementedError
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
@@ -41,13 +41,13 @@ class BaseEncodingMiddleware(ABC):
             self.connection_scope = scope
 
             headers = Headers(raw=scope["headers"])
-            if self.is_receive_encoding_set(headers):
+            if self.should_receive_with_decoder(headers):
                 self.receive = receive
-                receive = self.receive_with_encoder
+                receive = self.receive_with_decoder
 
             if self.send_encoded:
                 self.send = send
-                send = self.send_with_decoder
+                send = self.send_with_encoder
 
         await self.app(scope, receive, send)
 
@@ -63,7 +63,7 @@ class BaseEncodingMiddleware(ABC):
     def flush_decoder(self) -> bytes:
         raise NotImplementedError
 
-    async def receive_with_encoder(self) -> Message:
+    async def receive_with_decoder(self) -> Message:
         message = await self.receive()
         if message["type"] == "http.request":
             body = message.get("body", b"")
@@ -92,7 +92,7 @@ class BaseEncodingMiddleware(ABC):
         return message
 
     @abstractmethod
-    def is_send_encoding_set(self, headers: Headers) -> bool:
+    def should_send_with_encoder(self, headers: Headers) -> bool:
         raise NotImplementedError
 
     @abstractmethod
@@ -107,18 +107,14 @@ class BaseEncodingMiddleware(ABC):
     def flush_encoder(self) -> bytes:
         raise NotImplementedError
 
-    async def send_with_decoder(self, message: Message) -> None:
+    async def send_with_encoder(self, message: Message) -> None:
         message_type = message["type"]
         if message_type == "http.response.start":
-            self.initial_message = message
+            self.start_message = message
             headers = Headers(raw=message["headers"])
-            self.encoding_set = self.is_send_encoding_set(headers)
+            self.should_encode = self.should_send_with_encoder(headers)
         elif message_type == "http.response.body":
-            if self.encoding_set:
-                if not self.send_started:
-                    self.send_started = True
-                    await self.send(self.initial_message)
-            else:
+            if self.should_encode:
                 body = message.get("body", b"")
                 more_body = message.get("more_body", False)
 
@@ -130,7 +126,7 @@ class BaseEncodingMiddleware(ABC):
                     self.send_started = True
 
                     if body or more_body:
-                        headers = MutableHeaders(raw=self.initial_message["headers"])
+                        headers = MutableHeaders(raw=self.start_message["headers"])
                         await self.init_encoder(headers)
                         headers["Content-Type"] = "application/octet-stream"
 
@@ -140,7 +136,10 @@ class BaseEncodingMiddleware(ABC):
                         else:
                             body += self.flush_encoder()
                             headers["Content-Length"] = str(len(body))
-                    await self.send(self.initial_message)
+                    await self.send(self.start_message)
 
                 message["body"] = body
+            elif not self.send_started:
+                self.send_started = True
+                await self.send(self.start_message)
             await self.send(message)

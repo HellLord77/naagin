@@ -33,7 +33,7 @@ from .filters import gzip_filter
 from .middlewares import AESMiddleware
 from .middlewares import DeflateMiddleware
 from .middlewares import FilteredMiddleware
-from .middlewares import LimitingBodyMiddleware
+from .middlewares import LimitingBodyRequestMiddleware
 from .middlewares import RenewedMiddleware
 from .middlewares import StackedMiddleware
 from .utils import SQLAlchemyHandler
@@ -118,7 +118,8 @@ app.add_middleware(
 )
 if settings.fastapi.limit:
     app.add_middleware(
-        RenewedMiddleware, middleware=Middleware(LimitingBodyMiddleware, maximum_size=settings.fastapi.limit_max_size)
+        RenewedMiddleware,
+        middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.fastapi.limit_max_size),
     )
 if settings.fastapi.gzip:
     app.add_middleware(
@@ -126,6 +127,7 @@ if settings.fastapi.gzip:
         middleware=Middleware(GZipMiddleware, settings.fastapi.gzip_min_size, settings.fastapi.gzip_compress_level),
         filter=gzip_filter,
     )
+
 
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)

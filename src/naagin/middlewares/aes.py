@@ -17,9 +17,9 @@ from starlette.types import ASGIApp
 from naagin.abstract import BaseEncodingMiddleware
 from naagin.classes import AsyncSession
 from naagin.providers import provide_session_
-from naagin.utils import DOAXVVHeader
+from naagin.utils import CustomHeader
 
-send_header = DOAXVVHeader("Encrypted")
+send_header = CustomHeader("Encrypted")
 receive_header = str(send_header)
 
 
@@ -34,7 +34,7 @@ class AESMiddleware(BaseEncodingMiddleware):
         super().__init__(app, send_encoded=send_encoded)
         self.session = session
 
-    def is_receive_encoding_set(self, headers: Headers) -> bool:
+    def should_receive_with_decoder(self, headers: Headers) -> bool:
         return receive_header in headers
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
@@ -52,8 +52,8 @@ class AESMiddleware(BaseEncodingMiddleware):
     def flush_decoder(self) -> bytes:
         return self.unpadder.update(self.decryptor.finalize()) + self.unpadder.finalize()
 
-    def is_send_encoding_set(self, headers: Headers) -> bool:
-        return send_header in headers
+    def should_send_with_encoder(self, headers: Headers) -> bool:
+        return send_header not in headers
 
     async def init_encoder(self, headers: MutableHeaders) -> None:
         request = Request(scope=self.connection_scope)

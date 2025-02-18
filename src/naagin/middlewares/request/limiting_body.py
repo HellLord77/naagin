@@ -10,7 +10,7 @@ from starlette.types import Send
 from naagin.exceptions import InternalServerErrorException
 
 
-class LimitingBodyMiddleware:
+class LimitingBodyRequestMiddleware:
     receive: Receive
 
     def __init__(self, app: ASGIApp, *, maximum_size: int = COPY_BUFSIZE) -> None:
