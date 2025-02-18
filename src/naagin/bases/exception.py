@@ -16,7 +16,7 @@ class ExceptionBase(Exception, metaclass=SingletonMeta):  # noqa: N818
     @classmethod
     @cache
     def get_args(cls) -> tuple[dict[str, int | str], int]:
-        from naagin.models.common import ExceptionModel  # noqa: PLC0415
+        from naagin.models import ExceptionModel  # noqa: PLC0415
 
         self = cls()
         content = ExceptionModel.model_validate(self).model_dump()

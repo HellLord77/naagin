@@ -1,5 +1,5 @@
 from naagin.bases import ModelBase
-from naagin.models.common import FriendshipModel
+from naagin.models import FriendshipModel
 
 
 class FriendshipSentGetResponseModel(ModelBase):

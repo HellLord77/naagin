@@ -1,6 +1,6 @@
 from naagin.bases import ModelBase
-from naagin.models.common import FriendshipModel
-from naagin.models.common import OwnerOtherModel
+from naagin.models import FriendshipModel
+from naagin.models import OwnerOtherModel
 
 
 class FriendshipFriendIdDeleteResponseModel(ModelBase):

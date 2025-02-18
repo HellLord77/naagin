@@ -1,6 +1,6 @@
 from naagin.bases import ModelBase
-from naagin.models.common import OwnerOtherModel
-from naagin.models.common import TutorialModel
+from naagin.models import OwnerOtherModel
+from naagin.models import TutorialModel
 
 
 class TutorialEventMidPutResponseModel(ModelBase):

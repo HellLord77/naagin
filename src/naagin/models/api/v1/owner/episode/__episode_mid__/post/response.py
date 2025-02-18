@@ -1,6 +1,6 @@
 from naagin.bases import ModelBase
-from naagin.models.common import EpisodeModel
-from naagin.models.common import OwnerOtherModel
+from naagin.models import EpisodeModel
+from naagin.models import OwnerOtherModel
 
 
 class EpisodeResultEpisodeModel(ModelBase):
