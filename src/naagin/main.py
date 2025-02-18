@@ -98,12 +98,6 @@ app = FastAPI(
 
 app.mount("/game", apps.game.app)
 
-pattern = compile(r"^/api/v1/(?!session($|/))")
-
-if settings.fastapi.reqeust_max_size is not None:
-    app.add_middleware(
-        RenewedMiddleware, middleware=Middleware(LimitingBodyMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
-    )
 app.add_middleware(
     FilteredMiddleware,
     middleware=Middleware(
@@ -119,8 +113,12 @@ app.add_middleware(
             middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, session=settings.database.session),
         ),
     ),
-    pattern=pattern,
+    pattern=compile(r"^/api/v1/(?!session($|/))"),
 )
+if settings.fastapi.reqeust_max_size is not None:
+    app.add_middleware(
+        RenewedMiddleware, middleware=Middleware(LimitingBodyMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
+    )
 app.add_middleware(GZipMiddleware)
 
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
