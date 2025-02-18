@@ -3,7 +3,7 @@ from zlib import Z_DEFAULT_COMPRESSION
 from zlib import compressobj
 from zlib import decompressobj
 
-from starlette.datastructures import Headers  # noqa: TID251
+from starlette.datastructures import Headers
 from starlette.datastructures import MutableHeaders
 from starlette.types import ASGIApp
 
