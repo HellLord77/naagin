@@ -7,7 +7,6 @@ from inspect import getsourcelines
 from logging import WARNING
 from logging import Formatter
 from logging import getLogger
-from re import compile
 
 from aiopath import AsyncPath
 from fastapi import FastAPI
@@ -29,6 +28,7 @@ from .bases import SchemaBase
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
+from .filters import encoding_filter
 from .middlewares import AESMiddleware
 from .middlewares import DeflateMiddleware
 from .middlewares import FilteredMiddleware
@@ -45,7 +45,7 @@ logger = settings.logging.logger
 async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     logger.setLevel(settings.logging.level)
     handler = RichHandler(markup=True, rich_tracebacks=True)
-    formatter = Formatter("%(message)s", datefmt="[%X]")
+    formatter = Formatter("[underline]%(name)s[/underline] %(message)s", "[%X]")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
@@ -113,13 +113,14 @@ app.add_middleware(
             middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, session=settings.database.session),
         ),
     ),
-    pattern=compile(r"^/api/v1/(?!session($|/))"),
+    filter=encoding_filter,
 )
-if settings.fastapi.reqeust_max_size is not None:
+if settings.fastapi.limit:
     app.add_middleware(
-        RenewedMiddleware, middleware=Middleware(LimitingBodyMiddleware, maximum_size=settings.fastapi.reqeust_max_size)
+        RenewedMiddleware, middleware=Middleware(LimitingBodyMiddleware, maximum_size=settings.fastapi.limit_max_size)
     )
-app.add_middleware(GZipMiddleware)
+if settings.fastapi.gzip:
+    app.add_middleware(GZipMiddleware, settings.fastapi.gzip_min_size, settings.fastapi.gzip_compress_level)
 
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)

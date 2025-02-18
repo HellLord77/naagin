@@ -35,7 +35,7 @@ async def not_found_handler(request: Request, _: Exception) -> Response:
     path = settings.data.game_dir / url_path
     async with get_path_lock(url_path):
         if not await path.is_file():
-            logger.info("Downloading game: %s", url_path)
+            logger.info("Downloading: %s", url_path)
             try:
                 response = await settings.game.client.get(url_path)
                 response.raise_for_status()

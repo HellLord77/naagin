@@ -1,12 +1,15 @@
-from pydantic import Field
+from typing import Annotated
+from zlib import Z_BEST_SPEED
+
 from pydantic_settings import SettingsConfigDict
 
 from naagin.bases import SettingsBase
+from naagin.types.fields import ZLibCompressLevelField
 
 
 class APISettings(SettingsBase):
     compress: bool = True
-    compress_level: int = Field(1, ge=-1, le=9)
+    compress_level: Annotated[int, ZLibCompressLevelField] = Z_BEST_SPEED
 
     encrypt: bool = True
 
