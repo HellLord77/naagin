@@ -9,5 +9,6 @@ from .girl_equipment_model import GirlEquipmentModel as GirlEquipmentModel
 from .item_consume import ItemConsumeModel as ItemConsumeModel
 from .owner import OwnerModel as OwnerModel
 from .owner_other import OwnerOtherModel as OwnerOtherModel
+from .owner_room import OwnerRoomModel as OwnerRoomModel
 from .swimsuit_arrange_flag import SwimsuitArrangeFlagModel as SwimsuitArrangeFlagModel
 from .tutorial import TutorialModel as TutorialModel

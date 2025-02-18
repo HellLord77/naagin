@@ -6,10 +6,12 @@ from naagin.types.dependencies import OwnerIdDependency
 from naagin.types.dependencies import SessionDependency
 
 from . import girl
+from . import girls
 
 router = APIRouter(prefix="/room")
 
 router.include_router(girl.router)
+router.include_router(girls.router)
 
 
 @router.post("")
