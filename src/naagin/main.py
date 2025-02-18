@@ -29,6 +29,7 @@ from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .filters import encoding_filter
+from .filters import gzip_filter
 from .middlewares import AESMiddleware
 from .middlewares import DeflateMiddleware
 from .middlewares import FilteredMiddleware
@@ -120,7 +121,11 @@ if settings.fastapi.limit:
         RenewedMiddleware, middleware=Middleware(LimitingBodyMiddleware, maximum_size=settings.fastapi.limit_max_size)
     )
 if settings.fastapi.gzip:
-    app.add_middleware(GZipMiddleware, settings.fastapi.gzip_min_size, settings.fastapi.gzip_compress_level)
+    app.add_middleware(
+        FilteredMiddleware,
+        middleware=Middleware(GZipMiddleware, settings.fastapi.gzip_min_size, settings.fastapi.gzip_compress_level),
+        filter=gzip_filter,
+    )
 
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
