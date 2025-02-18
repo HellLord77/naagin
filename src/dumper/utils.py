@@ -16,6 +16,7 @@ from cryptography.hazmat.primitives.ciphers.modes import CBC
 from cryptography.hazmat.primitives.padding import PKCS7
 from datamodel_code_generator import DataModelType
 from datamodel_code_generator import PythonVersion
+from datamodel_code_generator.model.pydantic import BaseModel
 from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
 from genson import SchemaBuilder
 from genson import TypedSchemaStrategy
@@ -111,13 +112,17 @@ class CustomSchemaBuilder(SchemaBuilder):
     EXTRA_STRATEGIES = CustomDateTime, CustomDate, CustomTime
 
 
-def json_to_schema(path: Path, json_dir: Path, schema_dir: Path):
-    logging.info(f"[PATH] {path}")
+class CustomBaseModel(BaseModel):
+    BASE_CLASS = "naagin.bases.ModelBase"
+
+
+def json_to_schema(dir: Path, json_dir: Path, schema_dir: Path):
+    logging.info(f"[PATH] {dir}")
 
     data_hashes = set()
     json_datas = []
     schema_builder = CustomSchemaBuilder()
-    for json_path in path.rglob("*.json"):
+    for json_path in dir.rglob("*.json"):
         json_path: Path
         logging.debug(f"[JSON] {json_path}")
 
@@ -129,7 +134,7 @@ def json_to_schema(path: Path, json_dir: Path, schema_dir: Path):
             json_datas.append(json_data)
             schema_builder.add_object(json_data)
 
-    relative_path = path.relative_to(json_dir)
+    relative_path = dir.relative_to(json_dir)
 
     schema = schema_builder.to_schema()
     schema["title"] = "_".join(relative_path.parts[1:])
@@ -156,7 +161,7 @@ def schema_to_model(path: Path, schema_dir: Path, model_dir: Path):
     )
     parser = JsonSchemaParser(
         schema_data,
-        data_model_type=data_model_types.data_model,
+        data_model_type=CustomBaseModel,
         data_model_root_type=data_model_types.root_model,
         data_model_field_type=data_model_types.field_model,
         data_type_manager_type=data_model_types.data_type_manager,
