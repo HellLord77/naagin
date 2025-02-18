@@ -1,7 +1,7 @@
 from abc import ABC
 from abc import abstractmethod
 
-from fastapi.datastructures import Headers
+from starlette.datastructures import Headers  # noqa: TID251
 from starlette.datastructures import MutableHeaders
 from starlette.requests import empty_receive
 from starlette.requests import empty_send

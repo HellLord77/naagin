@@ -1,4 +1,4 @@
-from fastapi.middleware import Middleware
+from starlette.middleware import Middleware
 from starlette.types import ASGIApp
 from starlette.types import Receive
 from starlette.types import Scope
