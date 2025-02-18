@@ -1,6 +1,7 @@
 from .bromide import BromideSchema as BromideSchema
 from .dishevelment_swimsuit import DishevelmentSwimsuitSchema as DishevelmentSwimsuitSchema
 from .episode import EpisodeSchema as EpisodeSchema
+from .friendly_value import FriendlyValueSchema as FriendlyValueSchema
 from .friendship import FriendshipSchema as FriendshipSchema
 from .furniture_myset import FurnitureMySetSchema as FurnitureMySetSchema
 from .girl import GirlSchema as GirlSchema
