@@ -1,12 +1,25 @@
 from itertools import islice
 
 from naagin.models.csv import EpisodeCSVModel
+from naagin.models.csv import FriendlyRewardCSVModel
 from naagin.models.csv import GirlCSVModel
 from naagin.models.csv import GirlStatusCSVModel
 from naagin.types.headers import MasterVersionHeader
 
 from .utils import get_dict_reader
 from .utils import get_reader
+
+
+async def provide_friendly_rewards(master_version: MasterVersionHeader) -> list[FriendlyRewardCSVModel]:
+    reader = await get_dict_reader(master_version, "CR_FriendlyReward")
+    friendly_rewards = map(FriendlyRewardCSVModel.model_validate, reader)
+    return list(friendly_rewards)
+
+
+# async def provide_friendly_levels(friendly_rewards: Depends(provide_friendly_rewards)) -> list[int]:
+#     friendly_levels = [friendly_reward.friendly for friendly_reward in friendly_rewards]
+#     friendly_levels.insert(0, 0)
+#     return friendly_levels
 
 
 async def provide_girl_affection_levels(master_version: MasterVersionHeader) -> list[int]:

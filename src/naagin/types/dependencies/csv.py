@@ -3,15 +3,18 @@ from typing import Annotated
 from fastapi import Depends
 
 from naagin.models.csv import EpisodeCSVModel
+from naagin.models.csv import FriendlyRewardCSVModel
 from naagin.models.csv import GirlCSVModel
 from naagin.models.csv import GirlStatusCSVModel
 from naagin.providers.csv import provide_episodes
+from naagin.providers.csv import provide_friendly_rewards
 from naagin.providers.csv import provide_girl_affection_levels
 from naagin.providers.csv import provide_girl_levels
 from naagin.providers.csv import provide_girl_statuses
 from naagin.providers.csv import provide_girls
 from naagin.providers.csv import provide_owner_levels
 
+FriendlyRewardsCSVDependency = Annotated[list[FriendlyRewardCSVModel], Depends(provide_friendly_rewards)]
 GirlAffectionLevelsCSVDependency = Annotated[list[int], Depends(provide_girl_affection_levels)]
 GirlLevelsCSVDependency = Annotated[list[int], Depends(provide_girl_levels)]
 GirlsCSVDependency = Annotated[dict[int, GirlCSVModel], Depends(provide_girls)]
