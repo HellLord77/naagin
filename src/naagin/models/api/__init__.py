@@ -93,6 +93,7 @@ from .v1.quest.check.license_point.post.response import (
 from .v1.quest.fes.info.get.response import QuestFesInfoGetResponseModel as QuestFesInfoGetResponseModel
 from .v1.quest.stamina.get.response import QuestStaminaGetResponseModel as QuestStaminaGetResponseModel
 from .v1.room.girl.friendly.get.response import RoomGirlFriendlyGetResponseModel as RoomGirlFriendlyGetResponseModel
+from .v1.room.post.response import RoomPostResponseModel as RoomPostResponseModel
 from .v1.session.key.get.response import SessionKeyGetResponseModel as SessionKeyGetResponseModel
 from .v1.session.key.put.request import SessionKeyPutRequestModel as SessionKeyPutRequestModel
 from .v1.session.key.put.response import SessionKeyPutResponseModel as SessionKeyPutResponseModel
