@@ -2,11 +2,13 @@ from collections.abc import AsyncGenerator
 
 from fastapi import Depends
 from fastapi import Request
+from sqlalchemy import func
 
 from naagin import settings
 from naagin.classes import AsyncSession
 from naagin.decorators import async_request_cache_unsafe
 from naagin.exceptions import AuthenticationFailedException
+from naagin.schemas import MaintenanceSchema
 from naagin.schemas import SessionSchema
 from naagin.types.cookies import PINKSIDCookie
 from naagin.types.headers import AccessTokenHeader
@@ -23,6 +25,15 @@ async def provide_session() -> AsyncGenerator[AsyncSession]:
         await session.commit()
     finally:
         await session.close()
+
+
+async def provide_maintenance(session: AsyncSession = Depends(provide_session)) -> MaintenanceSchema | None:
+    maintenance = await session.find(
+        MaintenanceSchema, func.current_timestamp().between(MaintenanceSchema.started_at, MaintenanceSchema.end_at)
+    )
+    if maintenance is not None:
+        session.expunge(maintenance)
+    return maintenance
 
 
 @async_request_cache_unsafe
