@@ -21,8 +21,9 @@ sqlparse
 asyncpg
 sqlalchemy
 httpx
-orjson
+git+https://github.com/HellLord77/deflate-asgi.git@1.0.0
 starlette
+orjson
 fastapi[standard]
 # !httptools
 

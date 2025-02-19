@@ -1,7 +1,7 @@
 [project]
 name = "naagin"
-requires-python = "~=3.13.0"
 dynamic = ["version"]
+requires-python = "~=3.13.0"
 
 [tool.mypy]
 cache_dir = "$MYPY_CONFIG_FILE_DIR/.cache/mypy"
