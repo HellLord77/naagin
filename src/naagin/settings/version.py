@@ -8,7 +8,7 @@ from naagin.bases import SettingsBase
 
 class VersionSettings(SettingsBase):
     master: Literal[10] = 10
-    application: int = 64501
+    application: int = 64700
 
     model_config = SettingsConfigDict(env_prefix="ver_")
 
