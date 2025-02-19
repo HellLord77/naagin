@@ -13,8 +13,8 @@ from naagin.models.api import SessionKeyGetResponseModel
 from naagin.models.api import SessionKeyPutRequestModel
 from naagin.models.api import SessionKeyPutResponseModel
 from naagin.schemas import SessionSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/key")
 
@@ -36,14 +36,14 @@ async def get() -> SessionKeyGetResponseModel:
 
 @router.put("")
 async def put(
-    request: SessionKeyPutRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
+    request: SessionKeyPutRequestModel, database: DatabaseDependency, owner_id: OwnerIdDependency
 ) -> SessionKeyPutResponseModel:
-    session_ = await session.get_one(SessionSchema, owner_id)
+    session = await database.get_one(SessionSchema, owner_id)
 
     private_key = await get_private_key()
     session_key = private_key.decrypt(b64decode(request.encrypt_key), PKCS1v15())
-    session_.session_key = session_key
+    session.session_key = session_key
 
-    await session.flush()
+    await database.flush()
 
     return SessionKeyPutResponseModel(session="encrypt key saved")

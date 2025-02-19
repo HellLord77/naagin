@@ -10,8 +10,8 @@ from naagin.models.api import InformationGlobalPostRequestModel
 from naagin.models.api import InformationGlobalPostResponseModel
 from naagin.schemas import InformationReadSchema
 from naagin.schemas import InformationSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/global")
 
@@ -62,15 +62,15 @@ def get_categories(
 
 @router.post("")
 async def post(
-    request: InformationGlobalPostRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
+    request: InformationGlobalPostRequestModel, database: DatabaseDependency, owner_id: OwnerIdDependency
 ) -> InformationGlobalPostResponseModel:
-    information_list = await session.find_all(
+    information_list = await database.find_all(
         InformationSchema,
         InformationSchema.category.in_(get_categories(request.language)),
         InformationSchema.close_at >= func.current_timestamp(),
     )
 
-    information_read_list = await session.find_all(
+    information_read_list = await database.find_all(
         InformationReadSchema,
         InformationReadSchema.owner_id == owner_id,
         InformationReadSchema.information_id.in_([information.information_id for information in information_list]),

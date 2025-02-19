@@ -4,20 +4,20 @@ from naagin.enums import FriendshipStateEnum
 from naagin.models.api import FriendshipFriendIdDeleteResponseModel
 from naagin.schemas import FriendshipSchema
 from naagin.schemas import OwnerSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/{owner_other_id}")
 
 
 @router.delete("")
 async def delete(
-    owner_other_id: int, session: SessionDependency, owner_id: OwnerIdDependency
+    owner_other_id: int, database: DatabaseDependency, owner_id: OwnerIdDependency
 ) -> FriendshipFriendIdDeleteResponseModel:
-    owner = await session.get_one(OwnerSchema, owner_id)
-    owner_other = await session.get_one(OwnerSchema, owner_other_id)
-    friendship = await session.get_one(FriendshipSchema, (owner_id, owner_other_id))
-    friendship_other = await session.get_one(FriendshipSchema, (owner_other_id, owner_id))
+    owner = await database.get_one(OwnerSchema, owner_id)
+    owner_other = await database.get_one(OwnerSchema, owner_other_id)
+    friendship = await database.get_one(FriendshipSchema, (owner_id, owner_other_id))
+    friendship_other = await database.get_one(FriendshipSchema, (owner_other_id, owner_id))
 
     success = True
     owner_list = None
@@ -35,8 +35,8 @@ async def delete(
         success = False
 
     if success:
-        await session.flush()
-        await session.refresh(friendship)
-        await session.refresh(friendship_other)
+        await database.flush()
+        await database.refresh(friendship)
+        await database.refresh(friendship_other)
 
     return FriendshipFriendIdDeleteResponseModel(friendship_list=[friendship, friendship_other], owner_list=owner_list)

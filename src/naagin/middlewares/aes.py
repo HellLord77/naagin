@@ -16,7 +16,7 @@ from starlette.types import ASGIApp
 
 from naagin.abstract import BaseEncodingMiddleware
 from naagin.classes import AsyncSession
-from naagin.providers import provide_session_
+from naagin.providers import provide_session
 from naagin.utils import CustomHeader
 
 send_header = CustomHeader("Encrypted")
@@ -30,16 +30,16 @@ class AESMiddleware(BaseEncodingMiddleware):
     encryptor: CipherContext
 
     @override
-    def __init__(self, app: ASGIApp, *, send_encoded: bool = True, session: AsyncSession) -> None:
+    def __init__(self, app: ASGIApp, *, send_encoded: bool = True, database: AsyncSession) -> None:
         super().__init__(app, send_encoded=send_encoded)
-        self.session = session
+        self.database = database
 
     def should_receive_with_decoder(self, headers: Headers) -> bool:
         return receive_header in headers
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
         request = Request(scope=self.connection_scope)
-        session = await provide_session_(request, session=self.session)
+        session = await provide_session(request, database=self.database)
         initialization_vector = b64decode(request.headers[receive_header])
 
         del headers[receive_header]
@@ -57,7 +57,7 @@ class AESMiddleware(BaseEncodingMiddleware):
 
     async def init_encoder(self, headers: MutableHeaders) -> None:
         request = Request(scope=self.connection_scope)
-        session = await provide_session_(request, session=self.session)
+        session = await provide_session(request, database=self.database)
         initialization_vector = token_bytes(16)
 
         headers[send_header] = b64encode(initialization_vector).decode()

@@ -9,8 +9,8 @@ from naagin.models.api.v1.owner.episode.__episode_mid__.post.response import Epi
 from naagin.models.api.v1.owner.episode.__episode_mid__.post.response import EpisodeResultOwnerModel
 from naagin.schemas import EpisodeSchema
 from naagin.schemas import OwnerSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 from naagin.types.dependencies.csv import EpisodesCSVDependency
 from naagin.types.dependencies.csv import OwnerLevelsCSVDependency
 
@@ -19,18 +19,21 @@ router = APIRouter(prefix="/{episode_mid}")
 
 @router.put("")
 async def put(
-    episode_mid: int, _: OwnerEpisodeEpisodeMidPutRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
+    episode_mid: int,
+    _: OwnerEpisodeEpisodeMidPutRequestModel,
+    database: DatabaseDependency,
+    owner_id: OwnerIdDependency,
 ) -> OwnerEpisodeEpisodeMidPutResponseModel:
-    episode = await session.get(EpisodeSchema, (owner_id, episode_mid))
+    episode = await database.get(EpisodeSchema, (owner_id, episode_mid))
 
     if episode is None:
         episode = EpisodeSchema(owner_id=owner_id, episode_mid=episode_mid)
-        session.add(episode)
+        database.add(episode)
     else:
         episode.count += 1
 
-    await session.flush()
-    await session.refresh(episode)
+    await database.flush()
+    await database.refresh(episode)
 
     return OwnerEpisodeEpisodeMidPutResponseModel(episode_list=[episode])
 
@@ -38,13 +41,13 @@ async def put(
 @router.post("")
 async def post(
     episode_mid: int,
-    session: SessionDependency,
+    database: DatabaseDependency,
     owner_id: OwnerIdDependency,
     owner_levels_csv: OwnerLevelsCSVDependency,
     episodes_csv: EpisodesCSVDependency,
 ) -> OwnerEpisodeEpisodeMidPostResponseModel:
-    owner = await session.get_one(OwnerSchema, owner_id)
-    episode = await session.get_one(EpisodeSchema, (owner_id, episode_mid))
+    owner = await database.get_one(OwnerSchema, owner_id)
+    episode = await database.get_one(EpisodeSchema, (owner_id, episode_mid))
 
     experience_gain = 0 if episode.experience_gained else episodes_csv[episode_mid].experience_gain
     experience_before = owner.experience
@@ -58,9 +61,9 @@ async def post(
     episode.count += 1
     episode.experience_gained = True
 
-    await session.flush()
-    await session.refresh(owner)
-    await session.refresh(episode)
+    await database.flush()
+    await database.refresh(owner)
+    await database.refresh(episode)
 
     episode_result_owner = EpisodeResultOwnerModel(
         experience_before=experience_before,

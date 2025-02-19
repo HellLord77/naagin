@@ -14,34 +14,34 @@ from naagin.types.cookies import PINKSIDCookie
 from naagin.types.headers import AccessTokenHeader
 
 
-async def provide_session() -> AsyncGenerator[AsyncSession]:
-    session = settings.database.sessionmaker()
+async def provide_database() -> AsyncGenerator[AsyncSession]:
+    database = settings.database.sessionmaker()
     try:
-        yield session
+        yield database
     except Exception:
-        await session.rollback()
+        await database.rollback()
         raise
     else:
-        await session.commit()
+        await database.commit()
     finally:
-        await session.close()
+        await database.close()
 
 
-async def provide_maintenance(session: AsyncSession = Depends(provide_session)) -> MaintenanceSchema | None:
-    maintenance = await session.find(
+async def provide_maintenance(database: AsyncSession = Depends(provide_database)) -> MaintenanceSchema | None:
+    maintenance = await database.find(
         MaintenanceSchema, func.current_timestamp().between(MaintenanceSchema.started_at, MaintenanceSchema.end_at)
     )
     if maintenance is not None:
-        session.expunge(maintenance)
+        database.expunge(maintenance)
     return maintenance
 
 
 @async_request_cache_unsafe
-async def provide_session_(
+async def provide_session(
     request: Request,
     access_token: AccessTokenHeader = None,
     pinksid: PINKSIDCookie = None,
-    session: AsyncSession = Depends(provide_session),
+    database: AsyncSession = Depends(provide_database),
 ) -> SessionSchema:
     if access_token is None:
         access_token = request.headers.get("X-DOAXVV-Access-Token")
@@ -55,12 +55,12 @@ async def provide_session_(
     else:
         raise AuthenticationFailedException
 
-    session_ = await session.find(SessionSchema, whereclause)
-    if session_ is None:
+    session = await database.find(SessionSchema, whereclause)
+    if session is None:
         raise AuthenticationFailedException
-    session.expunge(session_)
-    return session_
+    database.expunge(session)
+    return session
 
 
-async def provide_owner_id(session: SessionSchema = Depends(provide_session_)) -> int:
+async def provide_owner_id(session: SessionSchema = Depends(provide_session)) -> int:
     return session.owner_id
