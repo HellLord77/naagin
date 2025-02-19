@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from naagin.classes import APIRouter
 
 from . import v1
 
