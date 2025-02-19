@@ -3,14 +3,6 @@ from starlette._utils import get_route_path
 from starlette.types import Scope
 
 
-def api_filter(scope: Scope) -> bool:
-    if scope["type"] != "http":
-        return False
-
-    route_path = get_route_path(scope)
-    return route_path.startswith("/api/")
-
-
 def encoding_filter(scope: Scope) -> bool:
     if scope["type"] != "http":
         return False
@@ -20,8 +12,5 @@ def encoding_filter(scope: Scope) -> bool:
 
 
 def gzip_filter(scope: Scope) -> bool:
-    if scope["type"] != "http":
-        return False
-
-    headers = Headers(scope=scope)
+    headers = Headers(raw=scope.get("headers", []))
     return "Range" not in headers
