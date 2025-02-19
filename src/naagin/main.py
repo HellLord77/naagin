@@ -29,12 +29,14 @@ from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions import UnderMaintenanceNowException
+from .filters import api_filter
 from .filters import encoding_filter
 from .filters import gzip_filter
 from .middlewares import AESMiddleware
 from .middlewares import DeflateMiddleware
 from .middlewares import FilteredMiddleware
 from .middlewares import LimitingBodyRequestMiddleware
+from .middlewares import MaintenanceMiddleware
 from .middlewares import RenewedMiddleware
 from .middlewares import StackedMiddleware
 from .utils import SQLAlchemyHandler
@@ -124,6 +126,11 @@ if settings.fastapi.limit:
         RenewedMiddleware,
         middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.fastapi.limit_max_size),
     )
+app.add_middleware(
+    FilteredMiddleware,
+    middleware=Middleware(MaintenanceMiddleware, database=settings.database.database),
+    filter=api_filter,
+)
 if settings.fastapi.gzip:
     app.add_middleware(
         FilteredMiddleware,

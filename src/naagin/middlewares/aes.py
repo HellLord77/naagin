@@ -38,7 +38,7 @@ class AESMiddleware(BaseEncodingMiddleware):
         return receive_header in headers
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
-        request = Request(scope=self.connection_scope)
+        request = Request(self.connection_scope)
         session = await provide_session(request, database=self.database)
         initialization_vector = b64decode(request.headers[receive_header])
 
@@ -56,7 +56,7 @@ class AESMiddleware(BaseEncodingMiddleware):
         return send_header not in headers
 
     async def init_encoder(self, headers: MutableHeaders) -> None:
-        request = Request(scope=self.connection_scope)
+        request = Request(self.connection_scope)
         session = await provide_session(request, database=self.database)
         initialization_vector = token_bytes(16)
 
