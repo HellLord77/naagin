@@ -9,7 +9,6 @@ from logging import Formatter
 from logging import getLogger
 
 from aiopath import AsyncPath
-from deflate_asgi import DeflateMiddleware
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.exceptions import StarletteHTTPException
@@ -30,10 +29,10 @@ from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
 from .exceptions import UnderMaintenanceNowException
-from .filters import custom_encoding_filter
 from .filters import encoding_filter
-from .middlewares import AESMiddleware as CustomAESMiddleware
-from .middlewares import DeflateMiddleware as CustomDeflateMiddleware
+from .filters import gzip_filter
+from .middlewares import AESMiddleware
+from .middlewares import DeflateMiddleware
 from .middlewares import FilteredMiddleware
 from .middlewares import LimitingBodyRequestMiddleware
 from .middlewares import RenewedMiddleware
@@ -108,17 +107,17 @@ app.add_middleware(
         Middleware(
             RenewedMiddleware,
             middleware=Middleware(
-                CustomDeflateMiddleware, send_encoded=settings.api.compress, compress_level=settings.api.compress_level
+                DeflateMiddleware, send_encoded=settings.api.compress, compress_level=settings.api.compress_level
             ),
         ),
         Middleware(
             RenewedMiddleware,
             middleware=Middleware(
-                CustomAESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.database
+                AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.database
             ),
         ),
     ),
-    filter=custom_encoding_filter,
+    filter=encoding_filter,
 )
 if settings.fastapi.limit:
     app.add_middleware(
@@ -129,17 +128,8 @@ if settings.fastapi.gzip:
     app.add_middleware(
         FilteredMiddleware,
         middleware=Middleware(GZipMiddleware, settings.fastapi.gzip_min_size, settings.fastapi.gzip_compress_level),
-        filter=encoding_filter,
+        filter=gzip_filter,
     )
-elif settings.fastapi.deflate:
-    app.add_middleware(
-        FilteredMiddleware,
-        middleware=Middleware(
-            DeflateMiddleware, settings.fastapi.deflate_min_size, settings.fastapi.deflate_compress_level
-        ),
-        filter=encoding_filter,
-    )
-
 
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
