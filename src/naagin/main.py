@@ -28,6 +28,7 @@ from .bases import SchemaBase
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
+from .exceptions import UnderMaintenanceNowException
 from .filters import encoding_filter
 from .filters import gzip_filter
 from .middlewares import AESMiddleware
@@ -132,6 +133,7 @@ if settings.fastapi.gzip:
 app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
 app.add_exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler)
+app.add_exception_handler(HTTPStatus.SERVICE_UNAVAILABLE, UnderMaintenanceNowException.handler)
 app.add_exception_handler(RequestValidationError, InvalidParameterException.handler)
 app.add_exception_handler(StarletteHTTPException, InternalServerErrorException.handler)
 app.add_exception_handler(ExceptionBase, ExceptionBase.handler)

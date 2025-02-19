@@ -5,3 +5,4 @@ from .internal_server_error import InternalServerErrorException as InternalServe
 from .invalid_parameter import InvalidParameterException as InvalidParameterException
 from .method_not_allowed import MethodNotAllowedException as MethodNotAllowedException
 from .not_found import NotFoundException as NotFoundException
+from .under_maintenance_now import UnderMaintenanceNowException as UnderMaintenanceNowException
