@@ -7,8 +7,8 @@ from naagin.models.api import FriendshipPostRequestModel
 from naagin.models.api import FriendshipPostResponseModel
 from naagin.schemas import FriendshipSchema
 from naagin.schemas import OwnerSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 
 from . import __owner_other_id__
 from . import accept
@@ -24,8 +24,8 @@ router.include_router(sent.router)
 
 
 @router.get("")
-async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> FriendshipGetResponseModel:
-    friendship_list = await session.find_all(
+async def get(database: DatabaseDependency, owner_id: OwnerIdDependency) -> FriendshipGetResponseModel:
+    friendship_list = await database.find_all(
         FriendshipSchema, FriendshipSchema.owner_id == owner_id, FriendshipSchema.state == FriendshipStateEnum.ACCEPTED
     )
     return FriendshipGetResponseModel(friendship_list=friendship_list)
@@ -33,12 +33,12 @@ async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> Friend
 
 @router.post("")
 async def post(
-    request: FriendshipPostRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
+    request: FriendshipPostRequestModel, database: DatabaseDependency, owner_id: OwnerIdDependency
 ) -> FriendshipPostResponseModel:
-    owner = await session.get_one(OwnerSchema, owner_id)
-    owner_other = await session.get_one(OwnerSchema, request.friend_id)
-    friendship = await session.get(FriendshipSchema, (owner_id, request.friend_id))
-    friendship_other = await session.get(FriendshipSchema, (request.friend_id, owner_id))
+    owner = await database.get_one(OwnerSchema, owner_id)
+    owner_other = await database.get_one(OwnerSchema, request.friend_id)
+    friendship = await database.get(FriendshipSchema, (owner_id, request.friend_id))
+    friendship_other = await database.get(FriendshipSchema, (request.friend_id, owner_id))
 
     success = True
     if friendship is None and friendship_other is None:
@@ -46,8 +46,8 @@ async def post(
         friendship_other = FriendshipSchema(
             owner_id=request.friend_id, friend_id=owner_id, state=FriendshipStateEnum.RECEIVED
         )
-        session.add(friendship)
-        session.add(friendship_other)
+        database.add(friendship)
+        database.add(friendship_other)
     elif friendship_other.state == FriendshipStateEnum.BLOCKED:
         raise FriendshipCantRequestException
     elif (
@@ -67,8 +67,8 @@ async def post(
         success = False
 
     if success:
-        await session.flush()
-        await session.refresh(friendship)
-        await session.refresh(friendship_other)
+        await database.flush()
+        await database.refresh(friendship)
+        await database.refresh(friendship_other)
 
     return FriendshipPostResponseModel(friendship_list=[friendship, friendship_other], owner_list=[owner, owner_other])

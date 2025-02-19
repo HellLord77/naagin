@@ -3,14 +3,14 @@ from fastapi import APIRouter
 from naagin.models.api import MaxCombineOwnerIdItemMidGetResponseModel
 from naagin.models.api.v1.max_combine.__owner_id__.__item_mid__.get.response import MaxCombineOtherModel
 from naagin.schemas import MaxCombineSwimsuitSchema
-from naagin.types.dependencies import SessionDependency
+from naagin.types.dependencies import DatabaseDependency
 
 router = APIRouter(prefix="/{item_mid}")
 
 
 @router.get("")
-async def get(owner_id: int, item_mid: int, session: SessionDependency) -> MaxCombineOwnerIdItemMidGetResponseModel:
-    max_combine_swimsuit = await session.get(MaxCombineSwimsuitSchema, (owner_id, item_mid))
+async def get(owner_id: int, item_mid: int, database: DatabaseDependency) -> MaxCombineOwnerIdItemMidGetResponseModel:
+    max_combine_swimsuit = await database.get(MaxCombineSwimsuitSchema, (owner_id, item_mid))
 
     if not_max_combine := max_combine_swimsuit is None:
         max_combine_swimsuit = MaxCombineSwimsuitSchema(owner_id=owner_id, item_mid=item_mid)

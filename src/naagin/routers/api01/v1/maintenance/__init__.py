@@ -1,9 +1,7 @@
 from fastapi import APIRouter
 
 from naagin.models.api01 import MaintenanceGetResponseModel
-from naagin.schemas import MaintenanceSchema as MaintenanceSchema
 from naagin.types.dependencies import MaintenanceDependency
-from naagin.types.dependencies import SessionDependency as SessionDependency
 
 from . import privilege
 

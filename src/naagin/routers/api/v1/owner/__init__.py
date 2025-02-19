@@ -4,8 +4,8 @@ from naagin.models.api import OwnerGetResponseModel
 from naagin.models.api import OwnerPutRequestModel
 from naagin.models.api import OwnerPutResponseModel
 from naagin.schemas import OwnerSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 
 from . import birthday
 from . import checkedat
@@ -21,16 +21,16 @@ router.include_router(episode.router)
 
 
 @router.get("")
-async def get(session: SessionDependency, owner_id: OwnerIdDependency) -> OwnerGetResponseModel:
-    owner = await session.get_one(OwnerSchema, owner_id)
+async def get(database: DatabaseDependency, owner_id: OwnerIdDependency) -> OwnerGetResponseModel:
+    owner = await database.get_one(OwnerSchema, owner_id)
     return OwnerGetResponseModel(owner=owner)
 
 
 @router.post("")
 async def post(
-    request: OwnerPutRequestModel, session: SessionDependency, owner_id: OwnerIdDependency
+    request: OwnerPutRequestModel, database: DatabaseDependency, owner_id: OwnerIdDependency
 ) -> OwnerPutResponseModel:
-    owner = await session.get_one(OwnerSchema, owner_id)
+    owner = await database.get_one(OwnerSchema, owner_id)
 
     success = True
     if request.name is not None:
@@ -43,7 +43,7 @@ async def post(
         success = False
 
     if success:
-        await session.flush()
-        await session.refresh(owner)
+        await database.flush()
+        await database.refresh(owner)
 
     return OwnerPutResponseModel(success=success, owner_list=[owner])

@@ -112,7 +112,9 @@ app.add_middleware(
         ),
         Middleware(
             RenewedMiddleware,
-            middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, session=settings.database.session),
+            middleware=Middleware(
+                AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.database
+            ),
         ),
     ),
     filter=encoding_filter,

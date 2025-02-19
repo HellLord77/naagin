@@ -3,14 +3,14 @@ from fastapi import APIRouter
 from naagin.models.api import DishevelmentOwnerIdItemMidGetResponseModel
 from naagin.models.api.v1.dishevelment.__owner_id__.__item_mid__.get.response import DishevelmentOtherModel
 from naagin.schemas import DishevelmentSwimsuitSchema
-from naagin.types.dependencies import SessionDependency
+from naagin.types.dependencies import DatabaseDependency
 
 router = APIRouter(prefix="/{item_mid}")
 
 
 @router.get("")
-async def get(owner_id: int, item_mid: int, session: SessionDependency) -> DishevelmentOwnerIdItemMidGetResponseModel:
-    dishevelment_swimsuit = await session.get(DishevelmentSwimsuitSchema, (owner_id, item_mid))
+async def get(owner_id: int, item_mid: int, database: DatabaseDependency) -> DishevelmentOwnerIdItemMidGetResponseModel:
+    dishevelment_swimsuit = await database.get(DishevelmentSwimsuitSchema, (owner_id, item_mid))
 
     if not_dishevelment := dishevelment_swimsuit is None:
         dishevelment_swimsuit = DishevelmentSwimsuitSchema(owner_id=owner_id, item_mid=item_mid)

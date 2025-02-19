@@ -4,15 +4,15 @@ from naagin.enums import SpecialOrderTypeEnum
 from naagin.exceptions import InternalServerErrorException
 from naagin.models.api import SpecialOrderTypeGetResponseModel
 from naagin.schemas import SpecialOrderSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 
 router = APIRouter(prefix="/{type}")
 
 
 @router.get("")
 async def get(
-    type: SpecialOrderTypeEnum, session: SessionDependency, owner_id: OwnerIdDependency
+    type: SpecialOrderTypeEnum, database: DatabaseDependency, owner_id: OwnerIdDependency
 ) -> SpecialOrderTypeGetResponseModel:
     if type == SpecialOrderTypeEnum._VALUE_81:  # noqa: SLF001
         raise InternalServerErrorException
@@ -23,7 +23,7 @@ async def get(
         )
     else:
         whereclause = SpecialOrderSchema.type == type
-    special_order_list = await session.find_all(
+    special_order_list = await database.find_all(
         SpecialOrderSchema, SpecialOrderSchema.owner_id == owner_id, whereclause
     )
     if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:

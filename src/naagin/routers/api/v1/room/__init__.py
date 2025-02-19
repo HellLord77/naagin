@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 from naagin.models.api import RoomPostResponseModel
 from naagin.schemas import OwnerRoomSchema
+from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies import SessionDependency
 
 from . import girl
 from . import girls
@@ -15,13 +15,13 @@ router.include_router(girls.router)
 
 
 @router.post("")
-async def post(session: SessionDependency, owner_id: OwnerIdDependency) -> RoomPostResponseModel:
-    owner_room = await session.get(OwnerRoomSchema, owner_id)
+async def post(database: DatabaseDependency, owner_id: OwnerIdDependency) -> RoomPostResponseModel:
+    owner_room = await database.get(OwnerRoomSchema, owner_id)
 
     if owner_room is None:
         owner_room = OwnerRoomSchema(owner_id=owner_id)
 
-        session.add(owner_room)
-        await session.flush()
+        database.add(owner_room)
+        await database.flush()
 
     return RoomPostResponseModel(owner_room=owner_room)
