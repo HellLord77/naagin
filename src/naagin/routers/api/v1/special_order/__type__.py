@@ -36,4 +36,5 @@ async def get(
         return SpecialOrderTypeGetResponseModel(sp_fan_item_list=special_order_list)
     if type == SpecialOrderTypeEnum.SP_ORDER_ITEM:
         return SpecialOrderTypeGetResponseModel(sp_order_item_list=special_order_list)
+
     raise NotImplementedError

@@ -312,7 +312,6 @@ CSV_FILE_HEADERS = {
 # 25001, honor
 # 35013, guest_point
 # 35021, free_vstone
-# 35030,35031,35032,35033 %upgrade_pow%
 
 # 35001 Upgrade APL Stone (S)
 # 35002 Upgrade APL Stone (M)
