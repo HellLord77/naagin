@@ -1,3 +1,4 @@
+from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped
@@ -18,3 +19,5 @@ class YwrkSkillSchema(SchemaBase):
     item_mid: Mapped[int] = mapped_column(Integer)
     skill_mid: Mapped[int] = mapped_column(Integer)
     value: Mapped[int] = mapped_column(Integer)
+
+    __table_args__ = (CheckConstraint(id >= 1, "id_min"),)

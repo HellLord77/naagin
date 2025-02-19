@@ -20,6 +20,7 @@ class FurnitureMySetSchema(SchemaBase):
     rot_y: Mapped[int] = mapped_column(Integer)
 
     __table_args__ = (
+        CheckConstraint(id >= 1, "id_min"),
         CheckConstraint(rot_y.between(0, 270), "rot_y_range"),
         CheckConstraint(rot_y % 90 == 0, "rot_y_mod"),
     )
