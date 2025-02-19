@@ -1,10 +1,14 @@
-from re import compile
-
 from fastapi.datastructures import Headers
 from starlette._utils import get_route_path
 from starlette.types import Scope
 
-encoding_pattern = compile(r"^/api/v1/(?!session(?:/|$))")
+
+def api_filter(scope: Scope) -> bool:
+    if scope["type"] != "http":
+        return False
+
+    route_path = get_route_path(scope)
+    return route_path.startswith("/api/")
 
 
 def encoding_filter(scope: Scope) -> bool:
@@ -12,7 +16,7 @@ def encoding_filter(scope: Scope) -> bool:
         return False
 
     route_path = get_route_path(scope)
-    return encoding_pattern.match(route_path) is not None
+    return route_path.startswith("/api/") and not route_path.startswith("/api/v1/session")
 
 
 def gzip_filter(scope: Scope) -> bool:
