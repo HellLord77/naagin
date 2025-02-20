@@ -10,7 +10,7 @@ class CustomRoomRequestModel(ModelBase):
     girl_mid2: int
     trend_status: int
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None
     started_at: None
     end_at: None
 

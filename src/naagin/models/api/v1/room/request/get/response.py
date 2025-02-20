@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from naagin.bases import ModelBase
 
@@ -11,9 +10,9 @@ class CustomRoomRequestModel(ModelBase):
     girl_mid2: int
     trend_status: int
     created_at: datetime
-    updated_at: datetime
-    started_at: Optional[datetime]
-    end_at: Optional[datetime]
+    updated_at: datetime | None
+    started_at: datetime | None
+    end_at: datetime | None
 
 
 class RoomRequestGetResponseModel(ModelBase):

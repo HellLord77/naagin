@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from naagin.bases import ModelBase
 
@@ -14,11 +13,11 @@ class RequestCSVModel(ModelBase):
     time_required: int
     friendly_level: int
     publish_at: datetime
-    close_at: Optional[datetime]
+    close_at: datetime | None
     _column_11: int
     rank_1_rate: int
     _column_13: int
     rank_2_rate: int
     _column_15: int
     rank_3_rate: int
-    _column_17: Optional[int]
+    _column_17: int | None
