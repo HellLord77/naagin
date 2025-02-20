@@ -12,8 +12,9 @@ from naagin.enums import LoggingLevelEnum
 class LoggingSettings(SettingsBase):
     level: LoggingLevelEnum = LoggingLevelEnum.NOTSET
 
-    duplicate_model: bool = False
-    duplicate_model_length: PositiveInt = 3
+    model_type: bool = False
+    model_dup: bool = False
+    model_dup_len: PositiveInt = 3
 
     model_config = SettingsConfigDict(env_prefix="log_")
 

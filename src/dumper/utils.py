@@ -171,6 +171,7 @@ def schema_to_model(path: Path, schema_dir: Path, model_dir: Path):
         disable_appending_item_suffix=True,
         custom_class_name_generator=custom_class_name_generator,
         use_title_as_name=True,
+        use_union_operator=True,
     )
     parsed_data = parser.parse()
     parsed_lines = parsed_data.split("\n")

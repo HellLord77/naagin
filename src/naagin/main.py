@@ -1,6 +1,7 @@
 from collections import defaultdict
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from datetime import datetime
 from http import HTTPStatus
 from inspect import getfile
 from inspect import getsourcelines
@@ -43,8 +44,17 @@ from .utils.exception_handlers import not_found_handler
 logger = settings.logging.logger
 
 
+def format_model_log(model: type[ModelBase]) -> str:
+    path = getfile(model)
+    link = AsyncPath(path).as_uri()
+    lines, lineno = getsourcelines(model)
+    message = f"\n[link={link}]{path}[/link]:[link={link}#{lineno}]{lineno}[/link]"
+    message += f"\n    {lines[0].rstrip()}"
+    return message
+
+
 @asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
+async def lifespan(_: FastAPI) -> AsyncGenerator[None]:  # noqa: C901
     logger.setLevel(settings.logging.level)
     handler = RichHandler(markup=True, rich_tracebacks=True)
     formatter = Formatter("[underline]%(name)s[/underline] %(message)s", "[%X]")
@@ -55,23 +65,29 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
     sqlalchemy_logger.addHandler(sqlalchemy_handler)
 
-    if settings.logging.duplicate_model and logger.isEnabledFor(WARNING):
-        model_map = defaultdict(list)
-        for model in ModelBase.__subclasses__():
-            annotations = frozenset(model.__annotations__.items())
-            if len(annotations) >= settings.logging.duplicate_model_length:
-                model_map[annotations].append(model)
+    if logger.isEnabledFor(WARNING):
+        if settings.logging.model_type:
+            optional_datetime = datetime | None
+            for model in ModelBase.__subclasses__():
+                for name, type_ in model.__annotations__.items():
+                    if name == "updated_at" and type_ != optional_datetime:
+                        message = "Possible wrong `update_at` annotation:"
+                        message += format_model_log(model)
+                        logger.warning(message)
 
-        for models in model_map.values():
-            if len(models) > 1:
-                message = "Possible duplicate models:"
-                for model in models:
-                    path = getfile(model)
-                    lines, lineno = getsourcelines(model)
-                    link = AsyncPath(path).as_uri()
-                    message += f"\n[link={link}]{path}[/link]:[link={link}#{lineno}]{lineno}[/link]"
-                    message += f"\n    {lines[0].rstrip()}"
-                logger.warning(message)
+        if settings.logging.model_dup:
+            model_map = defaultdict(list)
+            for model in ModelBase.__subclasses__():
+                annotations = frozenset(model.__annotations__.items())
+                if len(annotations) >= settings.logging.model_dup_len:
+                    model_map[annotations].append(model)
+
+            for models in model_map.values():
+                if len(models) > 1:
+                    message = "Possible duplicate models:"
+                    for model in models:
+                        message += format_model_log(model)
+                    logger.warning(message)
 
     hooks.attach()
 
