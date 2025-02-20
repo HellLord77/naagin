@@ -49,7 +49,7 @@ async def post(
     owner = await database.get_one(OwnerSchema, owner_id)
     episode = await database.get_one(EpisodeSchema, (owner_id, episode_mid))
 
-    experience_gain = 0 if episode.experience_gained else episodes_csv[episode_mid].experience_gain
+    experience_gain = episodes_csv[episode_mid].experience_gain if episode.experience_gain_status else 0
     experience_before = owner.experience
     experience_after = experience_before + experience_gain
     level_before = owner.level
@@ -59,7 +59,7 @@ async def post(
     owner.level = level_after
     owner.experience = experience_after
     episode.count += 1
-    episode.experience_gained = True
+    episode.experience_gain_status = False
 
     await database.flush()
     await database.refresh(owner)

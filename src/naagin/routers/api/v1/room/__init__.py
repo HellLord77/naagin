@@ -22,8 +22,8 @@ async def post(database: DatabaseDependency, owner_id: OwnerIdDependency) -> Roo
 
     if owner_room is None:
         owner_room = OwnerRoomSchema(owner_id=owner_id)
-
         database.add(owner_room)
+
         await database.flush()
 
     return RoomPostResponseModel(owner_room=owner_room)

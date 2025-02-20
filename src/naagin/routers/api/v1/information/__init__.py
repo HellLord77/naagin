@@ -21,8 +21,8 @@ async def put(
 
     if information_read is None:
         information_read = InformationReadSchema(owner_id=owner_id, information_id=request.information_id)
-
         database.add(information_read)
+
         await database.flush()
 
     return InformationPutResponseModel(information_mark_as_read=information_read)
