@@ -8,6 +8,7 @@ from naagin.enums import ItemEquipmentTypeEnum
 from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
 from naagin.enums import PrivateItemTypeEnum
+from naagin.enums import RequestClearRankEnum
 from naagin.enums import SpecialOrderTypeEnum
 
 from .utils import values_callable
@@ -20,4 +21,5 @@ ItemEquipmentTypeEnumSchema = Enum(ItemEquipmentTypeEnum, values_callable=values
 LicenseLevelEnumSchema = Enum(LicenseLevelEnum, values_callable=values_callable)
 OwnerStatusEnumSchema = Enum(OwnerStatusEnum, values_callable=values_callable)
 PrivateItemTypeEnumSchema = Enum(PrivateItemTypeEnum, values_callable=values_callable)
+RequestClearRankEnumSchema = Enum(RequestClearRankEnum, values_callable=values_callable)
 SpecialOrderTypeEnumSchema = Enum(SpecialOrderTypeEnum, values_callable=values_callable)

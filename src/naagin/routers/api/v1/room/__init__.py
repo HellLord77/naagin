@@ -7,11 +7,13 @@ from naagin.types.dependencies import OwnerIdDependency
 
 from . import girl
 from . import girls
+from . import request
 
 router = APIRouter(prefix="/room")
 
 router.include_router(girl.router)
 router.include_router(girls.router)
+router.include_router(request.router)
 
 
 @router.post("")
