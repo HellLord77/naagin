@@ -18,6 +18,7 @@ from .max_combine_swimsuit import MaxCombineSwimsuitSchema as MaxCombineSwimsuit
 from .option_item_auto_lock import OptionItemAutoLockSchema as OptionItemAutoLockSchema
 from .owner import OwnerSchema as OwnerSchema
 from .owner_checked_at import OwnerCheckedAtSchema as OwnerCheckedAtSchema
+from .owner_count_login import OwnerCountLoginSchema as OwnerCountLoginSchema
 from .owner_room import OwnerRoomSchema as OwnerRoomSchema
 from .private_item import PrivateItemSchema as PrivateItemSchema
 from .pvp_girl_equipment import PvpGirlEquipmentSchema as PvpGirlEquipmentSchema

@@ -1,8 +1,11 @@
 from fastapi import APIRouter
 from fastapi import Response
+from sqlalchemy import func
 
+from naagin import factories
 from naagin.models.api import SessionPostRequestModel
 from naagin.models.api import SessionPostResponseModel
+from naagin.schemas import OwnerCountLoginSchema
 from naagin.schemas import OwnerSchema
 from naagin.schemas import SessionSchema
 from naagin.types.dependencies import DatabaseDependency
@@ -28,13 +31,33 @@ async def post(
         await database.flush()
         await database.refresh(owner)
 
-    session = await database.get(SessionSchema, owner_id)
-    if session is not None:
-        await database.delete(session)
-        await database.flush()
+    owner = await database.get_one(OwnerSchema, owner_id)
+    stamina_checked_at = owner.stamina_checked_at  # noqa: F841
+    last_logged_at = owner.last_logged_at.date()
+    owner.stamina_checked_at = func.current_timestamp()
+    owner.last_logged_at = func.current_timestamp()
 
-    session = SessionSchema(owner_id=owner_id)
-    database.add(session)
+    await database.flush()
+    await database.refresh(owner)
+
+    owner_count_login = await database.get(OwnerCountLoginSchema, owner_id)
+    if owner_count_login is None:
+        owner_count_login = OwnerCountLoginSchema(owner_id=owner_id)
+        database.add(owner_count_login)
+    else:
+        today = owner.last_logged_at.date()
+        if last_logged_at == today:
+            owner_count_login.value += 1
+        else:
+            owner_count_login.value = 1
+
+    session = await database.get(SessionSchema, owner_id)
+    if session is None:
+        session = SessionSchema(owner_id=owner_id)
+        database.add(session)
+    else:
+        session.access_token = factories.schema.access_token_factory()
+        session.pinksid = factories.schema.pinksid_factory()
 
     await database.flush()
     await database.refresh(session)
