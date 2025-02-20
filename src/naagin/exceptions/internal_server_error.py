@@ -1,9 +1,6 @@
 from http import HTTPStatus
 
-from naagin import settings
 from naagin.bases import ExceptionBase
-
-logger = settings.logging.logger
 
 
 class InternalServerErrorException(ExceptionBase):

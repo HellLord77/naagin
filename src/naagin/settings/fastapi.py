@@ -8,8 +8,8 @@ from naagin.types.fields import GZipCompressLevelField
 
 
 class FastAPISettings(SettingsBase):
+    swagger_ui: bool = False
     process_time: bool = False
-    swagger: bool = False
 
     limit: bool = True
     limit_max_size: NonNegativeInt = 1000

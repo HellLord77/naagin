@@ -10,10 +10,9 @@ from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from httpx import HTTPStatusError
 
+from naagin import loggers
 from naagin import settings
 from naagin.exceptions import InternalServerErrorException
-
-logger = settings.logging.logger
 
 app = StaticFiles(directory=settings.data.game_dir)
 
@@ -35,7 +34,7 @@ async def not_found_handler(request: Request, _: Exception) -> Response:
     path = settings.data.game_dir / url_path
     async with get_path_lock(url_path):
         if not await path.is_file():
-            logger.info("Downloading: %s", url_path)
+            loggers.game.info("Downloading: %s", url_path)
             try:
                 response = await settings.game.client.get(url_path)
                 response.raise_for_status()
