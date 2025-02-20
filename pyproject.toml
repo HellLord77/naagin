@@ -54,6 +54,7 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 extend-allowed-calls = ["fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
+"typing.Optional".msg = "Use X | Y for type annotations."
 "starlette.requests.Request".msg = "Use fastapi.Request instead."
 "starlette.responses.Response".msg = "Use fastapi.Response instead."
 "starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
