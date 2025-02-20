@@ -25,6 +25,7 @@ from starlette.middleware.base import RequestResponseEndpoint
 from . import __version__
 from . import apps
 from . import hooks
+from . import loggers
 from . import routers
 from . import settings
 from .bases import ExceptionBase
@@ -45,8 +46,6 @@ from .middlewares import StackedMiddleware
 from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import not_found_handler
 
-logger = settings.logging.logger
-
 
 def format_model_log(model: type[ModelBase]) -> str:
     path = getfile(model)
@@ -58,40 +57,38 @@ def format_model_log(model: type[ModelBase]) -> str:
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncGenerator[None]:  # noqa: C901
-    logger.setLevel(settings.logging.level)
+async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
+    loggers.app.setLevel(settings.logging.level)
     handler = RichHandler(markup=True, rich_tracebacks=True)
     formatter = Formatter("[underline]%(name)s[/underline] %(message)s", "[%X]")
     handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    loggers.app.addHandler(handler)
 
     sqlalchemy_logger = getLogger("sqlalchemy.engine.Engine")
     sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
     sqlalchemy_logger.addHandler(sqlalchemy_handler)
 
-    if logger.isEnabledFor(WARNING):
-        if settings.logging.model_type:
-            optional_datetime = datetime | None
-            for model in ModelBase.__subclasses__():
-                for name, type_ in model.__annotations__.items():
-                    if name == "updated_at" and type_ != optional_datetime:
-                        message = "Possible wrong `update_at` annotation:"
-                        message += format_model_log(model)
-                        logger.warning(message)
+    if settings.logging.model and loggers.model.isEnabledFor(WARNING):
+        optional_datetime = datetime | None
+        for model in ModelBase.__subclasses__():
+            for name, type_ in model.__annotations__.items():
+                if name == "updated_at" and type_ != optional_datetime:
+                    message = "Possible wrong `update_at` annotation:"
+                    message += format_model_log(model)
+                    loggers.model.warning(message)
 
-        if settings.logging.model_dup:
-            model_map = defaultdict(list)
-            for model in ModelBase.__subclasses__():
-                annotations = frozenset(model.__annotations__.items())
-                if len(annotations) >= settings.logging.model_dup_len:
-                    model_map[annotations].append(model)
+        model_map = defaultdict(list)
+        for model in ModelBase.__subclasses__():
+            annotations = frozenset(model.__annotations__.items())
+            if len(annotations) >= settings.logging.model_dup_len:
+                model_map[annotations].append(model)
 
-            for models in model_map.values():
-                if len(models) > 1:
-                    message = "Possible duplicate models:"
-                    for model in models:
-                        message += format_model_log(model)
-                    logger.warning(message)
+        for models in model_map.values():
+            if len(models) > 1:
+                message = "Possible duplicate models:"
+                for model in models:
+                    message += format_model_log(model)
+                loggers.model.warning(message)
 
     hooks.attach()
 
@@ -105,7 +102,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:  # noqa: C901
 
 
 kwargs = {}
-if not settings.fastapi.swagger:
+if not settings.fastapi.swagger_ui:
     kwargs["openapi_url"] = None
     kwargs["docs_url"] = None
 
