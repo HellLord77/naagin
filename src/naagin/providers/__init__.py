@@ -27,10 +27,7 @@ async def provide_database() -> AsyncGenerator[AsyncSession]:
         await database.close()
 
 
-@async_request_cache_unsafe
-async def provide_maintenance(
-    _: Request, database: AsyncSession = Depends(provide_database)
-) -> MaintenanceSchema | None:
+async def provide_maintenance(database: AsyncSession = Depends(provide_database)) -> MaintenanceSchema | None:
     maintenance = await database.find(
         MaintenanceSchema, func.current_timestamp().between(MaintenanceSchema.started_at, MaintenanceSchema.end_at)
     )
