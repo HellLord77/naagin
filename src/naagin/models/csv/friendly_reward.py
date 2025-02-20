@@ -3,7 +3,7 @@ from naagin.bases import ModelBase
 
 class FriendlyRewardCSVModel(ModelBase):
     _column_1: int
-    friendly: int
+    value: int
     level: int
     _column_4: int
     basic_item_mid: int

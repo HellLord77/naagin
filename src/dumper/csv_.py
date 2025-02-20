@@ -21,7 +21,7 @@ CSV_FILE_HEADERS = {
     10: {
         "CR_FriendlyReward.csv": [
             None,
-            "friendly",
+            "value",
             "level",
             None,
             "basic_item_mid",
@@ -34,6 +34,25 @@ CSV_FILE_HEADERS = {
             None,
             None,
             "photo_spot_mid",
+        ],
+        "CR_Request.csv": [
+            "request_mid",
+            None,
+            None,
+            "category",
+            None,
+            None,
+            "time_required",
+            "friendly_level",
+            "publish_at",
+            "close_at",
+            None,
+            "rank_1_rate",
+            None,
+            "rank_2_rate",
+            None,
+            "rank_3_rate",
+            None,
         ],
         "EpisodeList.csv": [
             None,
@@ -98,6 +117,16 @@ CSV_FILE_HEADERS = {
 # 23, Nanami
 # 25, Koharu
 
+# request_mid, job, time
+# 1, 'Tidy Up' as a pair, 0h10m
+# 2, 'Clean Up' as a pair, 0h20m
+# 3, 'Cook' as a pair, 1h0m
+# 4, 'Shop' together, 3h0m
+# 5, 'Check Out the island' together, 6h0m
+# 6, 'Carry Out as nature survey' as friends, 12h0m
+# 7, 'Create a written report' as friends, 20h0m
+# 55, Friendly 'Lunch Making', 0h0m
+
 # item_mid, item
 # 25001, honor
 # 35013, guest_point
@@ -139,6 +168,7 @@ CSV_FILE_HEADERS = {
 # 35080 Unlock TEC Stone (M)
 # 35081 Unlock TEC Stone (L)
 # 35082 Unlock TEC Stone (XL)
+# 35083 VIP Points
 # 35103 Kasumi Coin
 # 35106 Ayane Coin
 # 35109 Hitomi Coin

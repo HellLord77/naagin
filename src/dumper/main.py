@@ -71,8 +71,6 @@ def game_to_tmp():
 
 
 def main():
-    # logging.basicConfig(level=logging.CRITICAL)
-
     flows.to_model()
     exit()
 

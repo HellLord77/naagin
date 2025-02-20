@@ -17,8 +17,9 @@ async def provide_friendly_rewards(master_version: MasterVersionHeader) -> list[
 
 
 # async def provide_friendly_levels(friendly_rewards: Depends(provide_friendly_rewards)) -> list[int]:
-#     friendly_levels = [friendly_reward.friendly for friendly_reward in friendly_rewards]
-#     friendly_levels.insert(0, 0)
+#     friendly_levels = [friendly_reward.value for friendly_reward in friendly_rewards]
+#     friendly_levels.append(0)
+#     friendly_levels.sort()
 #     return friendly_levels
 
 
