@@ -8,6 +8,7 @@ from naagin.types.fields import GZipCompressLevelField
 
 
 class FastAPISettings(SettingsBase):
+    process_time: bool = False
     swagger: bool = False
 
     limit: bool = True
