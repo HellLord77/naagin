@@ -5,10 +5,12 @@ from naagin.schemas import RequestSchema
 from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
 
+from . import cancel
 from . import list
 
 router = APIRouter(prefix="/request")
 
+router.include_router(cancel.router)
 router.include_router(list.router)
 
 
