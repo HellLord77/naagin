@@ -96,6 +96,7 @@ from .v1.room.girl.friendly.get.response import RoomGirlFriendlyGetResponseModel
 from .v1.room.girls.post.request import RoomGirlsPostRequestModel as RoomGirlsPostRequestModel
 from .v1.room.girls.post.response import RoomGirlsPostResponseModel as RoomGirlsPostResponseModel
 from .v1.room.post.response import RoomPostResponseModel as RoomPostResponseModel
+from .v1.room.request.get.response import RoomRequestGetResponseModel as RoomRequestGetResponseModel
 from .v1.room.request.list.get.response import RoomRequestListGetResponseModel as RoomRequestListGetResponseModel
 from .v1.session.key.get.response import SessionKeyGetResponseModel as SessionKeyGetResponseModel
 from .v1.session.key.put.request import SessionKeyPutRequestModel as SessionKeyPutRequestModel
