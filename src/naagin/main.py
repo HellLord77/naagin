@@ -8,15 +8,19 @@ from inspect import getsourcelines
 from logging import WARNING
 from logging import Formatter
 from logging import getLogger
+from time import perf_counter
 
 from aiopath import AsyncPath
 from fastapi import FastAPI
+from fastapi import Request
+from fastapi import Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.exceptions import StarletteHTTPException
 from fastapi.middleware import Middleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import ORJSONResponse
 from rich.logging import RichHandler
+from starlette.middleware.base import RequestResponseEndpoint
 
 from . import __version__
 from . import apps
@@ -157,3 +161,13 @@ app.add_exception_handler(ExceptionBase, ExceptionBase.handler)
 
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(routers.api01.router, tags=["api01"])
+
+if settings.fastapi.process_time:
+
+    @app.middleware("http")
+    async def add_process_time_header(request: Request, call_next: RequestResponseEndpoint) -> Response:
+        start_time = perf_counter()
+        response = await call_next(request)
+        process_time = perf_counter() - start_time
+        response.headers["X-Process-Time"] = str(process_time)
+        return response
