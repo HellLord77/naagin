@@ -19,6 +19,5 @@ async def post(
         owner.birthday = request.birthday
 
         await database.flush()
-        await database.refresh(owner)
 
     return OwnerBirthdayPostResponseModel(owner=owner, owner_list=[owner])

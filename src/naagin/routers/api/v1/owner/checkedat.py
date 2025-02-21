@@ -16,6 +16,7 @@ async def get(database: DatabaseDependency, owner_id: OwnerIdDependency) -> Owne
         owner_checked_at = OwnerCheckedAtSchema(owner_id=owner_id)
         database.add(owner_checked_at)
 
-    await database.flush()
-    await database.refresh(owner_checked_at)
+        await database.flush()
+        await database.refresh(owner_checked_at)
+
     return OwnerCheckedAtGetResponseModel(owner_checked_at=owner_checked_at)

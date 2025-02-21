@@ -44,6 +44,5 @@ async def post(
 
     if success:
         await database.flush()
-        await database.refresh(owner)
 
     return OwnerPutResponseModel(success=success, owner_list=[owner])

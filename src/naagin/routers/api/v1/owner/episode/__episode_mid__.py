@@ -27,7 +27,8 @@ async def put(
 ) -> OwnerEpisodeEpisodeMidPutResponseModel:
     episode = await database.get(EpisodeSchema, (owner_id, episode_mid))
 
-    if episode is None:
+    success = episode is None
+    if success:
         experience_gain = episodes_csv[episode_mid].experience_gain
         episode = EpisodeSchema(owner_id=owner_id, episode_mid=episode_mid, experience_gain=experience_gain)
         database.add(episode)
@@ -35,7 +36,8 @@ async def put(
         episode.count += 1
 
     await database.flush()
-    await database.refresh(episode)
+    if success:
+        await database.refresh(episode)
 
     return OwnerEpisodeEpisodeMidPutResponseModel(episode_list=[episode])
 
@@ -63,8 +65,6 @@ async def post(
     episode.experience_gain = 0
 
     await database.flush()
-    await database.refresh(owner)
-    await database.refresh(episode)
 
     episode_result_owner = EpisodeResultOwnerModel(
         experience_before=experience_before,

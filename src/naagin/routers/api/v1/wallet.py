@@ -17,6 +17,5 @@ async def get(database: DatabaseDependency, owner_id: OwnerIdDependency) -> Wall
         database.add(wallet)
 
         await database.flush()
-        await database.refresh(wallet)
 
     return WalletGetResponseModel(wallet=wallet)

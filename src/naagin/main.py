@@ -47,12 +47,24 @@ from .utils import SQLAlchemyHandler
 from .utils.exception_handlers import not_found_handler
 
 
-def format_model_log(model: type[ModelBase]) -> str:
+def format_model_log(model: type[ModelBase], field: str | None = None) -> str:
     path = getfile(model)
     link = AsyncPath(path).as_uri()
+
     lines, lineno = getsourcelines(model)
+    local_lineno = 0
+    if field is not None:
+        field_annotation = f"{field}: "
+        for line in lines:
+            if line.lstrip().startswith(field_annotation):
+                break
+            local_lineno += 1
+        else:
+            raise NotImplementedError
+        lineno += local_lineno
+
     message = f"\n[link={link}]{path}[/link]:[link={link}#{lineno}]{lineno}[/link]"
-    message += f"\n    {lines[0].rstrip()}"
+    message += f"\n    {lines[local_lineno].rstrip()}"
     return message
 
 
@@ -73,8 +85,8 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
         for model in ModelBase.__subclasses__():
             for name, type_ in model.__annotations__.items():
                 if name == "updated_at" and type_ != optional_datetime:
-                    message = "Possible wrong `update_at` annotation:"
-                    message += format_model_log(model)
+                    message = "Possibly wrong field annotation:"
+                    message += format_model_log(model, "updated_at")
                     loggers.model.warning(message)
 
         model_map = defaultdict(list)
