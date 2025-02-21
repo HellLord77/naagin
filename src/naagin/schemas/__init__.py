@@ -1,4 +1,5 @@
 from .bromide import BromideSchema as BromideSchema
+from .casino_game import CasinoGameSchema as CasinoGameSchema
 from .dishevelment_swimsuit import DishevelmentSwimsuitSchema as DishevelmentSwimsuitSchema
 from .episode import EpisodeSchema as EpisodeSchema
 from .friendly_value import FriendlyValueSchema as FriendlyValueSchema
