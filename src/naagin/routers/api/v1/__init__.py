@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from . import bromide
+from . import casino
 from . import cheat_log
 from . import csv
 from . import dishevelment
@@ -29,6 +30,7 @@ from . import wallet
 router = APIRouter(prefix="/v1")
 
 router.include_router(bromide.router)
+router.include_router(casino.router)
 router.include_router(cheat_log.router)
 router.include_router(csv.router)
 router.include_router(dishevelment.router)

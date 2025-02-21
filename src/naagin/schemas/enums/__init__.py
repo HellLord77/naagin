@@ -1,5 +1,6 @@
 from sqlalchemy import Enum
 
+from naagin.enums import CasinoGameEnum
 from naagin.enums import CheckedLicenseLevelEnum
 from naagin.enums import FriendshipStateEnum
 from naagin.enums import InformationCategoryEnum
@@ -14,6 +15,7 @@ from naagin.enums import SpecialOrderTypeEnum
 
 from .utils import values_callable
 
+CasinoGameEnumSchema = Enum(CasinoGameEnum, values_callable=values_callable)
 CheckedLicenseLevelEnumSchema = Enum(CheckedLicenseLevelEnum, values_callable=values_callable)
 FriendshipStateEnumSchema = Enum(FriendshipStateEnum, values_callable=values_callable)
 InformationCategoryEnumSchema = Enum(InformationCategoryEnum, values_callable=values_callable)
