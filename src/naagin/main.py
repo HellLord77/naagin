@@ -66,7 +66,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
     sqlalchemy_logger = getLogger("sqlalchemy.engine.Engine")
     sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
-    sqlalchemy_logger.addHandler(sqlalchemy_handler)
+    sqlalchemy_logger.handlers = [sqlalchemy_handler]
 
     if settings.logging.model and loggers.model.isEnabledFor(WARNING):
         optional_datetime = datetime | None
@@ -89,6 +89,9 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
                 for model in models:
                     message += format_model_log(model)
                 loggers.model.warning(message)
+
+    loggers.api.debug("Routes count: %d", len(routers.api.router.routes))
+    loggers.api01.debug("Routes count: %d", len(routers.api01.router.routes))
 
     hooks.attach()
 

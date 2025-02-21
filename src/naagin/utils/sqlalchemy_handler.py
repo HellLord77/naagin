@@ -30,7 +30,7 @@ class SQLAlchemyHandler(RichHandler):
     def emit(self, record: LogRecord) -> None:
         if record.levelno == INFO and record.msg != "[%s] %r":
             record.format = settings.database.echo_lint
-            record.syntax = settings.database.echo_color
+            record.highlight = settings.database.echo_color
         super().emit(record)
 
     @override
@@ -38,7 +38,7 @@ class SQLAlchemyHandler(RichHandler):
         if getattr(record, "format", False):
             message = format(message, reindent=True, keyword_case="upper")
 
-        if getattr(record, "syntax", False):
+        if getattr(record, "highlight", False):
             return get_syntax().highlight(message)
 
         return super().render_message(record, message)

@@ -13,13 +13,13 @@ from naagin.types import ZLibCompressor
 from naagin.types import ZLibDecompressor
 from naagin.utils import CustomHeader
 
-send_header = CustomHeader("Encoding")
-receive_header = str(send_header)
-
 
 class DeflateMiddleware(BaseEncodingMiddleware):
     decompressor: ZLibDecompressor
     compressor: ZLibCompressor
+
+    send_header = CustomHeader("Encoding")
+    receive_header = str(send_header)
 
     @override
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True, compress_level: int = Z_DEFAULT_COMPRESSION) -> None:
@@ -27,10 +27,10 @@ class DeflateMiddleware(BaseEncodingMiddleware):
         self.compress_level = compress_level
 
     def should_receive_with_decoder(self, headers: Headers) -> bool:
-        return headers.get(receive_header) == EncodingEnum.DEFLATE
+        return headers.get(self.receive_header) == EncodingEnum.DEFLATE
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
-        del headers[receive_header]
+        del headers[self.receive_header]
         self.decompressor = decompressobj()
 
     def update_decoder(self, data: bytes) -> bytes:
@@ -40,10 +40,10 @@ class DeflateMiddleware(BaseEncodingMiddleware):
         return self.decompressor.flush()
 
     def should_send_with_encoder(self, headers: Headers) -> bool:
-        return send_header not in headers
+        return self.send_header not in headers
 
     async def init_encoder(self, headers: MutableHeaders) -> None:
-        headers[send_header] = EncodingEnum.DEFLATE
+        headers[self.send_header] = EncodingEnum.DEFLATE
         self.compressor = compressobj(self.compress_level)
 
     def update_encoder(self, data: bytes) -> bytes:
