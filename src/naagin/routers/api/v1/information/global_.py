@@ -73,7 +73,7 @@ async def post(
     information_read_list = await database.find_all(
         InformationReadSchema,
         InformationReadSchema.owner_id == owner_id,
-        InformationReadSchema.information_id.in_([information.information_id for information in information_list]),
+        InformationReadSchema.information_id.in_(tuple(information.information_id for information in information_list)),
     )
     information_read_id_set = {information_read.information_id for information_read in information_read_list}
     for information in information_list:

@@ -1,4 +1,5 @@
 from .v1.bromide.get.response import BromideGetResponseModel as BromideGetResponseModel
+from .v1.casino.chip.get.response import CasinoChipGetResponseModel as CasinoChipGetResponseModel
 from .v1.casino.game.get.response import CasinoGameGetResponseModel as CasinoGameGetResponseModel
 from .v1.cheat_log.check.get.response import CheatLogCheckGetResponseModel as CheatLogCheckGetResponseModel
 from .v1.csv.list.get.response import CsvListGetResponseModel as CsvListGetResponseModel
