@@ -84,6 +84,7 @@ from .v1.pvp_fes_deck.equipment_list_all.get.response import (
     PvpFesDeckEquipmentListAllGetResponseModel as PvpFesDeckEquipmentListAllGetResponseModel,
 )
 from .v1.pvp_girl.equipment.get.response import PvpGirlEquipmentGetResponseModel as PvpGirlEquipmentGetResponseModel
+from .v1.pyon2.get.response import Pyon2GetResponseModel as Pyon2GetResponseModel
 from .v1.quest.check.license_point.post.request import (
     QuestCheckLicensePointPostRequestModel as QuestCheckLicensePointPostRequestModel,
 )
