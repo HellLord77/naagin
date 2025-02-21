@@ -29,7 +29,6 @@ async def post(
         database.add(owner)
 
         await database.flush()
-        await database.refresh(owner)
 
     owner = await database.get_one(OwnerSchema, owner_id)
     stamina_checked_at = owner.stamina_checked_at  # noqa: F841
@@ -60,7 +59,6 @@ async def post(
         session.pinksid = factories.schema.pinksid_factory()
 
     await database.flush()
-    await database.refresh(session)
 
     CustomHeader.set(response, "Access-Token", session.access_token)
     response.set_cookie("PINKSID", session.pinksid, samesite=None)

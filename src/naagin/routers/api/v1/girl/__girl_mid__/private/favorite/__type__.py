@@ -48,7 +48,6 @@ async def post(
         favorite_delete_private_item_list = [private_item]
 
     await database.flush()
-    await database.refresh(private_item)
 
     return GirlGirlMidPrivateFavoriteTypePostResponseModel(
         favorite_private_item_list=favorite_private_item_list,

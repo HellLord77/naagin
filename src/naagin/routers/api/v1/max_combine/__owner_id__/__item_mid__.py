@@ -12,13 +12,14 @@ router = APIRouter(prefix="/{item_mid}")
 async def get(owner_id: int, item_mid: int, database: DatabaseDependency) -> MaxCombineOwnerIdItemMidGetResponseModel:
     max_combine_swimsuit = await database.get(MaxCombineSwimsuitSchema, (owner_id, item_mid))
 
-    if not_max_combine := max_combine_swimsuit is None:
+    max_combine = max_combine_swimsuit is not None
+    if not max_combine:
         max_combine_swimsuit = MaxCombineSwimsuitSchema(owner_id=owner_id, item_mid=item_mid)
 
     max_combine_other = MaxCombineOtherModel(
         owner_id=max_combine_swimsuit.owner_id,
         item_mid=max_combine_swimsuit.item_mid,
         variation=max_combine_swimsuit.variation,
-        max_combine=not not_max_combine,
+        max_combine=max_combine,
     )
     return MaxCombineOwnerIdItemMidGetResponseModel(max_combine_other=max_combine_other)
