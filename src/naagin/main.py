@@ -60,7 +60,7 @@ def format_model_log(model: type[ModelBase]) -> str:
 async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     loggers.app.setLevel(settings.logging.level)
     handler = RichHandler(markup=True, rich_tracebacks=True)
-    formatter = Formatter("[underline]%(name)s[/underline] %(message)s", "[%X]")
+    formatter = Formatter("[code]%(name)s[/code] %(message)s", "[%X]")
     handler.setFormatter(formatter)
     loggers.app.addHandler(handler)
 
@@ -129,9 +129,7 @@ app.add_middleware(
         ),
         Middleware(
             RenewedMiddleware,
-            middleware=Middleware(
-                AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.database
-            ),
+            middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.session),
         ),
     ),
     filter=encoding_filter,
