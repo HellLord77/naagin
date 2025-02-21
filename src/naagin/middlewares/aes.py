@@ -19,9 +19,6 @@ from naagin.classes import AsyncSession
 from naagin.providers import provide_session
 from naagin.utils import CustomHeader
 
-send_header = CustomHeader("Encrypted")
-receive_header = str(send_header)
-
 
 class AESMiddleware(BaseEncodingMiddleware):
     decryptor: CipherContext
@@ -29,20 +26,23 @@ class AESMiddleware(BaseEncodingMiddleware):
     padder: PaddingContext
     encryptor: CipherContext
 
+    send_header = CustomHeader("Encrypted")
+    receive_header = str(send_header)
+
     @override
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True, database: AsyncSession) -> None:
         super().__init__(app, send_encoded=send_encoded)
         self.database = database
 
     def should_receive_with_decoder(self, headers: Headers) -> bool:
-        return receive_header in headers
+        return self.receive_header in headers
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
         request = Request(self.connection_scope)
         session = await provide_session(request, database=self.database)
-        initialization_vector = b64decode(request.headers[receive_header])
+        initialization_vector = b64decode(request.headers[self.receive_header])
 
-        del headers[receive_header]
+        del headers[self.receive_header]
         self.decryptor = Cipher(AES(session.session_key), CBC(initialization_vector)).decryptor()
         self.unpadder = PKCS7(AES.block_size).unpadder()
 
@@ -53,14 +53,14 @@ class AESMiddleware(BaseEncodingMiddleware):
         return self.unpadder.update(self.decryptor.finalize()) + self.unpadder.finalize()
 
     def should_send_with_encoder(self, headers: Headers) -> bool:
-        return send_header not in headers
+        return self.send_header not in headers
 
     async def init_encoder(self, headers: MutableHeaders) -> None:
         request = Request(self.connection_scope)
         session = await provide_session(request, database=self.database)
         initialization_vector = token_bytes(16)
 
-        headers[send_header] = b64encode(initialization_vector).decode()
+        headers[self.send_header] = b64encode(initialization_vector).decode()
         self.padder = PKCS7(AES.block_size).padder()
         self.encryptor = Cipher(AES(session.session_key), CBC(initialization_vector)).encryptor()
 
