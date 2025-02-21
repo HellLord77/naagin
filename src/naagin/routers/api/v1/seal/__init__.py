@@ -5,7 +5,11 @@ from naagin.schemas import ItemSealSchema
 from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
 
+from . import base
+
 router = APIRouter(prefix="/seal")
+
+router.include_router(base.router)
 
 
 @router.get("")

@@ -26,6 +26,7 @@ from .pvp_girl_equipment import PvpGirlEquipmentSchema as PvpGirlEquipmentSchema
 from .pyon2_run import Pyon2RunSchema as Pyon2RunSchema
 from .request import RequestSchema as RequestSchema
 from .request_log import RequestLogSchema as RequestLogSchema
+from .seal_base import SealBaseSchema as SealBaseSchema
 from .session import SessionSchema as SessionSchema
 from .special_order import SpecialOrderSchema as SpecialOrderSchema
 from .swimsuit_arrange_flag import SwimsuitArrangeFlagSchema as SwimsuitArrangeFlagSchema
