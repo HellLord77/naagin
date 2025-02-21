@@ -7,6 +7,7 @@ from naagin.types.dependencies import OwnerIdDependency
 
 from . import __girl_mid__
 from . import equipment
+from . import head
 from . import potential
 from . import private
 from . import ywrk_skill
@@ -15,6 +16,7 @@ router = APIRouter(prefix="/girl")
 
 router.include_router(__girl_mid__.router)
 router.include_router(equipment.router)
+router.include_router(head.router)
 router.include_router(potential.router)
 router.include_router(private.router)
 router.include_router(ywrk_skill.router)

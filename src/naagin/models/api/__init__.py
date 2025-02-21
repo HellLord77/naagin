@@ -37,6 +37,9 @@ from .v1.girl.__girl_mid__.private.favorite.__type__.post.response import (
 )
 from .v1.girl.equipment.get.response import GirlEquipmentGetResponseModel as GirlEquipmentGetResponseModel
 from .v1.girl.get.response import GirlGetResponseModel as GirlGetResponseModel
+from .v1.girl.head.accessory.switch.list.get.response import (
+    GirlHeadAccessorySwitchListGetResponseModel as GirlHeadAccessorySwitchListGetResponseModel,
+)
 from .v1.girl.potential.get.response import GirlPotentialGetResponseModel as GirlPotentialGetResponseModel
 from .v1.girl.private.favorite.__type__.get.response import (
     GirlPrivateFavoriteTypeGetResponseModel as GirlPrivateFavoriteTypeGetResponseModel,
