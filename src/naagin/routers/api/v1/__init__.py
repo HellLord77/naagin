@@ -23,6 +23,7 @@ from . import seal
 from . import session
 from . import shop
 from . import special_order
+from . import subscription
 from . import swimsuit_arrange_flag
 from . import tutorial
 from . import wallet
@@ -52,6 +53,7 @@ router.include_router(seal.router)
 router.include_router(session.router)
 router.include_router(shop.router)
 router.include_router(special_order.router)
+router.include_router(subscription.router)
 router.include_router(swimsuit_arrange_flag.router)
 router.include_router(tutorial.router)
 router.include_router(wallet.router)
