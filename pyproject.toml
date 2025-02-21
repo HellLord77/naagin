@@ -60,6 +60,7 @@ extend-allowed-calls = ["fastapi.datastructures.Default"]
 "starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
 "starlette.datastructures.Headers".msg = "Use fastapi.datastructures.Headers instead."
 "starlette.exceptions.HTTPException".msg = "Use fastapi.exceptions.StarletteHTTPException instead."
+"sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."
 "pydantic.BaseModel".msg = "Use naagin.base.models.CustomBaseModel instead."
 "sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.CustomBaseSchema instead."
 "pydantic_settings.BaseSettings".msg = "Use naagin.settings.base.CustomBaseSettings instead."

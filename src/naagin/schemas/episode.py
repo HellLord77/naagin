@@ -1,4 +1,3 @@
-from sqlalchemy import Boolean
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -17,6 +16,6 @@ class EpisodeSchema(SchemaBase):
     episode_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
     count: Mapped[int] = mapped_column(Integer, default=0)
 
-    experience_gain_status: Mapped[bool] = mapped_column(Boolean, default=True)
+    experience_gain: Mapped[int] = mapped_column(Integer)
 
     __table_args__ = (CheckConstraint(count >= 0, "count_min"),)

@@ -53,7 +53,7 @@ class DatabaseSettings(SettingsBase):
         )
 
     @cached_property
-    def database(self) -> AsyncSession:
+    def session(self) -> AsyncSession:
         return AsyncSession(self.engine, autoflush=False)
 
     @cached_property

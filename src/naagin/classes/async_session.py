@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession  # noqa: TID251
 from sqlalchemy.sql._typing import _ColumnExpressionArgument
 
 from naagin.bases import SchemaBase
