@@ -90,6 +90,7 @@ CSV_FILE_HEADERS = {
         ],
         "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
         "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"],
+        # "SealSetting.csv": ["item_mid", "bromide_mid?", ...],
         "ShopItemDetail.csv": [None, "product_mid", "item_mid", "count"],
         # "skill.csv": [None, None, "skill_mid", ...],
         # "YwrkSkillTable.csv": ["skill_mid", ...],

@@ -43,6 +43,7 @@ VARIABLE_PATHS = [
     "v1/ranking/finalresult/{ranking_id}",
     "v1/ranking/score/{ranking_id}",
     "v1/room/detail/{owner_id}",
+    "v1/seal/{girl_mid}",
     "v1/shop/exchange/{product_mid}",
     "v1/swimsuit_arrange_flag/{owner_id}",
     "v1/tutorial/{event_mid}",

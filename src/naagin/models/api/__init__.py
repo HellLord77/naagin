@@ -102,6 +102,7 @@ from .v1.room.request.cancel.post.response import (
 )
 from .v1.room.request.get.response import RoomRequestGetResponseModel as RoomRequestGetResponseModel
 from .v1.room.request.list.get.response import RoomRequestListGetResponseModel as RoomRequestListGetResponseModel
+from .v1.seal.get.response import SealGetResponseModel as SealGetResponseModel
 from .v1.session.key.get.response import SessionKeyGetResponseModel as SessionKeyGetResponseModel
 from .v1.session.key.put.request import SessionKeyPutRequestModel as SessionKeyPutRequestModel
 from .v1.session.key.put.response import SessionKeyPutResponseModel as SessionKeyPutResponseModel
