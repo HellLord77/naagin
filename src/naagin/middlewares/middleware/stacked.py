@@ -6,8 +6,8 @@ from starlette.types import Send
 
 
 class StackedMiddleware:
-    def __init__(self, app: ASGIApp, *middleware: Middleware) -> None:
-        for cls, args, kwargs in middleware:
+    def __init__(self, app: ASGIApp, *middlewares: Middleware) -> None:
+        for cls, args, kwargs in middlewares:
             app = cls(app, *args, **kwargs)
         self.app = app
 
