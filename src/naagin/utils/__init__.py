@@ -1,6 +1,10 @@
+from collections.abc import AsyncIterable
 from collections.abc import Sequence
 from secrets import choice
 
+from asyncstdlib import list as alist
+from asyncstdlib.itertools import tee as atee
+from fastapi import Response
 from fastapi.datastructures import Headers
 from starlette.routing import Match
 from starlette.routing import Router
@@ -30,3 +34,12 @@ def router_matches(self: Router, scope: Scope) -> tuple[Match, Scope]:
             case Match.PARTIAL if partial_matches[0] == Match.NONE:
                 partial_matches = matches
     return partial_matches
+
+
+async def response_peek_body(self: Response) -> bytes:
+    body_iterator = getattr(self, "body_iterator", None)
+    if isinstance(body_iterator, AsyncIterable):
+        self.body_iterator, body_iterator = atee(body_iterator)
+        return b"".join(await alist(body_iterator))
+
+    return self.body
