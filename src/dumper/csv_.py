@@ -262,8 +262,9 @@ def game_to_csv():
                 f"https://game.doaxvv.com/production/csv/{master_version}/{initialization_vector}"
             )
             response.raise_for_status()
+
             encrypted_path.parent.mkdir(parents=True, exist_ok=True)
-            temp_path = encrypted_path.with_suffix(".tmp")
+            temp_path = encrypted_path.with_suffix(".temp")
             temp_path.write_bytes(response.content)
             temp_path.rename(encrypted_path)
 

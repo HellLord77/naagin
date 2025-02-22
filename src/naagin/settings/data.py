@@ -1,5 +1,6 @@
 from functools import cached_property
 from pathlib import Path
+from tempfile import gettempdir
 
 from aiopath import AsyncPath
 from pydantic import DirectoryPath
@@ -9,9 +10,15 @@ from naagin.bases import SettingsBase
 
 
 class DataSettings(SettingsBase):
+    temp: bool = False
+
     dir: DirectoryPath = Path.cwd() / "data"
 
     model_config = SettingsConfigDict(env_prefix="data_")
+
+    @cached_property
+    def temp_dir(self) -> AsyncPath:
+        return AsyncPath((self.dir / "temp") if self.temp else gettempdir())
 
     @cached_property
     def api_dir(self) -> AsyncPath:
