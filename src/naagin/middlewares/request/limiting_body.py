@@ -7,7 +7,7 @@ from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
 
-from naagin.exceptions import InternalServerErrorException
+from naagin.exceptions import InvalidParameterException
 
 
 class LimitingBodyRequestMiddleware:
@@ -34,6 +34,6 @@ class LimitingBodyRequestMiddleware:
 
             self.received_size += len(body)
             if self.received_size > self.maximum_size:
-                raise InternalServerErrorException
+                raise InvalidParameterException
 
         return message

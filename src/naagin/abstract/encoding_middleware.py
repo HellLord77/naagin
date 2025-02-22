@@ -1,5 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
+from http import HTTPStatus
 
 from starlette.datastructures import Headers  # noqa: TID251
 from starlette.datastructures import MutableHeaders
@@ -111,8 +112,10 @@ class BaseEncodingMiddleware(ABC):
         message_type = message["type"]
         if message_type == "http.response.start":
             self.start_message = message
-            headers = Headers(raw=message["headers"])
-            self.should_encode = self.should_send_with_encoder(headers)
+            self.should_encode = HTTPStatus(message["status"]).is_success
+            if self.should_encode:
+                headers = Headers(raw=message["headers"])
+                self.should_encode = self.should_send_with_encoder(headers)
         elif message_type == "http.response.body":
             if self.should_encode:
                 body = message.get("body", b"")
