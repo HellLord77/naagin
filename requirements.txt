@@ -11,6 +11,7 @@ types-pywin32
 types-ujson
 
 # naagin
+asyncstdlib
 async-lru
 aiopath
 filelock

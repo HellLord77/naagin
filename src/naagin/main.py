@@ -1,3 +1,4 @@
+from base64 import b64encode
 from collections import defaultdict
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -5,6 +6,7 @@ from datetime import datetime
 from http import HTTPStatus
 from inspect import getfile
 from inspect import getsourcelines
+from json import JSONDecodeError
 from logging import WARNING
 from logging import Formatter
 from logging import getLogger
@@ -19,7 +21,9 @@ from fastapi.exceptions import StarletteHTTPException
 from fastapi.middleware import Middleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import ORJSONResponse
+from orjson import loads
 from rich.logging import RichHandler
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
 
 from . import __version__
@@ -43,7 +47,9 @@ from .middlewares import FilteredMiddleware
 from .middlewares import LimitingBodyRequestMiddleware
 from .middlewares import RenewedMiddleware
 from .middlewares import StackedMiddleware
+from .providers import provide_session
 from .utils import SQLAlchemyHandler
+from .utils import response_peek_body
 from .utils.exception_handlers import not_found_handler
 
 
@@ -128,23 +134,56 @@ app = FastAPI(
 
 app.mount("/game", apps.game.app)
 
-app.add_middleware(
-    FilteredMiddleware,
-    middleware=Middleware(
-        StackedMiddleware,
-        Middleware(
-            RenewedMiddleware,
-            middleware=Middleware(
-                DeflateMiddleware, send_encoded=settings.api.compress, compress_level=settings.api.compress_level
-            ),
-        ),
-        Middleware(
-            RenewedMiddleware,
-            middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.session),
+
+async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint) -> Response:
+    headers = {}
+    try:
+        session = await provide_session(request, database=settings.database.session)
+    except ExceptionBase:
+        pass
+    else:
+        headers["X-Session-Key"] = b64encode(session.key).decode()
+
+        request_body = await request.body()
+        if request_body:
+            try:
+                await request.json()
+            except JSONDecodeError:
+                pass
+            else:
+                headers["X-Request"] = request_body.decode()
+
+    response = await call_next(request)
+    response_body = await response_peek_body(response)
+    if response_body:
+        try:
+            loads(response_body)
+        except JSONDecodeError:
+            pass
+        else:
+            headers["X-Response"] = response_body.decode()
+    response.headers.update(headers)
+
+    return response
+
+
+middlewares = [
+    Middleware(
+        RenewedMiddleware,
+        middleware=Middleware(
+            DeflateMiddleware, send_encoded=settings.api.compress, compress_level=settings.api.compress_level
         ),
     ),
-    filter=encoding_filter,
-)
+    Middleware(
+        RenewedMiddleware,
+        middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.session),
+    ),
+]
+if settings.fastapi.debug_headers:
+    middlewares.insert(0, Middleware(BaseHTTPMiddleware, dispatch=add_debug_headers))
+
+app.add_middleware(FilteredMiddleware, middleware=Middleware(StackedMiddleware, *middlewares), filter=encoding_filter)
+
 if settings.fastapi.limit:
     app.add_middleware(
         RenewedMiddleware,
@@ -168,7 +207,7 @@ app.add_exception_handler(ExceptionBase, ExceptionBase.handler)
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(routers.api01.router, tags=["api01"])
 
-if settings.fastapi.process_time:
+if settings.fastapi.debug_headers:
 
     @app.middleware("http")
     async def add_process_time_header(request: Request, call_next: RequestResponseEndpoint) -> Response:
