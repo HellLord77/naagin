@@ -42,7 +42,7 @@ async def put(
 
     private_key = await get_private_key()
     session_key = private_key.decrypt(b64decode(request.encrypt_key), PKCS1v15())
-    session.session_key = session_key
+    session.key = session_key
 
     await database.flush()
 

@@ -25,10 +25,10 @@ class SessionSchema(SchemaBase):
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     access_token: Mapped[str] = mapped_column(String(32), default=factories.schema.access_token_factory, index=True)
     pinksid: Mapped[str] = mapped_column(String(26), default=factories.schema.pinksid_factory, index=True)
-    session_key: Mapped[bytes | None] = mapped_column(LargeBinary(32), default=None)
+    key: Mapped[bytes | None] = mapped_column(LargeBinary(32), default=None)
 
     __table_args__ = (
         CheckConstraint(func.regexp_like(access_token, r"^[0-9a-f]{32}$"), "access_token_fmt"),
         CheckConstraint(func.regexp_like(pinksid, r"^[0-9a-z]{26}$"), "pinksid_fmt"),
-        CheckConstraint(func.octet_length(session_key) == 32, "session_key_len"),  # noqa: PLR2004
+        CheckConstraint(func.octet_length(key) == 32, "key_len"),  # noqa: PLR2004
     )
