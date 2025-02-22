@@ -13,6 +13,7 @@ types-ujson
 # naagin
 async-lru
 aiopath
+filelock
 cryptography
 rich
 pydantic

@@ -52,7 +52,7 @@ def game_to_tmp():
     base_path = config.DATA_DIR / "game"
     client = Client(base_url=URL(scheme="https", host="game.doaxvv.com"))
 
-    for path in base_path.rglob("*[!.tmp]"):
+    for path in base_path.rglob("*[!.temp]"):
         path: Path
         if path.is_file():
             logging.warning("[GAME] %s", path)
@@ -67,7 +67,7 @@ def game_to_tmp():
             if hash_ != get_md5(path):
                 logging.error(path)
 
-                path.rename(path.with_suffix(".tmp"))
+                path.rename(path.with_suffix(".temp"))
 
 
 def main():
