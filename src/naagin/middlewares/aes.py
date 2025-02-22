@@ -43,7 +43,7 @@ class AESMiddleware(BaseEncodingMiddleware):
         initialization_vector = b64decode(request.headers[self.receive_header])
 
         del headers[self.receive_header]
-        self.decryptor = Cipher(AES(session.session_key), CBC(initialization_vector)).decryptor()
+        self.decryptor = Cipher(AES(session.key), CBC(initialization_vector)).decryptor()
         self.unpadder = PKCS7(AES.block_size).unpadder()
 
     def update_decoder(self, data: bytes) -> bytes:
@@ -62,7 +62,7 @@ class AESMiddleware(BaseEncodingMiddleware):
 
         headers[self.send_header] = b64encode(initialization_vector).decode()
         self.padder = PKCS7(AES.block_size).padder()
-        self.encryptor = Cipher(AES(session.session_key), CBC(initialization_vector)).encryptor()
+        self.encryptor = Cipher(AES(session.key), CBC(initialization_vector)).encryptor()
 
     def update_encoder(self, data: bytes) -> bytes:
         return self.encryptor.update(self.padder.update(data))
