@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from fastapi.responses import PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from filelock import AsyncFileLock
+from filelock import BaseAsyncFileLock
 from httpx import HTTPStatusError
 
 from naagin import loggers
@@ -15,23 +16,22 @@ from naagin.exceptions import InternalServerErrorException
 app = StaticFiles(directory=settings.data.game_dir)
 
 
+def get_lock(relative_path: str) -> BaseAsyncFileLock:
+    lock_path = settings.data.temp_dir / "lock" / relative_path
+    return AsyncFileLock(lock_path)
+
+
 def not_found_response() -> PlainTextResponse:
     return PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
-
-
-async def get_lock(relative_path: str) -> AsyncFileLock:
-    lock_path = settings.data.temp_dir / "lock" / relative_path
-    await lock_path.parent.mkdir(parents=True, exist_ok=True)
-    return AsyncFileLock(lock_path, is_singleton=True)
 
 
 async def not_found_handler(request: Request, _: Exception) -> Response:
     if settings.game.offline_mode:
         return not_found_response()
 
-    url_path = request.url.path.removeprefix("/game/")
+    url_path = request.url.path.removeprefix("/game/").removesuffix("/").removesuffix(".temp")
     path = settings.data.game_dir / url_path
-    async with await get_lock(url_path):
+    async with get_lock(url_path):
         if not await path.is_file():
             loggers.game.info("Downloading: %s", url_path)
             try:
