@@ -26,15 +26,16 @@ async def get(
     special_order_list = await database.find_all(
         SpecialOrderSchema, SpecialOrderSchema.owner_id == owner_id, whereclause
     )
-    if type == SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:
-        return SpecialOrderTypeGetResponseModel(sp_timestop_item_list=special_order_list)
-    if type == SpecialOrderTypeEnum.ORDER_TICKET:
-        return SpecialOrderTypeGetResponseModel(order_ticket_list=special_order_list)
-    if type == SpecialOrderTypeEnum.POSE_CARD_ITEM:
-        return SpecialOrderTypeGetResponseModel(pose_card_item_list=special_order_list)
-    if type == SpecialOrderTypeEnum.SP_FAN_ITEM:
-        return SpecialOrderTypeGetResponseModel(sp_fan_item_list=special_order_list)
-    if type == SpecialOrderTypeEnum.SP_ORDER_ITEM:
-        return SpecialOrderTypeGetResponseModel(sp_order_item_list=special_order_list)
-
-    raise NotImplementedError
+    match type:
+        case SpecialOrderTypeEnum.SP_TIMESTOP_ITEM:
+            return SpecialOrderTypeGetResponseModel(sp_timestop_item_list=special_order_list)
+        case SpecialOrderTypeEnum.ORDER_TICKET:
+            return SpecialOrderTypeGetResponseModel(order_ticket_list=special_order_list)
+        case SpecialOrderTypeEnum.POSE_CARD_ITEM:
+            return SpecialOrderTypeGetResponseModel(pose_card_item_list=special_order_list)
+        case SpecialOrderTypeEnum.SP_FAN_ITEM:
+            return SpecialOrderTypeGetResponseModel(sp_fan_item_list=special_order_list)
+        case SpecialOrderTypeEnum.SP_ORDER_ITEM:
+            return SpecialOrderTypeGetResponseModel(sp_order_item_list=special_order_list)
+        case _:
+            raise NotImplementedError

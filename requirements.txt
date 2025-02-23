@@ -19,12 +19,14 @@ cryptography
 rich
 pydantic
 pydantic-settings
+pydantic-xml[lxml]
 sqlparse
 asyncpg
 sqlalchemy
 httpx
 starlette
 orjson
+lxml
 fastapi[standard]
 # !httptools
 

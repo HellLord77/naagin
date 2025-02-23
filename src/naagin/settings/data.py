@@ -1,5 +1,5 @@
 from functools import cached_property
-from pathlib import Path
+from pathlib import Path  # noqa: TID251
 from tempfile import gettempdir
 
 from aiopath import AsyncPath
@@ -17,21 +17,25 @@ class DataSettings(SettingsBase):
     model_config = SettingsConfigDict(env_prefix="data_")
 
     @cached_property
+    def directory(self) -> AsyncPath:
+        return AsyncPath(self.dir.resolve())
+
+    @cached_property
     def temp_dir(self) -> AsyncPath:
-        return AsyncPath((self.dir / "temp") if self.temp else gettempdir())
+        return (self.directory / "temp") if self.temp else AsyncPath(gettempdir())
 
     @cached_property
     def api_dir(self) -> AsyncPath:
-        return AsyncPath(self.dir / "api")
+        return self.directory / "api"
 
     @cached_property
     def api01_dir(self) -> AsyncPath:
-        return AsyncPath(self.dir / "api01")
+        return self.directory / "api01"
 
     @cached_property
     def game_dir(self) -> AsyncPath:
-        return AsyncPath(self.dir / "game")
+        return self.directory / "game"
 
     @cached_property
     def csv_dir(self) -> AsyncPath:
-        return AsyncPath(self.dir / "csv")
+        return self.directory / "csv"

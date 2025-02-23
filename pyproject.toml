@@ -54,16 +54,19 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 extend-allowed-calls = ["fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
+"pathlib.Path".msg = "Use aiopath.AsyncPath instead."
 "typing.Optional".msg = "Use X | Y for type annotations."
+"aiopath.Path".msg = "Use aiopath.AsyncPath instead."
 "starlette.requests.Request".msg = "Use fastapi.Request instead."
 "starlette.responses.Response".msg = "Use fastapi.Response instead."
 "starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
 "starlette.datastructures.Headers".msg = "Use fastapi.datastructures.Headers instead."
 "starlette.exceptions.HTTPException".msg = "Use fastapi.exceptions.StarletteHTTPException instead."
 "sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."
-"pydantic.BaseModel".msg = "Use naagin.base.models.CustomBaseModel instead."
-"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.schemas.base.CustomBaseSchema instead."
-"pydantic_settings.BaseSettings".msg = "Use naagin.settings.base.CustomBaseSettings instead."
+"pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
+"pydantic_xml.BaseXmlModel".msg = "Use naagin.bases.AutoIndexXMLModelBase instead."
+"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.bases.SchemaBase instead."
+"pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
