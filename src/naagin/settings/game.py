@@ -8,6 +8,7 @@ from naagin.bases import SettingsBase
 
 
 class GameSettings(SettingsBase):
+    list_dir: bool = False
     offline_mode: bool = False
     no_proxy: bool = True
 

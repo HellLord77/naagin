@@ -38,6 +38,7 @@ from .bases import SchemaBase
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
+from .exceptions import NotFoundException
 from .exceptions import UnderMaintenanceNowException
 from .filters import encoding_filter
 from .filters import gzip_filter
@@ -50,7 +51,6 @@ from .middlewares import StackedMiddleware
 from .providers import provide_session
 from .utils import SQLAlchemyHandler
 from .utils import response_peek_body
-from .utils.exception_handlers import not_found_handler
 
 
 def format_model_log(model: type[ModelBase]) -> str:
@@ -196,7 +196,7 @@ if settings.fastapi.gzip:
         filter=gzip_filter,
     )
 
-app.add_exception_handler(HTTPStatus.NOT_FOUND, not_found_handler)
+app.add_exception_handler(HTTPStatus.NOT_FOUND, NotFoundException.handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
 app.add_exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler)
 app.add_exception_handler(HTTPStatus.SERVICE_UNAVAILABLE, UnderMaintenanceNowException.handler)

@@ -1,53 +1,46 @@
+from base64 import b64encode
 from http import HTTPStatus
 
-from fastapi import Request
-from fastapi import Response
-from fastapi.responses import FileResponse
-from fastapi.responses import PlainTextResponse
-from fastapi.staticfiles import StaticFiles
+from aiopath import AsyncPath
 from filelock import AsyncFileLock
-from filelock import BaseAsyncFileLock
 from httpx import HTTPStatusError
+from starlette.exceptions import HTTPException  # noqa: TID251
+from starlette.responses import FileResponse
+from starlette.responses import Response  # noqa: TID251
 
 from naagin import loggers
 from naagin import settings
-from naagin.exceptions import InternalServerErrorException
-
-app = StaticFiles(directory=settings.data.game_dir)
+from naagin.classes import StaticFiles
 
 
-def get_lock(relative_path: str) -> BaseAsyncFileLock:
-    lock_path = settings.data.temp_dir / "lock" / relative_path
-    return AsyncFileLock(lock_path)
+async def not_found_handler(path: AsyncPath) -> Response:
+    relative_path = path.relative_to(settings.data.game_dir)
+    url = relative_path.as_posix()
+    name = b64encode(url.encode()).decode()
 
-
-def not_found_response() -> PlainTextResponse:
-    return PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
-
-
-async def not_found_handler(request: Request, _: Exception) -> Response:
-    if settings.game.offline_mode:
-        return not_found_response()
-
-    url_path = request.url.path.removeprefix("/game/").removesuffix("/").removesuffix(".temp")
-    path = settings.data.game_dir / url_path
-    async with get_lock(url_path):
+    lock_path = (settings.data.temp_dir / name).with_suffix(".lock")
+    async with AsyncFileLock(lock_path):
         if not await path.is_file():
-            loggers.game.info("Downloading: %s", url_path)
+            loggers.game.info("Downloading: %s", url)
             try:
-                response = await settings.game.client.get(url_path)
+                response = await settings.game.client.get(url)
                 response.raise_for_status()
             except HTTPStatusError as exception:
                 if exception.response.status_code == HTTPStatus.NOT_FOUND:
-                    return not_found_response()
+                    raise HTTPException(status_code=HTTPStatus.NOT_FOUND) from exception
 
-                return InternalServerErrorException.handler(request, exception)
+                raise
             else:
-                if await path.is_dir():
-                    raise InternalServerErrorException
-
                 await path.parent.mkdir(parents=True, exist_ok=True)
-                temp_path = path.with_suffix(".temp")
+                temp_path = (settings.data.temp_dir / name).with_suffix(".temp")
+
                 await temp_path.write_bytes(response.content)
                 await temp_path.rename(path)
     return FileResponse(path)
+
+
+kwargs = {}
+if not settings.game.offline_mode:
+    kwargs["not_found_handler"] = not_found_handler
+
+app = StaticFiles(directory=settings.data.game_dir, autoindex=settings.game.list_dir, **kwargs)
