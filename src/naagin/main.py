@@ -4,10 +4,10 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from datetime import datetime
 from http import HTTPStatus
+from importlib.util import find_spec
 from inspect import getfile
 from inspect import getsourcelines
 from json import JSONDecodeError
-from logging import WARNING
 from logging import Formatter
 from logging import getLogger
 from time import perf_counter
@@ -75,19 +75,22 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:  # noqa: C901
     sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
     sqlalchemy_logger.handlers = [sqlalchemy_handler]
 
-    if settings.logging.model and loggers.model.isEnabledFor(WARNING):
+    if find_spec("httptools") is not None:
+        loggers.app.error("Conflicting module [bold]httptools[/bold] found")
+
+    if settings.logging.model:
         optional_datetime = datetime | None
         for model in ModelBase.__subclasses__():
             for name, type_ in model.__annotations__.items():
                 if name == "updated_at" and type_ != optional_datetime:
-                    message = "Wrong `updated_at` annotation:"
+                    message = "Wrong model field [bold]updated_at[bold] annotation:"
                     message += format_model_log(model)
-                    loggers.model.warning(message)
+                    loggers.model.error(message)
 
         for model in ModelBase.__subclasses__():
             json_schema_extra = model.model_config.get("json_schema_extra", None)
             if json_schema_extra is not None:
-                message = "Unnecessary `json_schema_extra` config:"
+                message = "Unnecessary model config [bold]json_schema_extra[/bold] found:"
                 message += format_model_log(model)
                 loggers.model.warning(message)
 
@@ -99,7 +102,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:  # noqa: C901
 
         for models in model_map.values():
             if len(models) > 1:
-                message = "Possible duplicate models:"
+                message = "Possible duplicate model found:"
                 for model in models:
                     message += format_model_log(model)
                 loggers.model.warning(message)

@@ -40,9 +40,6 @@ extend-unsafe-fixes = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"src/naagin/classes/static_files/**.py" = [
-    "TID251",  # flake8-tidy-imports banned-api
-]
 "src/naagin/middlewares/**.py" = [
     "TID251",  # flake8-tidy-imports banned-api
 ]
