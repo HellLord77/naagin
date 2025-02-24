@@ -3,30 +3,28 @@ from collections.abc import Callable
 from datetime import UTC
 from datetime import datetime
 from http import HTTPStatus
-from operator import itemgetter
-from pathlib import Path  # noqa: TID251
 from stat import S_ISDIR
 from typing import override
 
 from aiopath import AsyncPath
 from starlette.datastructures import URL
-from starlette.exceptions import HTTPException  # noqa: TID251
-from starlette.requests import Request  # noqa: TID251
+from starlette.exceptions import HTTPException
+from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.responses import RedirectResponse
-from starlette.responses import Response  # noqa: TID251
+from starlette.responses import Response
 from starlette.staticfiles import StaticFiles
-from starlette.templating import Jinja2Templates
 from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
 
-from naagin.enums import AutoIndexFormatEnum
-from naagin.models.auto_index import AutoIndexModel
-from naagin.models.auto_index import AutoIndexXMLModel
-from naagin.utils.responses import LXMLResponse
-
-TemplateResponse = Jinja2Templates(Path(__file__).parent / "templates").TemplateResponse
+from .enums import FormatEnum
+from .models import DirectoryModel
+from .models import FileModel
+from .models import ListModel
+from .responses import PydanticJSONResponse
+from .responses import PydanticXMLResponse
+from .responses import TemplateResponse
 
 
 class CustomStaticFiles(StaticFiles):
@@ -35,7 +33,7 @@ class CustomStaticFiles(StaticFiles):
         self,
         *args,  # noqa: ANN002
         autoindex: bool = False,
-        autoindex_format: AutoIndexFormatEnum = AutoIndexFormatEnum.HTML,
+        autoindex_format: FormatEnum = FormatEnum.HTML,
         not_found_handler: Callable[[AsyncPath], Awaitable[Response]] | None = None,
         **kwargs,  # noqa: ANN003
     ) -> None:
@@ -68,7 +66,6 @@ class CustomStaticFiles(StaticFiles):
                         if not scope["path"].endswith("/"):
                             url = URL(scope=scope)
                             return RedirectResponse(url.replace(path=url.path + "/"))
-
                         return await self.autoindex_response(full_path, scope)
 
                     if self.not_found_handler is not None:
@@ -79,32 +76,28 @@ class CustomStaticFiles(StaticFiles):
         dirs = []
         files = []
         async for child_path in path.iterdir():
-            child_path: AsyncPath
-            dir_ = {}
             stat = await child_path.stat()
-            dir_["name"] = child_path.name
-            dir_["mtime"] = datetime.fromtimestamp(stat.st_mtime, UTC)
+            mtime = datetime.fromtimestamp(stat.st_mtime, UTC)
             if S_ISDIR(stat.st_mode):
+                dir_ = DirectoryModel(name=child_path.name, mtime=mtime)
                 dirs.append(dir_)
             else:
-                dir_["size"] = stat.st_size
-                files.append(dir_)
+                file = FileModel(name=child_path.name, size=stat.st_size, mtime=mtime)
+                files.append(file)
 
-        sorted(dirs, key=itemgetter("name"))
-        sorted(files, key=itemgetter("name"))
+        if self.autoindex_format == FormatEnum.HTML:
+            root = path.relative_to(self.directory).as_posix()
+            if root == ".":
+                root = ""
+            return TemplateResponse(
+                Request(scope), "autoindex.html.jinja", {"root": root, "dirs": dirs, "files": files}
+            )
 
+        list_ = ListModel(root=dirs + files)
         match self.autoindex_format:
-            case AutoIndexFormatEnum.HTML:
-                base = path.relative_to(self.directory).as_posix()
-                if base == ".":
-                    base = ""
-
-                return TemplateResponse(
-                    Request(scope), "auto_index.html.jinja", {"base": base, "dirs": dirs, "files": files}
-                )
-            case AutoIndexFormatEnum.XML:
-                return LXMLResponse(AutoIndexXMLModel(root=dirs + files).to_xml_tree())
-            case AutoIndexFormatEnum.JSON:
-                return Response(AutoIndexModel(root=dirs + files).model_dump_json(), media_type="application/json")
+            case FormatEnum.XML:
+                return PydanticXMLResponse(list_)
+            case FormatEnum.JSON:
+                return PydanticJSONResponse(list_)
             case _:
                 raise NotImplementedError

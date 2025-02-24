@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 
-class AutoIndexFormatEnum(StrEnum):
+class FormatEnum(StrEnum):
     HTML = "html"
     XML = "xml"
     JSON = "json"
