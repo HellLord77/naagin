@@ -40,6 +40,9 @@ extend-unsafe-fixes = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"src/naagin/classes/static_files/**.py" = [
+    "TID251",  # flake8-tidy-imports banned-api
+]
 "src/naagin/middlewares/**.py" = [
     "TID251",  # flake8-tidy-imports banned-api
 ]
@@ -64,7 +67,6 @@ extend-allowed-calls = ["fastapi.datastructures.Default"]
 "starlette.exceptions.HTTPException".msg = "Use fastapi.exceptions.StarletteHTTPException instead."
 "sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."
 "pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
-"pydantic_xml.BaseXmlModel".msg = "Use naagin.bases.AutoIndexXMLModelBase instead."
 "sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.bases.SchemaBase instead."
 "pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
 
