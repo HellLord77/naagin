@@ -16,6 +16,7 @@ from .item_consume import ItemConsumeSchema as ItemConsumeSchema
 from .item_equipemnt import ItemEquipmentSchema as ItemEquipmentSchema
 from .item_furniture import ItemFurnitureSchema as ItemFurnitureSchema
 from .item_seal import ItemSealSchema as ItemSealSchema
+from .login_bonus import LoginBonusSchema as LoginBonusSchema
 from .maintenance import MaintenanceSchema as MaintenanceSchema
 from .max_combine_swimsuit import MaxCombineSwimsuitSchema as MaxCombineSwimsuitSchema
 from .option_item_auto_lock import OptionItemAutoLockSchema as OptionItemAutoLockSchema
