@@ -28,7 +28,6 @@ async def not_found_handler(path: AsyncPath) -> Response:
             except HTTPStatusError as exception:
                 if exception.response.status_code == HTTPStatus.NOT_FOUND:
                     raise HTTPException(status_code=HTTPStatus.NOT_FOUND) from exception
-
                 raise
             else:
                 await path.parent.mkdir(parents=True, exist_ok=True)
