@@ -89,6 +89,27 @@ CSV_FILE_HEADERS = {
             None,
         ],
         "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
+        "LoginBonus.csv": [
+            "bonus_mid",
+            None,
+            None,
+            "publish_at",
+            "close_at",
+            None,
+            None,
+        ],
+        "LoginBonusDetail.csv": [
+            None,
+            "bonus_mid",
+            "days",
+            "item_mid",
+            "count",
+            None,
+            None,
+            None,
+            None,
+            None,
+        ],
         "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"],
         # "SealSetting.csv": ["item_mid", "bromide_mid?", ...],
         "ShopItemDetail.csv": [None, "product_mid", "item_mid", "count"],
@@ -177,6 +198,7 @@ CSV_FILE_HEADERS = {
 # 35112 Misaki Coin
 # 35125 Luna Coin
 # 35178 Tamaki Coin
+# 35229 VIP Coin
 # 35243 Chinese Tea
 # 35246 Leifang Coin
 # 35252 Episode Coin
@@ -202,6 +224,7 @@ CSV_FILE_HEADERS = {
 # 35858 Shiny Deco-pen
 # 35888 Monica Coin
 # 36201 Moisturizing Fan (Momiji)
+# 36452 Clover of Happiness
 # 36628 Weekly SSR Ticket
 # 36629 Weekly Gacha Ticket
 # 36629 Weekly Gacha Ticket

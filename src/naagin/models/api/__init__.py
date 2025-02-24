@@ -60,6 +60,7 @@ from .v1.item.consume.negative.get.response import (
 from .v1.item.equipment.type.__type__.get.response import (
     ItemEquipmentTypeTypeGetResponseModel as ItemEquipmentTypeTypeGetResponseModel,
 )
+from .v1.login_bonus.get.response import LoginBonusGetResponseModel as LoginBonusGetResponseModel
 from .v1.max_combine.__owner_id__.__item_mid__.get.response import (
     MaxCombineOwnerIdItemMidGetResponseModel as MaxCombineOwnerIdItemMidGetResponseModel,
 )
