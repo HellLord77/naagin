@@ -10,7 +10,6 @@ from naagin.types.fields import GZipCompressLevelField
 class AppSettings(SettingsBase):
     swagger_ui: bool = False
     debug_headers: bool = False
-    user_agent: str | None = None
 
     limit: bool = True
     limit_max_size: NonNegativeInt = 1000

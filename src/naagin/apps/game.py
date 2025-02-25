@@ -52,4 +52,4 @@ kwargs = {}
 if not settings.game.offline_mode:
     kwargs["not_found_handler"] = not_found_handler
 
-app = StaticFiles(directory=settings.data.game_dir, html=True, **kwargs)
+app = StaticFiles(directory=settings.data.game_dir, html=True, autoindex=settings.game.list_dir, **kwargs)

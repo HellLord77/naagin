@@ -20,7 +20,7 @@ def redirect_filter(scope: Scope) -> bool:
         return False
 
     headers = Headers(raw=scope["headers"])
-    if headers.get("User-Agent") == settings.app.user_agent:
+    if headers.get("User-Agent") == settings.game.user_agent:
         return False
 
     route_path = get_route_path(scope)
