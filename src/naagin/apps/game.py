@@ -1,6 +1,7 @@
 from base64 import b64encode
 from http import HTTPStatus
 
+from aiopath import AsyncPath
 from filelock import AsyncFileLock
 from httpx import HTTPStatusError
 from starlette.exceptions import HTTPException  # noqa: TID251
@@ -14,8 +15,8 @@ from naagin import settings
 from naagin.classes import StaticFiles
 
 
-async def not_found_handler(path: PathLike, scope: Scope) -> Response:
-    full_path = await (settings.data.game_dir / path).resolve()
+async def not_found_handler(full_path: PathLike, scope: Scope) -> Response:
+    full_path = AsyncPath(full_path)
     try:
         relative_path = full_path.relative_to(settings.data.game_dir)
     except ValueError:
