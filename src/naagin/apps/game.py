@@ -15,8 +15,8 @@ from naagin import settings
 from naagin.classes import StaticFiles
 
 
-async def not_found_handler(full_path: PathLike, scope: Scope) -> Response:
-    full_path = AsyncPath(full_path)
+async def not_found_handler(path: PathLike, scope: Scope) -> Response:
+    full_path = await AsyncPath(settings.data.game_dir / path).resolve()
     try:
         relative_path = full_path.relative_to(settings.data.game_dir)
     except ValueError:

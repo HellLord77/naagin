@@ -55,6 +55,22 @@ from .utils import SQLAlchemyHandler
 from .utils import response_peek_body
 
 
+def setup_sqlalchemy_logger() -> None:
+    logger = getLogger("sqlalchemy.engine.Engine")
+    handler = SQLAlchemyHandler(show_path=False)
+    logger.handlers = [handler]
+
+
+def setup_logging() -> None:
+    loggers.app.setLevel(settings.logging.level)
+    handler = RichHandler(markup=True, rich_tracebacks=True)
+    formatter = Formatter("[code]%(name)s[/code] %(message)s", "[%X]")
+    handler.setFormatter(formatter)
+    loggers.app.addHandler(handler)
+
+    setup_sqlalchemy_logger()
+
+
 def format_model_log(model: type[ModelBase]) -> str:
     path = getfile(model)
     link = AsyncPath(path).as_uri()
@@ -65,49 +81,44 @@ def format_model_log(model: type[ModelBase]) -> str:
     return message
 
 
-@asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncGenerator[None]:  # noqa: C901
-    loggers.app.setLevel(settings.logging.level)
-    handler = RichHandler(markup=True, rich_tracebacks=True)
-    formatter = Formatter("[code]%(name)s[/code] %(message)s", "[%X]")
-    handler.setFormatter(formatter)
-    loggers.app.addHandler(handler)
+def log_model() -> None:
+    optional_datetime = datetime | None
+    for model in ModelBase.__subclasses__():
+        for name, type_ in model.__annotations__.items():
+            if name == "updated_at" and type_ != optional_datetime:
+                message = "Wrong model field [bold]updated_at[bold] annotation:"
+                message += format_model_log(model)
+                loggers.model.error(message)
 
-    sqlalchemy_logger = getLogger("sqlalchemy.engine.Engine")
-    sqlalchemy_handler = SQLAlchemyHandler(show_path=False)
-    sqlalchemy_logger.handlers = [sqlalchemy_handler]
+    model_map = defaultdict(list)
+    for model in ModelBase.__subclasses__():
+        json_schema_extra = model.model_config.get("json_schema_extra", None)
+        if json_schema_extra is not None:
+            message = "Unnecessary model config [bold]json_schema_extra[/bold] found:"
+            message += format_model_log(model)
+            loggers.model.warning(message)
+
+        annotations = frozenset(model.__annotations__.items())
+        if len(annotations) >= settings.logging.model_dup_len:
+            model_map[annotations].append(model)
+
+    for models in model_map.values():
+        if len(models) > 1:
+            message = "Possible duplicate model found:"
+            for model in models:
+                message += format_model_log(model)
+            loggers.model.warning(message)
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
+    setup_logging()
 
     if find_spec("httptools") is not None:
         loggers.app.error("Conflicting module [bold]httptools[/bold] found")
 
     if settings.logging.model:
-        optional_datetime = datetime | None
-        for model in ModelBase.__subclasses__():
-            for name, type_ in model.__annotations__.items():
-                if name == "updated_at" and type_ != optional_datetime:
-                    message = "Wrong model field [bold]updated_at[bold] annotation:"
-                    message += format_model_log(model)
-                    loggers.model.error(message)
-
-        for model in ModelBase.__subclasses__():
-            json_schema_extra = model.model_config.get("json_schema_extra", None)
-            if json_schema_extra is not None:
-                message = "Unnecessary model config [bold]json_schema_extra[/bold] found:"
-                message += format_model_log(model)
-                loggers.model.warning(message)
-
-        model_map = defaultdict(list)
-        for model in ModelBase.__subclasses__():
-            annotations = frozenset(model.__annotations__.items())
-            if len(annotations) >= settings.logging.model_dup_len:
-                model_map[annotations].append(model)
-
-        for models in model_map.values():
-            if len(models) > 1:
-                message = "Possible duplicate model found:"
-                for model in models:
-                    message += format_model_log(model)
-                loggers.model.warning(message)
+        log_model()
 
     loggers.api.debug("Routes count: %d", len(routers.api.router.routes))
     loggers.api01.debug("Routes count: %d", len(routers.api01.router.routes))
