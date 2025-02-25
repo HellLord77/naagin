@@ -172,7 +172,7 @@ async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint
     return response
 
 
-if settings.app.user_agent is not None:
+if settings.game.user_agent is not None:
     app.add_middleware(FilteredMiddleware, middleware=Middleware(RedirectMiddleware), filter=redirect_filter)
 
 middlewares = [

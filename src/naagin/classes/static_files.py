@@ -6,10 +6,10 @@ from typing import override
 from starlette.exceptions import HTTPException  # noqa: TID251
 from starlette.responses import PlainTextResponse
 from starlette.responses import Response  # noqa: TID251
-from starlette.staticfiles import StaticFiles
 from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
+from static_files_asgi import StaticFiles
 
 
 class CustomStaticFiles(StaticFiles):
