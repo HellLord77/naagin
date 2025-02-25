@@ -10,7 +10,7 @@ from naagin.types.fields import GZipCompressLevelField
 class AppSettings(SettingsBase):
     swagger_ui: bool = False
     debug_headers: bool = False
-    _user_agent: str = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko"
+    user_agent: str | None = None
 
     limit: bool = True
     limit_max_size: NonNegativeInt = 1000
