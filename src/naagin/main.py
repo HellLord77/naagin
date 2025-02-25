@@ -122,7 +122,7 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:  # noqa: C901
 
 
 kwargs = {}
-if not settings.fastapi.swagger_ui:
+if not settings.app.swagger_ui:
     kwargs["openapi_url"] = None
     kwargs["docs_url"] = None
 
@@ -182,20 +182,21 @@ middlewares = [
         middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.session),
     ),
 ]
-if settings.fastapi.debug_headers:
+if settings.app.debug_headers:
     middlewares.insert(0, Middleware(BaseHTTPMiddleware, dispatch=add_debug_headers))
 
 app.add_middleware(FilteredMiddleware, middleware=Middleware(StackedMiddleware, *middlewares), filter=encoding_filter)
 
-if settings.fastapi.limit:
+if settings.app.limit:
     app.add_middleware(
         RenewedMiddleware,
-        middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.fastapi.limit_max_size),
+        middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.app.limit_max_size),
     )
-if settings.fastapi.gzip:
+
+if settings.app.gzip:
     app.add_middleware(
         FilteredMiddleware,
-        middleware=Middleware(GZipMiddleware, settings.fastapi.gzip_min_size, settings.fastapi.gzip_compress_level),
+        middleware=Middleware(GZipMiddleware, settings.app.gzip_min_size, settings.app.gzip_compress_level),
         filter=gzip_filter,
     )
 
@@ -210,7 +211,7 @@ app.add_exception_handler(ExceptionBase, ExceptionBase.handler)
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(routers.api01.router, tags=["api01"])
 
-if settings.fastapi.debug_headers:
+if settings.app.debug_headers:
 
     @app.middleware("http")
     async def add_process_time_header(request: Request, call_next: RequestResponseEndpoint) -> Response:

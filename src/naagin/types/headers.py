@@ -7,6 +7,7 @@ from naagin import factories
 from naagin.enums import ClientTypeEnum
 from naagin.enums import EncodingEnum
 
+UserAgentHeader = Annotated[str | None, Header(default_factory=factories.null_factory, alias="User-Agent")]
 ContentTypeHeader = Annotated[str, Header(alias="Content-Type")]
 ContentLengthHeader = Annotated[int | None, Header(default_factory=factories.null_factory, alias="Content-Length")]
 
