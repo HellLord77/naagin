@@ -23,6 +23,7 @@ sqlparse
 asyncpg
 sqlalchemy
 httpx
+ua-parser[regex]
 starlette
 orjson
 fastapi[standard]
