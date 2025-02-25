@@ -11,7 +11,6 @@ from starlette.routing import Router
 from starlette.types import Scope
 
 from .custom_header import CustomHeader as CustomHeader
-from .singleton_meta import SingletonMeta as SingletonMeta
 from .sqlalchemy_handler import SQLAlchemyHandler as SQLAlchemyHandler
 
 

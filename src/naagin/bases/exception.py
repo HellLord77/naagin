@@ -6,10 +6,9 @@ from fastapi import Request
 from fastapi.responses import ORJSONResponse
 
 from naagin.utils import CustomHeader
-from naagin.utils import SingletonMeta
 
 
-class ExceptionBase(Exception, metaclass=SingletonMeta):  # noqa: N818
+class ExceptionBase(Exception):  # noqa: N818
     code: ClassVar[int]
     message: ClassVar[str]
 
