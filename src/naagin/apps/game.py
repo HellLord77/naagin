@@ -14,20 +14,25 @@ from naagin.classes import StaticFiles
 
 
 async def not_found_handler(path: AsyncPath) -> Response:
-    relative_path = path.relative_to(settings.data.game_dir)
+    try:
+        relative_path = path.relative_to(settings.data.game_dir)
+    except ValueError:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND) from None
+
     url = relative_path.as_posix()
     name = b64encode(url.encode()).decode()
 
     lock_path = (settings.data.temp_dir / name).with_suffix(".lock")
     async with AsyncFileLock(lock_path):
         if not await path.is_file():
-            loggers.game.info("Downloading: %s", url)
+            loggers.game.info("GET: %s", url)
             try:
                 response = await settings.game.client.get(url)
                 response.raise_for_status()
             except HTTPStatusError as exception:
                 if exception.response.status_code == HTTPStatus.NOT_FOUND:
-                    raise HTTPException(status_code=HTTPStatus.NOT_FOUND) from exception
+                    loggers.game.warning("Not Found: %s", url)
+                    raise HTTPException(status_code=HTTPStatus.NOT_FOUND) from None
                 raise
             else:
                 await path.parent.mkdir(parents=True, exist_ok=True)
