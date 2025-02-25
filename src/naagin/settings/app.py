@@ -7,7 +7,7 @@ from naagin.bases import SettingsBase
 from naagin.types.fields import GZipCompressLevelField
 
 
-class FastAPISettings(SettingsBase):
+class AppSettings(SettingsBase):
     swagger_ui: bool = False
     debug_headers: bool = False
 

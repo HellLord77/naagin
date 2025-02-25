@@ -1,16 +1,16 @@
 from .api import APISettings
 from .api01 import API01Settings
+from .app import AppSettings
 from .data import DataSettings
 from .database import DatabaseSettings
 from .environment import EnvironmentSettings
-from .fastapi import FastAPISettings
 from .game import GameSettings
 from .logging import LoggingSettings
 from .version import VersionSettings
 
 environment = EnvironmentSettings()
 logging = LoggingSettings(_env_file=environment.file)
-fastapi = FastAPISettings(_env_file=environment.file)
+app = AppSettings(_env_file=environment.file)
 
 version = VersionSettings(_env_file=environment.file)
 data = DataSettings(_env_file=environment.file)
