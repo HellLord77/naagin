@@ -26,6 +26,10 @@ from .v1.furniture.myset.__owner_id__.list.get.response import (
     FurnitureMySetOwnerIdListGetResponseModel as FurnitureMySetOwnerIdListGetResponseModel,
 )
 from .v1.furniture.myset.get.response import FurnitureMySetGetResponseModel as FurnitureMySetGetResponseModel
+from .v1.giftbox.count.get.response import GiftBoxCountGetResponseModel as GiftBoxCountGetResponseModel
+from .v1.giftbox.fetch.post.response import GiftBoxFetchPostResponseModel as GiftBoxFetchPostResponseModel
+from .v1.giftbox.get.response import GiftBoxGetResponseModel as GiftBoxGetResponseModel
+from .v1.giftbox.history.get.response import GiftBoxHistoryGetResponseModel as GiftBoxHistoryGetResponseModel
 from .v1.girl.__girl_mid__.private.favorite.__type__.get.response import (
     GirlGirlMidPrivateFavoriteTypeGetResponseModel as GirlGirlMidPrivateFavoriteTypeGetResponseModel,
 )

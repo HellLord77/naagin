@@ -7,6 +7,7 @@ from . import csv
 from . import dishevelment
 from . import friendship
 from . import furniture
+from . import giftbox
 from . import girl
 from . import honor
 from . import information
@@ -38,6 +39,7 @@ router.include_router(csv.router)
 router.include_router(dishevelment.router)
 router.include_router(friendship.router)
 router.include_router(furniture.router)
+router.include_router(giftbox.router)
 router.include_router(girl.router)
 router.include_router(honor.router)
 router.include_router(information.router)
