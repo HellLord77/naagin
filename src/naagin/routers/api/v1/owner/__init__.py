@@ -12,6 +12,7 @@ from . import checkedat
 from . import checklogin
 from . import countlogin
 from . import episode
+from . import guestpoint
 
 router = APIRouter(prefix="/owner")
 
@@ -20,6 +21,7 @@ router.include_router(checkedat.router)
 router.include_router(checklogin.router)
 router.include_router(countlogin.router)
 router.include_router(episode.router)
+router.include_router(guestpoint.router)
 
 
 @router.get("")

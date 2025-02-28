@@ -91,6 +91,9 @@ from .v1.owner.episode.__episode_mid__.put.response import (
 )
 from .v1.owner.episode.get.response import OwnerEpisodeGetResponseModel as OwnerEpisodeGetResponseModel
 from .v1.owner.get.response import OwnerGetResponseModel as OwnerGetResponseModel
+from .v1.owner.guestpoint.accept.post.response import (
+    OwnerGuestPointAcceptPostResponseModel as OwnerGuestPointAcceptPostResponseModel,
+)
 from .v1.owner.put.request import OwnerPutRequestModel as OwnerPutRequestModel
 from .v1.owner.put.response import OwnerPutResponseModel as OwnerPutResponseModel
 from .v1.pvp_fes_deck.equipment_list_all.get.response import (
