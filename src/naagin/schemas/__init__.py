@@ -6,6 +6,7 @@ from .episode import EpisodeSchema as EpisodeSchema
 from .friendly_value import FriendlyValueSchema as FriendlyValueSchema
 from .friendship import FriendshipSchema as FriendshipSchema
 from .furniture_myset import FurnitureMySetSchema as FurnitureMySetSchema
+from .giftbox import GiftBoxSchema as GiftBoxSchema
 from .girl import GirlSchema as GirlSchema
 from .girl_equipment import GirlEquipmentSchema as GirlEquipmentSchema
 from .girl_potential import GirlPotentialSchema as GirlPotentialSchema
