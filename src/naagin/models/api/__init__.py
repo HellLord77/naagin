@@ -78,6 +78,7 @@ from .v1.option.item_auto_lock.post.response import (
 from .v1.owner.birthday.post.request import OwnerBirthdayPostRequestModel as OwnerBirthdayPostRequestModel
 from .v1.owner.birthday.post.response import OwnerBirthdayPostResponseModel as OwnerBirthdayPostResponseModel
 from .v1.owner.checkedat.get.response import OwnerCheckedAtGetResponseModel as OwnerCheckedAtGetResponseModel
+from .v1.owner.checklogin.get.response import OwnerCheckLoginGetResponseModel as OwnerCheckLoginGetResponseModel
 from .v1.owner.countlogin.get.response import OwnerCountLoginGetResponseModel as OwnerCountLoginGetResponseModel
 from .v1.owner.episode.__episode_mid__.post.response import (
     OwnerEpisodeEpisodeMidPostResponseModel as OwnerEpisodeEpisodeMidPostResponseModel,
