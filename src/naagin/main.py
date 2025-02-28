@@ -63,7 +63,7 @@ def setup_sqlalchemy_logger() -> None:
 
 def setup_logging() -> None:
     loggers.app.setLevel(settings.logging.level)
-    handler = RichHandler(markup=True, rich_tracebacks=True)
+    handler = RichHandler(show_path=False, markup=True, rich_tracebacks=True)
     formatter = Formatter("[code]%(name)s[/code] %(message)s", "[%X]")
     handler.setFormatter(formatter)
     loggers.app.addHandler(handler)
@@ -116,6 +116,12 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
     if find_spec("httptools") is not None:
         loggers.app.error("Conflicting module [bold]httptools[/bold] found")
+
+    if settings.environment.file is not None:
+        loggers.setting.debug("Unused cli arg [bold]--env-file[/bold]")
+
+    if settings.app.limit:
+        loggers.setting.debug("Unused cli arg [bold]--limit-request-line[/bold]")
 
     if settings.logging.model:
         log_model()
