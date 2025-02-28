@@ -6,12 +6,12 @@ from sqlalchemy import func
 
 from naagin import settings
 from naagin.classes import AsyncSession
-from naagin.decorators import async_request_cache_unsafe
+from naagin.decorators import async_request_cache_unsafe as async_request_cache_unsafe
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import MaintenanceSchema
 from naagin.schemas import SessionSchema
-from naagin.types.cookies import PINKSIDCookie
-from naagin.types.headers import AccessTokenHeader
+from naagin.types.securities import CookieSecurity
+from naagin.types.securities import HeaderSecurity
 
 
 async def provide_database() -> AsyncGenerator[AsyncSession]:
@@ -39,8 +39,8 @@ async def provide_maintenance(database: AsyncSession = Depends(provide_database)
 @async_request_cache_unsafe
 async def provide_session(
     request: Request,
-    access_token: AccessTokenHeader = None,
-    pinksid: PINKSIDCookie = None,
+    access_token: HeaderSecurity = None,
+    pinksid: CookieSecurity = None,
     database: AsyncSession = Depends(provide_database),
 ) -> SessionSchema:
     if access_token is None:
