@@ -1,19 +1,10 @@
 from naagin.bases import ModelBase
+from naagin.models import WalletModel
 
 
 class AcceptedGuestPointModel(ModelBase):
     guest_count: int
     guest_point: int
-
-
-class WalletModel(ModelBase):
-    owner_id: int
-    zack_money: int
-    guest_point: int
-    vip_point: int
-    paid_vstone: int
-    free_vstone: int
-    vip_coin: int
 
 
 class OwnerGuestPointAcceptPostResponseModel(ModelBase):

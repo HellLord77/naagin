@@ -14,3 +14,4 @@ from .owner_other import OwnerOtherModel as OwnerOtherModel
 from .owner_room import OwnerRoomModel as OwnerRoomModel
 from .swimsuit_arrange_flag import SwimsuitArrangeFlagModel as SwimsuitArrangeFlagModel
 from .tutorial import TutorialModel as TutorialModel
+from .wallet import WalletModel as WalletModel
