@@ -115,6 +115,13 @@ from .v1.quest.check.license_point.post.response import (
 )
 from .v1.quest.fes.info.get.response import QuestFesInfoGetResponseModel as QuestFesInfoGetResponseModel
 from .v1.quest.stamina.get.response import QuestStaminaGetResponseModel as QuestStaminaGetResponseModel
+from .v1.radio_station.bgm.__scene_mid__.post.request import (
+    RadioStationBgmSceneMidPostRequestModel as RadioStationBgmSceneMidPostRequestModel,
+)
+from .v1.radio_station.bgm.__scene_mid__.post.response import (
+    RadioStationBgmSceneMidPostResponseModel as RadioStationBgmSceneMidPostResponseModel,
+)
+from .v1.radio_station.bgm.get.response import RadioStationBgmGetResponseModel as RadioStationBgmGetResponseModel
 from .v1.room.girl.friendly.get.response import RoomGirlFriendlyGetResponseModel as RoomGirlFriendlyGetResponseModel
 from .v1.room.girls.post.request import RoomGirlsPostRequestModel as RoomGirlsPostRequestModel
 from .v1.room.girls.post.response import RoomGirlsPostResponseModel as RoomGirlsPostResponseModel

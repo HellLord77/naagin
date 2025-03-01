@@ -1,3 +1,4 @@
+from .bgm import BgmModel as BgmModel
 from .bromide import BromideModel as BromideModel
 from .episode import EpisodeModel as EpisodeModel
 from .exception import ExceptionModel as ExceptionModel

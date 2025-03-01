@@ -11,6 +11,7 @@ from naagin.enums import LicenseLevelEnum
 from naagin.enums import OwnerStatusEnum
 from naagin.enums import PrivateItemTypeEnum
 from naagin.enums import RequestClearRankEnum
+from naagin.enums import SceneEnum
 from naagin.enums import SealRarityEnum
 from naagin.enums import SpecialOrderTypeEnum
 
@@ -27,5 +28,6 @@ LicenseLevelEnumSchema = Enum(LicenseLevelEnum, values_callable=values_callable)
 OwnerStatusEnumSchema = Enum(OwnerStatusEnum, values_callable=values_callable)
 PrivateItemTypeEnumSchema = Enum(PrivateItemTypeEnum, values_callable=values_callable)
 RequestClearRankEnumSchema = Enum(RequestClearRankEnum, values_callable=values_callable)
+SceneEnumSchema = Enum(SceneEnum, values_callable=values_callable)
 SealRarityEnumSchema = Enum(SealRarityEnum, values_callable=values_callable)
 SpecialOrderTypeEnumSchema = Enum(SpecialOrderTypeEnum, values_callable=values_callable)

@@ -21,6 +21,7 @@ from . import pvp_fes_deck
 from . import pvp_girl
 from . import pyon2
 from . import quest
+from . import radio_station
 from . import room
 from . import seal
 from . import session
@@ -54,6 +55,7 @@ router.include_router(pvp_fes_deck.router)
 router.include_router(pvp_girl.router)
 router.include_router(pyon2.router)
 router.include_router(quest.router)
+router.include_router(radio_station.router)
 router.include_router(room.router)
 router.include_router(seal.router)
 router.include_router(session.router)
