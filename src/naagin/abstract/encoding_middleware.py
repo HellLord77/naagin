@@ -97,7 +97,7 @@ class BaseEncodingMiddleware(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def init_encoder(self, headers: MutableHeaders) -> None:
+    async def init_encoder(self, headers: MutableHeaders) -> bool:
         raise NotImplementedError
 
     @abstractmethod
@@ -112,10 +112,9 @@ class BaseEncodingMiddleware(ABC):
         message_type = message["type"]
         if message_type == "http.response.start":
             self.start_message = message
-            self.should_encode = HTTPStatus(message["status"]).is_success
-            if self.should_encode:
-                headers = Headers(raw=message["headers"])
-                self.should_encode = self.should_send_with_encoder(headers)
+            self.should_encode = HTTPStatus(message["status"]).is_success and self.should_send_with_encoder(
+                Headers(raw=message["headers"])
+            )
         elif message_type == "http.response.body":
             if self.should_encode:
                 body = message.get("body", b"")
@@ -130,15 +129,17 @@ class BaseEncodingMiddleware(ABC):
 
                     if body or more_body:
                         headers = MutableHeaders(raw=self.start_message["headers"])
-                        await self.init_encoder(headers)
-                        headers["Content-Type"] = "application/octet-stream"
+                        if await self.init_encoder(headers):
+                            headers["Content-Type"] = "application/octet-stream"
 
-                        body = self.update_encoder(body)
-                        if more_body:
-                            del headers["Content-Length"]
+                            body = self.update_encoder(body)
+                            if more_body:
+                                del headers["Content-Length"]
+                            else:
+                                body += self.flush_encoder()
+                                headers["Content-Length"] = str(len(body))
                         else:
-                            body += self.flush_encoder()
-                            headers["Content-Length"] = str(len(body))
+                            self.should_encode = False
                     await self.send(self.start_message)
 
                 message["body"] = body

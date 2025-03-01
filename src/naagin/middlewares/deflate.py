@@ -42,9 +42,10 @@ class DeflateMiddleware(BaseEncodingMiddleware):
     def should_send_with_encoder(self, headers: Headers) -> bool:
         return self.send_header not in headers
 
-    async def init_encoder(self, headers: MutableHeaders) -> None:
+    async def init_encoder(self, headers: MutableHeaders) -> bool:
         headers[self.send_header] = EncodingEnum.DEFLATE
         self.compressor = compressobj(self.compress_level)
+        return True
 
     def update_encoder(self, data: bytes) -> bytes:
         return self.compressor.compress(data)
