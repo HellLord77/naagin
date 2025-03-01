@@ -7,23 +7,23 @@ from naagin.schemas import OwnerSchema
 from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
 
-from . import accept
 from . import birthday
 from . import checkedat
 from . import checklogin
 from . import countlogin
 from . import episode
 from . import guestpoint
+from . import parameter
 
 router = APIRouter(prefix="/owner")
 
-router.include_router(accept.router)
 router.include_router(birthday.router)
 router.include_router(checkedat.router)
 router.include_router(checklogin.router)
 router.include_router(countlogin.router)
 router.include_router(episode.router)
 router.include_router(guestpoint.router)
+router.include_router(parameter.router)
 
 
 @router.get("")

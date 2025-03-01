@@ -6,5 +6,5 @@ router = APIRouter(prefix="/accept")
 
 
 @router.post("")
-async def get() -> OwnerParameterAcceptPostResponseModel:
+async def post() -> OwnerParameterAcceptPostResponseModel:
     return OwnerParameterAcceptPostResponseModel(root=[])
