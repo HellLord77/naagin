@@ -5,6 +5,7 @@ from . import casino
 from . import cheat_log
 from . import csv
 from . import dishevelment
+from . import dynamic_game_parameter
 from . import friendship
 from . import furniture
 from . import giftbox
@@ -37,6 +38,7 @@ router.include_router(casino.router)
 router.include_router(cheat_log.router)
 router.include_router(csv.router)
 router.include_router(dishevelment.router)
+router.include_router(dynamic_game_parameter.router)
 router.include_router(friendship.router)
 router.include_router(furniture.router)
 router.include_router(giftbox.router)

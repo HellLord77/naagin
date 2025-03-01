@@ -9,6 +9,9 @@ from .v1.dishevelment.__owner_id__.__item_mid__.get.response import (
     DishevelmentOwnerIdItemMidGetResponseModel as DishevelmentOwnerIdItemMidGetResponseModel,
 )
 from .v1.dishevelment.get.response import DishevelmentGetResponseModel as DishevelmentGetResponseModel
+from .v1.dynamic_game_parameter.get.response import (
+    DynamicGameParameterGetResponseModel as DynamicGameParameterGetResponseModel,
+)
 from .v1.friendship.__friend_id__.delete.response import (
     FriendshipFriendIdDeleteResponseModel as FriendshipFriendIdDeleteResponseModel,
 )
