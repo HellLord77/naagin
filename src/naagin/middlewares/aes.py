@@ -16,6 +16,7 @@ from starlette.types import ASGIApp
 
 from naagin.abstract import BaseEncodingMiddleware
 from naagin.classes import AsyncSession
+from naagin.exceptions import AuthenticationFailedException
 from naagin.providers import provide_session
 from naagin.utils import CustomHeader
 
@@ -55,14 +56,18 @@ class AESMiddleware(BaseEncodingMiddleware):
     def should_send_with_encoder(self, headers: Headers) -> bool:
         return self.send_header not in headers
 
-    async def init_encoder(self, headers: MutableHeaders) -> None:
+    async def init_encoder(self, headers: MutableHeaders) -> bool:
         request = Request(self.connection_scope)
-        session = await provide_session(request, database=self.database)
+        try:
+            session = await provide_session(request, database=self.database)
+        except AuthenticationFailedException:
+            return False
         initialization_vector = token_bytes(16)
 
         headers[self.send_header] = b64encode(initialization_vector).decode()
         self.padder = PKCS7(AES.block_size).padder()
         self.encryptor = Cipher(AES(session.key), CBC(initialization_vector)).encryptor()
+        return True
 
     def update_encoder(self, data: bytes) -> bytes:
         return self.encryptor.update(self.padder.update(data))
