@@ -7,6 +7,7 @@ from naagin.schemas import OwnerSchema
 from naagin.types.dependencies import DatabaseDependency
 from naagin.types.dependencies import OwnerIdDependency
 
+from . import accept
 from . import birthday
 from . import checkedat
 from . import checklogin
@@ -16,6 +17,7 @@ from . import guestpoint
 
 router = APIRouter(prefix="/owner")
 
+router.include_router(accept.router)
 router.include_router(birthday.router)
 router.include_router(checkedat.router)
 router.include_router(checklogin.router)
