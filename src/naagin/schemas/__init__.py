@@ -1,3 +1,4 @@
+from .bgm import BgmSchema as BgmSchema
 from .bromide import BromideSchema as BromideSchema
 from .casino_chip import CasinoChipSchema as CasinoChipSchema
 from .casino_game import CasinoGameSchema as CasinoGameSchema

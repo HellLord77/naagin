@@ -15,5 +15,6 @@ from .owner_status import OwnerStatusEnum as OwnerStatusEnum
 from .private_item import PrivateItemTypeEnum as PrivateItemTypeEnum
 from .request_category import RequestCategoryEnum as RequestCategoryEnum
 from .request_clear_rank import RequestClearRankEnum as RequestClearRankEnum
+from .scene import SceneEnum as SceneEnum
 from .seal_rarity import SealRarityEnum as SealRarityEnum
 from .special_order_type import SpecialOrderTypeEnum as SpecialOrderTypeEnum
