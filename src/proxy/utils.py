@@ -22,6 +22,7 @@ from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
 from mitmproxy.http import Request
 
+import config
 import consts
 
 
@@ -133,10 +134,10 @@ def print_json(flow: HTTPFlow, session_key: Optional[bytes] = None):
                 get_fernet(flow.id).encrypt(session_key).decode()
             )
 
-        if not consts.MITMWEB:
-            if flow.response is not None:
-                consts.FLOW_WRITER.add(flow)
+        if config.WRITE_FILE and flow.response is not None:
+            consts.FLOW_WRITER.add(flow)
 
+        if config.WRITE_CONSOLE:
             body = decrypt_message(flow.id, message)
             print(f"[{type(message).__name__.lower()}] {flow.request.path}")
             rich.print_json(body.decode())

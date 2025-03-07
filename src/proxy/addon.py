@@ -16,6 +16,7 @@ from mitmproxy.http import HTTPFlow
 
 import consts
 import utils
+import config
 
 
 class AddonDOAXVV:
@@ -31,7 +32,7 @@ class AddonDOAXVV:
     def requestheaders(flow: HTTPFlow):
         match flow.request.pretty_host:
             case consts.API_HOST:
-                if consts.MITMWEB:
+                if not config.WRITE_FILE:
                     utils.redirect_request(flow.request, "api")
                 utils.renounce_request(flow.request)
             case consts.API01_HOST:
