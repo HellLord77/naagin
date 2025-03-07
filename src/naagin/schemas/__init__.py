@@ -26,6 +26,7 @@ from .owner import OwnerSchema as OwnerSchema
 from .owner_checked_at import OwnerCheckedAtSchema as OwnerCheckedAtSchema
 from .owner_count_login import OwnerCountLoginSchema as OwnerCountLoginSchema
 from .owner_room import OwnerRoomSchema as OwnerRoomSchema
+from .photo_shoot import PhotoShootSchema as PhotoShootSchema
 from .private_item import PrivateItemSchema as PrivateItemSchema
 from .pvp_girl_equipment import PvpGirlEquipmentSchema as PvpGirlEquipmentSchema
 from .pyon2_run import Pyon2RunSchema as Pyon2RunSchema
