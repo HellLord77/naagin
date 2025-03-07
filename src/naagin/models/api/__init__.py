@@ -103,6 +103,10 @@ from .v1.owner.parameter.accept.post.response import (
 )
 from .v1.owner.put.request import OwnerPutRequestModel as OwnerPutRequestModel
 from .v1.owner.put.response import OwnerPutResponseModel as OwnerPutResponseModel
+from .v1.photo_shoot.shoot.post.response import PhotoShootShootPostResponseModel as PhotoShootShootPostResponseModel
+from .v1.photo_shoot.today_count.get.response import (
+    PhotoShootTodayCountGetResponseModel as PhotoShootTodayCountGetResponseModel,
+)
 from .v1.pvp_fes_deck.equipment_list_all.get.response import (
     PvpFesDeckEquipmentListAllGetResponseModel as PvpFesDeckEquipmentListAllGetResponseModel,
 )

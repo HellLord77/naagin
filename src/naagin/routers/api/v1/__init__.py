@@ -17,6 +17,7 @@ from . import login_bonus
 from . import max_combine
 from . import option
 from . import owner
+from . import photo_shoot
 from . import pvp_fes_deck
 from . import pvp_girl
 from . import pyon2
@@ -51,6 +52,7 @@ router.include_router(login_bonus.router)
 router.include_router(max_combine.router)
 router.include_router(option.router)
 router.include_router(owner.router)
+router.include_router(photo_shoot.router)
 router.include_router(pvp_fes_deck.router)
 router.include_router(pvp_girl.router)
 router.include_router(pyon2.router)
