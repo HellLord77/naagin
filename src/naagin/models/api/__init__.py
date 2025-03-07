@@ -114,6 +114,8 @@ from .v1.quest.check.license_point.post.response import (
     QuestCheckLicensePointPostResponseModel as QuestCheckLicensePointPostResponseModel,
 )
 from .v1.quest.fes.info.get.response import QuestFesInfoGetResponseModel as QuestFesInfoGetResponseModel
+from .v1.quest.guest.list.get.response import QuestGuestListGetResponseModel as QuestGuestListGetResponseModel
+from .v1.quest.list.get.response import QuestListGetResponseModel as QuestListGetResponseModel
 from .v1.quest.stamina.get.response import QuestStaminaGetResponseModel as QuestStaminaGetResponseModel
 from .v1.radio_station.bgm.__scene_mid__.post.request import (
     RadioStationBgmSceneMidPostRequestModel as RadioStationBgmSceneMidPostRequestModel,
