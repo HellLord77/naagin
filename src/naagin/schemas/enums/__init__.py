@@ -2,6 +2,7 @@ from sqlalchemy import Enum
 
 from naagin.enums import CasinoGameEnum
 from naagin.enums import CheckedLicenseLevelEnum
+from naagin.enums import ClearRankEnum
 from naagin.enums import FriendshipStateEnum
 from naagin.enums import GiftBoxMessageTypeTypeEnum
 from naagin.enums import InformationCategoryEnum
@@ -19,6 +20,7 @@ from .utils import values_callable
 
 CasinoGameEnumSchema = Enum(CasinoGameEnum, values_callable=values_callable)
 CheckedLicenseLevelEnumSchema = Enum(CheckedLicenseLevelEnum, values_callable=values_callable)
+ClearRankEnumSchema = Enum(ClearRankEnum, values_callable=values_callable)
 FriendshipStateEnumSchema = Enum(FriendshipStateEnum, values_callable=values_callable)
 GiftBoxMessageTypeTypeEnumSchema = Enum(GiftBoxMessageTypeTypeEnum, values_callable=values_callable)
 InformationCategoryEnumSchema = Enum(InformationCategoryEnum, values_callable=values_callable)

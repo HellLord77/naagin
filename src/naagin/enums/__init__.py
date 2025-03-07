@@ -1,5 +1,6 @@
 from .casino_game import CasinoGameEnum as CasinoGameEnum
 from .checked_license_level import CheckedLicenseLevelEnum as CheckedLicenseLevelEnum
+from .clear_rank import ClearRankEnum as ClearRankEnum
 from .client_type import ClientTypeEnum as ClientTypeEnum
 from .database_driver import DatabaseDriverEnum as DatabaseDriverEnum
 from .encoding import EncodingEnum as EncodingEnum
@@ -13,6 +14,7 @@ from .license_level import LicenseLevelEnum as LicenseLevelEnum
 from .logging_level import LoggingLevelEnum as LoggingLevelEnum
 from .owner_status import OwnerStatusEnum as OwnerStatusEnum
 from .private_item import PrivateItemTypeEnum as PrivateItemTypeEnum
+from .recommended_rank import RecommendedRankEnum as RecommendedRankEnum
 from .request_category import RequestCategoryEnum as RequestCategoryEnum
 from .request_clear_rank import RequestClearRankEnum as RequestClearRankEnum
 from .scene import SceneEnum as SceneEnum

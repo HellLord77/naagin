@@ -29,6 +29,7 @@ from .owner_room import OwnerRoomSchema as OwnerRoomSchema
 from .private_item import PrivateItemSchema as PrivateItemSchema
 from .pvp_girl_equipment import PvpGirlEquipmentSchema as PvpGirlEquipmentSchema
 from .pyon2_run import Pyon2RunSchema as Pyon2RunSchema
+from .quest import QuestSchema as QuestSchema
 from .request import RequestSchema as RequestSchema
 from .request_log import RequestLogSchema as RequestLogSchema
 from .seal_base import SealBaseSchema as SealBaseSchema

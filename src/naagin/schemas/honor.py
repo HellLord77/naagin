@@ -1,3 +1,5 @@
+from typing import Literal
+
 from sqlalchemy import CheckConstraint
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
@@ -14,8 +16,8 @@ class HonorSchema(SchemaBase):
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
     honor_mid: Mapped[int] = mapped_column(Integer, primary_key=True)
-    times_received: Mapped[int] = mapped_column(Integer, default=1)
-    parent_honor_mid: Mapped[int] = mapped_column(Integer, default=0)
+    times_received: Mapped[Literal[1]] = mapped_column(Integer, default=1)
+    parent_honor_mid: Mapped[Literal[0]] = mapped_column(Integer, default=0)
 
     __table_args__ = (
         CheckConstraint(times_received == 1, "times_received_const"),
