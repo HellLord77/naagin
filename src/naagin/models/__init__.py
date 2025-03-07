@@ -8,6 +8,7 @@ from .friendship import FriendshipModel as FriendshipModel
 from .furniture_my_set import FurnitureMySetModel as FurnitureMySetModel
 from .giftbox_model import GiftBoxModel as GiftBoxModel
 from .girl_equipment_model import GirlEquipmentModel as GirlEquipmentModel
+from .honor import HonorModel as HonorModel
 from .item_consume import ItemConsumeModel as ItemConsumeModel
 from .owner import OwnerModel as OwnerModel
 from .owner_checked_at import OwnerCheckedAtModel as OwnerCheckedAtModel

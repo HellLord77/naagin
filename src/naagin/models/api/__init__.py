@@ -54,6 +54,7 @@ from .v1.girl.private.favorite.__type__.get.response import (
 from .v1.girl.private.get.response import GirlPrivateGetResponseModel as GirlPrivateGetResponseModel
 from .v1.girl.ywrk_skill.get.resposne import GirlYwrkSkillGetResponseModel as GirlYwrkSkillGetResponseModel
 from .v1.honor.get.response import HonorGetResponseModel as HonorGetResponseModel
+from .v1.honor.post.response import HonorPostResponseModel as HonorPostResponseModel
 from .v1.information.global_.post.request import InformationGlobalPostRequestModel as InformationGlobalPostRequestModel
 from .v1.information.global_.post.response import (
     InformationGlobalPostResponseModel as InformationGlobalPostResponseModel,
