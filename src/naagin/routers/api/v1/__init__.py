@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from . import affection_reward
 from . import bromide
 from . import casino
 from . import cheat_log
@@ -37,6 +38,7 @@ from . import wallet
 
 router = APIRouter(prefix="/v1")
 
+router.include_router(affection_reward.router)
 router.include_router(bromide.router)
 router.include_router(casino.router)
 router.include_router(cheat_log.router)

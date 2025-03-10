@@ -1,3 +1,4 @@
+from .v1.affection_reward.get.response import AffectionRewardGetResponseModel as AffectionRewardGetResponseModel
 from .v1.bromide.get.response import BromideGetResponseModel as BromideGetResponseModel
 from .v1.casino.chip.get.response import CasinoChipGetResponseModel as CasinoChipGetResponseModel
 from .v1.casino.game.get.response import CasinoGameGetResponseModel as CasinoGameGetResponseModel
