@@ -5,7 +5,7 @@ requires-python = "~=3.13.0"
 
 [tool.mypy]
 cache_dir = "$MYPY_CONFIG_FILE_DIR/.cache/mypy"
-mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+mypy_path = "$MYPY_CONFIG_FILE_DIR/naagin"
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
@@ -14,7 +14,7 @@ follow_untyped_imports = true
 
 [tool.ruff]
 cache-dir = ".cache/ruff"
-src = ["src/naagin"]
+src = ["naagin"]
 line-length = 120
 
 [tool.ruff.lint]
@@ -40,7 +40,7 @@ extend-unsafe-fixes = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"src/naagin/middlewares/**.py" = [
+"naagin/middlewares/**.py" = [
     "TID251",  # flake8-tidy-imports banned-api
 ]
 
