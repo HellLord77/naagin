@@ -9,7 +9,7 @@ from httpx import URL
 
 import config
 import csv_
-import flows
+import flow
 from naagin.enums import ItemConsumeTypeEnum
 
 
@@ -49,15 +49,16 @@ def get_md5(path: Path) -> str:
 
 
 def game_to_tmp():
-    base_path = config.DATA_DIR / "game"
+    game_dir = config.DATA_DIR / "game"
+    temp_dir = config.DATA_DIR / "temp"
     client = Client(base_url=URL(scheme="https", host="game.doaxvv.com"))
 
-    for path in base_path.rglob("*[!.temp]"):
+    for path in game_dir.rglob("*[!.temp]"):
         path: Path
         if path.is_file():
             logging.warning("[GAME] %s", path)
 
-            relative_path = path.relative_to(base_path)
+            relative_path = path.relative_to(game_dir)
 
             response = client.head(relative_path.as_posix())
             response.raise_for_status()
@@ -67,21 +68,22 @@ def game_to_tmp():
             if hash_ != get_md5(path):
                 logging.error(path)
 
-                path.rename(path.with_suffix(".temp"))
+                temp_path = (temp_dir / relative_path).with_suffix(".temp")
+                temp_path.parent.mkdir(parents=True, exist_ok=True)
+                path.rename(temp_path)
 
 
 def main():
-    flows.to_model()
-    exit()
+    if config.FLOW:
+        flow.to_model()
 
-    csv_.to_model()
-    exit()
+    if config.CSV:
+        csv_.to_model()
 
-    consume_to_enum()
-    exit()
+    if config.GAME:
+        game_to_tmp()
 
-    game_to_tmp()
-    exit()
+    # consume_to_enum()
 
 
 if __name__ == "__main__":
