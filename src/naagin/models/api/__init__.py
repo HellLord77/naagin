@@ -73,6 +73,7 @@ from .v1.max_combine.__owner_id__.__item_mid__.get.response import (
     MaxCombineOwnerIdItemMidGetResponseModel as MaxCombineOwnerIdItemMidGetResponseModel,
 )
 from .v1.max_combine.get.response import MaxCombineGetResponseModel as MaxCombineGetResponseModel
+from .v1.onsen.get.response import OnsenGetResponseModel as OnsenGetResponseModel
 from .v1.option.item_auto_lock.post.request import (
     OptionItemAutoLockPostRequestModel as OptionItemAutoLockPostRequestModel,
 )
