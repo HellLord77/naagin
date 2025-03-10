@@ -8,7 +8,6 @@ import shutil
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 from csv import DictReader
-from csv import DictWriter
 from io import StringIO
 from pathlib import Path
 
@@ -17,106 +16,6 @@ import httpx
 import config
 import utils
 
-CSV_FILE_HEADERS = {
-    10: {
-        "CR_FriendlyReward.csv": [
-            None,
-            "value",
-            "level",
-            None,
-            "basic_item_mid",
-            "basic_item_count",
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            "photo_spot_mid",
-        ],
-        "CR_Request.csv": [
-            "request_mid",
-            None,
-            None,
-            "category",
-            None,
-            None,
-            "time_required",
-            "friendly_level",
-            "publish_at",
-            "close_at",
-            None,
-            "rank_1_rate",
-            None,
-            "rank_2_rate",
-            None,
-            "rank_3_rate",
-            None,
-        ],
-        "EpisodeList.csv": [
-            None,
-            "episode_mid",
-            None,
-            None,
-            "experience_gain",
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        ],
-        # "Equipment_Parameter.csv": ["item_mid", "type", ...],
-        "girl_master.csv": [
-            "girl_mid",
-            None,
-            "power",
-            None,
-            "stamina",
-            None,
-            "technic",
-            None,
-            "appeal",
-            None,
-            None,
-            None,
-            "swimsuit_item_mid",
-            None,
-            "hair_item_mid",
-            None,
-            None,
-        ],
-        "GravurePanelData.csv": [None, None, None, None, None, "episode_mid"],
-        "LoginBonus.csv": [
-            "bonus_mid",
-            None,
-            None,
-            "publish_at",
-            "close_at",
-            None,
-            None,
-        ],
-        "LoginBonusDetail.csv": [
-            None,
-            "bonus_mid",
-            "days",
-            "item_mid",
-            "count",
-            None,
-            None,
-            None,
-            None,
-            None,
-        ],
-        "MissionReward.csv": [None, "mission_mid", "item_mid", "count_or_honor_mid"],
-        # "SealSetting.csv": ["item_mid", "bromide_mid?", ...],
-        "ShopItemDetail.csv": [None, "product_mid", "item_mid", "count"],
-        # "skill.csv": [None, None, "skill_mid", ...],
-        # "YwrkSkillTable.csv": ["skill_mid", ...],
-    }
-}
 
 # girl_mid, girl
 # 2, Kasumi
@@ -138,6 +37,8 @@ CSV_FILE_HEADERS = {
 # 22, Lobelia
 # 23, Nanami
 # 25, Koharu
+# ...
+# 32, ...
 
 # request_mid, job, time
 # 1, 'Tidy Up' as a pair, 0h10m
@@ -244,6 +145,11 @@ def get_csv_dir() -> Path:
 
 
 @functools.cache
+def get_header_dir() -> Path:
+    return config.DATA_DIR / "header"
+
+
+@functools.cache
 def get_json_dir() -> Path:
     return config.DATA_DIR / "json" / "csv"
 
@@ -256,6 +162,14 @@ def get_schema_dir() -> Path:
 @functools.cache
 def get_model_dir() -> Path:
     return config.DATA_DIR / "model" / "csv"
+
+
+def get_header_names() -> frozenset[str]:
+    header_dir = get_header_dir() / str(config.VERSION)
+    return frozenset(
+        "".join(header_path.name.rsplit(".header", 1))
+        for header_path in header_dir.rglob("*.header.csv")
+    )
 
 
 def game_to_csv():
@@ -274,6 +188,9 @@ def game_to_csv():
     md5 = hashlib.md5(file_encrypt_key.encode())
     md5.update(str(master_version).encode())
     key = md5.hexdigest()
+
+    header_names = get_header_names()
+    header_dir = get_header_dir() / str(master_version)
 
     src_path = config.DATA_DIR / "game" / "production" / "csv" / str(master_version)
     dst_path = get_csv_dir() / str(master_version)
@@ -294,16 +211,22 @@ def game_to_csv():
         logging.info(f"[ENCRYPTED] {encrypted_path}")
 
         data = utils.decrypt_file(key, encrypted_path)
-        if csv_file in CSV_FILE_HEADERS.get(master_version, {}):
-            fieldnames = CSV_FILE_HEADERS[master_version][csv_file]
-            for index in range(len(fieldnames)):
-                if fieldnames[index] is None:
-                    fieldnames[index] = f"column_{index + 1}"
+        if csv_file in header_names:
+            header_path = (header_dir / csv_file).with_suffix(".header.csv")
+            with header_path.open() as file:
+                header = next(csv.reader(file))
+
+            for index in range(len(header)):
+                if header[index] == "":
+                    header[index] = f"column_{index + 1}"
 
             string_io = StringIO()
-            dict_writer = DictWriter(string_io, fieldnames, quoting=csv.QUOTE_ALL)
-            dict_writer.writeheader()
-            data = string_io.getvalue().encode() + data
+            writer = csv.writer(string_io, quoting=csv.QUOTE_ALL)
+            reader = csv.reader(data.decode("shift-jis").splitlines())
+
+            writer.writerow(header)
+            writer.writerows(reader)
+            data = string_io.getvalue().encode("shift-jis")
 
         csv_path = dst_path / csv_file
         logging.warning(f"[CSV] {csv_path}")
@@ -342,12 +265,12 @@ def to_model():
     game_to_csv()
 
     shutil.rmtree(get_json_dir(), True)
-    for master_version, csv_files in CSV_FILE_HEADERS.items():
-        base_path = get_csv_dir() / str(master_version)
-        for csv_file in csv_files:
-            csv_path = base_path / csv_file
-            if csv_path.is_file():
-                csv_to_json(csv_path)
+
+    base_path = get_csv_dir() / str(config.VERSION)
+    for csv_file in get_header_names():
+        csv_path = base_path / csv_file
+        if csv_path.is_file():
+            csv_to_json(csv_path)
 
     shutil.rmtree(get_schema_dir(), True)
     json_to_schema = functools.partial(
