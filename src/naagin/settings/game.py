@@ -13,7 +13,6 @@ class GameSettings(SettingsBase):
     no_proxy: bool = True
 
     base_url: AnyHttpUrl = "https://game.doaxvv.com"
-    user_agent: str | None = "Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko"
 
     model_config = SettingsConfigDict(env_prefix="game_")
 
