@@ -35,13 +35,13 @@ class QuestSchema(SchemaBase):
         CheckConstraint(~quest_clear | (clear_rank != ClearRankEnum.F), "quest_clear_or_clear_rank"),
         # CheckConstraint(started_at <= first_cleared_at, "started_at_lte_first_cleared_at"),
         CheckConstraint(
-            (clear_rank == ClearRankEnum.S) & (srank_cleared_at != None),  # noqa: E711
-            "clear_rank_and_srank_cleared_at",
+            (clear_rank != ClearRankEnum.S) | (srank_cleared_at != None),  # noqa: E711
+            "clear_rank_or_srank_cleared_at",
         ),
         # CheckConstraint(first_cleared_at <= srank_cleared_at, "first_cleared_at_lte_srank_cleared_at"),
         CheckConstraint(
-            ((clear_rank == ClearRankEnum.A) | (clear_rank == ClearRankEnum.S)) & (arank_cleared_at != None),  # noqa: E711
-            "clear_rank_and_arank_cleared_at",
+            (clear_rank != ClearRankEnum.A) | (arank_cleared_at != None),  # noqa: E711
+            "clear_rank_or_arank_cleared_at",
         ),
         # CheckConstraint(first_cleared_at <= arank_cleared_at, "first_cleared_at_lte_arank_cleared_at"),
     )
