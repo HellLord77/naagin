@@ -42,12 +42,10 @@ from .exceptions import NotFoundException
 from .exceptions import UnderMaintenanceNowException
 from .filters import encoding_filter
 from .filters import gzip_filter
-from .filters import redirect_filter
 from .middlewares import AESMiddleware
 from .middlewares import DeflateMiddleware
 from .middlewares import FilteredMiddleware
 from .middlewares import LimitingBodyRequestMiddleware
-from .middlewares import RedirectMiddleware
 from .middlewares import RenewedMiddleware
 from .middlewares import StackedMiddleware
 from .providers import provide_session
@@ -188,9 +186,6 @@ async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint
 
     return response
 
-
-if settings.game.user_agent is not None:
-    app.add_middleware(FilteredMiddleware, middleware=Middleware(RedirectMiddleware), filter=redirect_filter)
 
 middlewares = [
     Middleware(
