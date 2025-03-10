@@ -23,8 +23,8 @@ class PhotoShootSchema(SchemaBase):
     today: Mapped[date] = mapped_column(Date, default=func.current_date())
 
     __table_args__ = (
-        CheckConstraint(shoot_count.in_((0, 1)), "shoot_count_const"),
-        CheckConstraint(recover_count.in_((0, 1)), "recover_count_const"),
+        CheckConstraint(shoot_count.between(0, 1), "shoot_count_range"),
+        CheckConstraint(recover_count.between(0, 1), "recover_count_range"),
         CheckConstraint(shoot_count >= recover_count, "shoot_count_gte_recover_count"),
         # CheckConstraint(today <= updated_at, "today_lte_updated_at"),
     )

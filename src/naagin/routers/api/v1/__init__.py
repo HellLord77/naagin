@@ -15,6 +15,7 @@ from . import information
 from . import item
 from . import login_bonus
 from . import max_combine
+from . import onsen
 from . import option
 from . import owner
 from . import photo_shoot
@@ -50,6 +51,7 @@ router.include_router(information.router)
 router.include_router(item.router)
 router.include_router(login_bonus.router)
 router.include_router(max_combine.router)
+router.include_router(onsen.router)
 router.include_router(option.router)
 router.include_router(owner.router)
 router.include_router(photo_shoot.router)
