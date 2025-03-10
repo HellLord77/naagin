@@ -38,5 +38,7 @@ from .session import SessionSchema as SessionSchema
 from .special_order import SpecialOrderSchema as SpecialOrderSchema
 from .swimsuit_arrange_flag import SwimsuitArrangeFlagSchema as SwimsuitArrangeFlagSchema
 from .tutorial import TutorialSchema as TutorialSchema
+from .venus_board_girl_panel import VenusBoardGirlPanelSchema as VenusBoardGirlPanelSchema
+from .venus_board_status import VenusBoardStatusSchema as VenusBoardStatusSchema
 from .wallet import WalletSchema as WalletSchema
 from .ywrk_skill import YwrkSkillSchema as YwrkSkillSchema

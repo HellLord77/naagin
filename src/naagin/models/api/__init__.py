@@ -160,4 +160,6 @@ from .v1.swimsuit_arrange_flag.get.response import (
 from .v1.tutorial.__event_mid__.put.request import TutorialEventMidPutRequestModel as TutorialEventMidPutRequestModel
 from .v1.tutorial.__event_mid__.put.response import TutorialEventMidPutResponseModel as TutorialEventMidPutResponseModel
 from .v1.tutorial.get.response import TutorialGetResponseModel as TutorialGetResponseModel
+from .v1.venus_board.panel.get.response import VenusBoardPanelGetResponseModel as VenusBoardPanelGetResponseModel
+from .v1.venus_board.status.get.response import VenusBoardStatusGetResponseModel as VenusBoardStatusGetResponseModel
 from .v1.wallet.get.response import WalletGetResponseModel as WalletGetResponseModel
