@@ -25,5 +25,6 @@ async def post(database: DatabaseDependency, owner_id: OwnerIdDependency) -> Hon
     owner_checked_at.honor_checked_at = func.current_timestamp()
 
     await database.flush()
+    await database.refresh(owner_checked_at)
 
     return HonorPostResponseModel(honor_list=honor_list, owner_checked_at_list=[owner_checked_at])

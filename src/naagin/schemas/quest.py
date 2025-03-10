@@ -31,13 +31,16 @@ class QuestSchema(SchemaBase):
     arank_cleared_at: Mapped[datetime | None] = mapped_column(DateTime, default=None)
 
     __table_args__ = (
-        CheckConstraint(quest_clear == False or quest_new == False, "quest_clear_or_quest_new"),  # noqa: E712
-        CheckConstraint(quest_clear == False or clear_rank != ClearRankEnum.F, "quest_clear_or_clear_rank"),  # noqa: E712
+        CheckConstraint(~quest_clear | ~quest_new, "quest_clear_or_quest_new"),
+        CheckConstraint(~quest_clear | (clear_rank != ClearRankEnum.F), "quest_clear_or_clear_rank"),
         # CheckConstraint(started_at <= first_cleared_at, "started_at_lte_first_cleared_at"),
-        CheckConstraint(clear_rank == ClearRankEnum.S and srank_cleared_at != None, "clear_rank_and_srank_cleared_at"),  # noqa: E711
+        CheckConstraint(
+            (clear_rank == ClearRankEnum.S) & (srank_cleared_at != None),  # noqa: E711
+            "clear_rank_and_srank_cleared_at",
+        ),
         # CheckConstraint(first_cleared_at <= srank_cleared_at, "first_cleared_at_lte_srank_cleared_at"),
         CheckConstraint(
-            (clear_rank == ClearRankEnum.A or clear_rank == ClearRankEnum.S) and arank_cleared_at != None,  # noqa: E711, PLR1714
+            ((clear_rank == ClearRankEnum.A) | (clear_rank == ClearRankEnum.S)) & (arank_cleared_at != None),  # noqa: E711
             "clear_rank_and_arank_cleared_at",
         ),
         # CheckConstraint(first_cleared_at <= arank_cleared_at, "first_cleared_at_lte_arank_cleared_at"),

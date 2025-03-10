@@ -36,7 +36,7 @@ class ItemEquipmentSchema(SchemaBase):
         CheckConstraint(type != ItemEquipmentTypeEnum.HAIRSTYLE_OR_EXPRESSION, "type_const"),
         CheckConstraint(level.between(1, 90), "level_range"),
         CheckConstraint(experience.between(0, 480000), "experience_range"),
-        CheckConstraint(favorite == False, "favorite_const"),  # noqa: E712
+        CheckConstraint(~favorite, "favorite_const"),
         CheckConstraint(unlock_count.between(0, 4), "unlock_count_range"),
         CheckConstraint(upgrade_count >= 0, "upgrade_count_min"),
         CheckConstraint(combine_count.between(0, 4), "combine_count_range"),
