@@ -14,9 +14,9 @@ from cryptography.hazmat.primitives.serialization import PublicFormat
 from mitmproxy.addonmanager import Loader
 from mitmproxy.http import HTTPFlow
 
+import config
 import consts
 import utils
-import config
 
 
 class AddonDOAXVV:
