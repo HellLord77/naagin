@@ -54,6 +54,7 @@ import utils
 # 25001, honor
 # 35013, guest_point
 # 35021, free_vstone
+# 37980, venus_memory
 
 # 35001 Upgrade APL Stone (S)
 # 35002 Upgrade APL Stone (M)

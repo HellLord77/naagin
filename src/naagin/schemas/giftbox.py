@@ -40,7 +40,8 @@ class GiftBoxSchema(SchemaBase):
         CheckConstraint(count >= 1, "count_min"),
         CheckConstraint(message == "", "message_const"),
         CheckConstraint(
-            parameter1 == 14324 if message_type == GiftBoxMessageTypeTypeEnum._VALUE_35 else parameter1 == 0,  # noqa: PLR2004, SLF001
+            ((message_type == GiftBoxMessageTypeTypeEnum._VALUE_35) & (parameter1 == 14324))  # noqa: PLR2004, SLF001
+            | ((message_type != GiftBoxMessageTypeTypeEnum._VALUE_35) & (parameter1 == 0)),  # noqa: SLF001
             "parameter1_const",
         ),
         CheckConstraint(expired_at >= func.current_timestamp(), "expired_at_gte_now"),
