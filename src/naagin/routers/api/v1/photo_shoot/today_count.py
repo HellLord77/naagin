@@ -19,19 +19,18 @@ async def get(database: DatabaseDependency, owner_id: OwnerIdDependency) -> Phot
 
         await database.flush()
     else:
-        last_today = photo_shoot.last_today
-        photo_shoot.last_today = func.current_date()
+        today = photo_shoot.today
+        photo_shoot.today = func.current_datetime()
 
         await database.flush()
         await database.refresh(photo_shoot)
 
-        today = photo_shoot.last_today
-        if last_today != today:
-            photo_shoot.shoot = False
-            photo_shoot.recover = False
+        if today != photo_shoot.today:
+            photo_shoot.shoot_count = 0
+            photo_shoot.recover_count = 0
 
             await database.flush()
 
     return PhotoShootTodayCountGetResponseModel(
-        photo_shoot_today_count=int(photo_shoot.shoot), photo_recover_today_count=int(photo_shoot.recover)
+        photo_shoot_today_count=int(photo_shoot.shoot_count), photo_recover_today_count=int(photo_shoot.recover_count)
     )

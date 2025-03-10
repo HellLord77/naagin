@@ -12,7 +12,7 @@ router = APIRouter(prefix="/shoot")
 async def post(database: DatabaseDependency, owner_id: OwnerIdDependency) -> PhotoShootShootPostResponseModel:
     photo_shoot = await database.get_one(PhotoShootSchema, owner_id)
 
-    photo_shoot.shoot = True
+    photo_shoot.shoot_count = 1
 
     await database.flush()
 

@@ -1,6 +1,6 @@
 from datetime import date
+from typing import Literal
 
-from sqlalchemy import Boolean
 from sqlalchemy import CheckConstraint
 from sqlalchemy import Date
 from sqlalchemy import ForeignKey
@@ -18,11 +18,13 @@ class PhotoShootSchema(SchemaBase):
     __tablename__ = "photo_shoot"
 
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey(OwnerSchema.owner_id), primary_key=True)
-    shoot: Mapped[bool] = mapped_column(Boolean, default=False)
-    recover: Mapped[bool] = mapped_column(Boolean, default=False)
-    last_today: Mapped[date] = mapped_column(Date, default=func.current_date())
+    shoot_count: Mapped[Literal[0, 1]] = mapped_column(Integer, default=0)
+    recover_count: Mapped[Literal[0, 1]] = mapped_column(Integer, default=0)
+    today: Mapped[date] = mapped_column(Date, default=func.current_date())
 
     __table_args__ = (
-        CheckConstraint(recover == False or shoot == True, "recover_or_shoot"),  # noqa: E712
-        # CheckConstraint(last_today <= updated_at, "checked_at_lte_updated_at"),
+        CheckConstraint(shoot_count.in_((0, 1)), "shoot_count_const"),
+        CheckConstraint(recover_count.in_((0, 1)), "recover_count_const"),
+        CheckConstraint(shoot_count >= recover_count, "shoot_count_gte_recover_count"),
+        # CheckConstraint(today <= updated_at, "today_lte_updated_at"),
     )

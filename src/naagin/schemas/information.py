@@ -35,6 +35,6 @@ class InformationSchema(SchemaBase):
         CheckConstraint(information_id >= 1, "information_id_min"),
         CheckConstraint(publish_at <= close_at, "publish_at_lte_close_at"),
         CheckConstraint(announce_at == None, "announce_at_const"),  # noqa: E711
-        CheckConstraint(prohibit_popup == False, "prohibit_popup_const"),  # noqa: E712
+        CheckConstraint(~prohibit_popup, "prohibit_popup_const"),
         CheckConstraint(priority == 1, "priority_const"),
     )
