@@ -12,7 +12,7 @@ class OnsenInfoModel(ModelBase):
     reward_stock_second: int
     reward_count: int
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None
 
 
 class OnsenSlotModel(ModelBase):
@@ -21,7 +21,7 @@ class OnsenSlotModel(ModelBase):
     girl_mid: int
     exp_updated_at: datetime
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None
 
 
 class OnsenQualityStashModel(ModelBase):
