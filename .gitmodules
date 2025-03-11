@@ -1,0 +1,4 @@
+[submodule "submodules/wrap_dll"]
+	path = submodules/wrap_dll
+	url = https://github.com/mavenlin/wrap_dll
+	ignore = dirty
