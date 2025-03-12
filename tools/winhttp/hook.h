@@ -30,7 +30,7 @@ FAKE(BOOL, WINAPI, WinHttpGetIEProxyConfigForCurrentUser, WINHTTP_CURRENT_USER_I
 #define LoadLibrary(lpLibFileName) \
     ([]() -> HMODULE { \
         CHAR lpBuffer[MAX_PATH]; \
-        if (!GetSystemDirectory(lpBuffer, MAX_PATH)) { \
+        if (!GetSystemDirectoryA(lpBuffer, MAX_PATH)) { \
             return NULL; \
         } \
         \
