@@ -18,6 +18,7 @@ import utils
 
 
 # girl_mid, girl
+# free_start
 # 2, Kasumi
 # 3, Honoka
 # 4, Marie
@@ -27,6 +28,7 @@ import utils
 # 8, Hitomi
 # 9, Momiji
 # 10, Helena
+# free_end
 # 11, Misaki
 # 12, Luna
 # 13, Tamaki

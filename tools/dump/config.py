@@ -4,7 +4,7 @@ from pathlib import Path
 EXAMPLES: bool = os.getenv("EXAMPLES", "false").lower() == "true"
 
 VERSION: int = int(os.getenv("VERSION", 10))
-APP_VERSION: int = int(os.getenv("APP_VERSION", 64800))
+APP_VERSION: int = int(os.getenv("APP_VERSION", 64900))
 
 DATA_DIR: Path = Path(os.getenv("DATA_DIR", Path.cwd() / "data"))
 
