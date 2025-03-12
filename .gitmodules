@@ -1,4 +1,4 @@
 [submodule "submodules/wrap_dll"]
 	path = submodules/wrap_dll
-	url = https://github.com/mavenlin/wrap_dll
+	url = https://github.com/HellLord77/wrap_dll/tree/fix-ordinal
 	ignore = dirty
