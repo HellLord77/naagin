@@ -1,4 +1,5 @@
-[submodule "submodules/wrap_dll"]
-	path = submodules/wrap_dll
-	url = https://github.com/HellLord77/wrap_dll/tree/fix-ordinal
+[submodule "wrap_dll"]
+	path = wrap_dll
+	url = https://github.com/HellLord77/wrap_dll.git
+	branch = fix-ordinal
 	ignore = dirty
