@@ -2,10 +2,8 @@
 
 #include "common.h"
 
-#define INTERNETOPENW
-FAKE(HINTERNET, WINAPI, InternetOpenW, LPCWSTR lpszAgent, DWORD dwAccessType, LPCWSTR lpszProxy, LPCWSTR lpszProxyBypass, DWORD dwFlags)
+#define INTERNETCRACKURLW
+FAKE(BOOL, WINAPI, InternetCrackUrlW, LPCWSTR lpszUrl, DWORD dwUrlLength, DWORD dwFlags, LPURL_COMPONENTSW lpUrlComponents)
 {
-    dwAccessType = INTERNET_OPEN_TYPE_PROXY;
-    lpszProxy = L"http://localhost:8080";
-    return InternetOpenW_real(lpszAgent, dwAccessType, lpszProxy, lpszProxyBypass, dwFlags);
+    return CrackUrl_fake(InternetCrackUrlW_real, lpszUrl, dwUrlLength, dwFlags, lpUrlComponents);
 }
