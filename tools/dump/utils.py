@@ -3,9 +3,13 @@ import gzip
 import hashlib
 import json
 import logging
+import subprocess
 import zlib
+from collections import deque
 from datetime import datetime
+from itertools import islice
 from pathlib import Path
+from typing import Iterable
 
 import datamodel_code_generator
 import frozendict
@@ -24,6 +28,13 @@ from mitmproxy.http import Message
 from mitmproxy.http import Request
 
 import config
+
+
+def consume(iterable: Iterable, n: int | None = None):
+    if n is None:
+        deque(iterable, maxlen=0)
+    else:
+        next(islice(iterable, n, n), None)
 
 
 def get_fernet(password: str) -> Fernet:
@@ -112,10 +123,6 @@ class CustomSchemaBuilder(SchemaBuilder):
     EXTRA_STRATEGIES = CustomDateTime, CustomDate, CustomTime
 
 
-class CustomBaseModel(BaseModel):
-    BASE_CLASS = "naagin.bases.ModelBase"
-
-
 def json_to_schema(dir: Path, json_dir: Path, schema_dir: Path):
     logging.info(f"[PATH] {dir}")
 
@@ -161,17 +168,19 @@ def schema_to_model(path: Path, schema_dir: Path, model_dir: Path):
     )
     parser = JsonSchemaParser(
         schema_data,
-        data_model_type=CustomBaseModel,
+        data_model_type=data_model_types.data_model,
         data_model_root_type=data_model_types.root_model,
         data_model_field_type=data_model_types.field_model,
         data_type_manager_type=data_model_types.data_type_manager,
         dump_resolve_reference_action=data_model_types.dump_resolve_reference_action,
+        base_class="naagin.bases.ModelBase",
         field_constraints=True,
         use_standard_collections=True,
         disable_appending_item_suffix=True,
         custom_class_name_generator=custom_class_name_generator,
         use_title_as_name=True,
         use_union_operator=True,
+        formatters=[],
     )
     parsed_data = parser.parse()
     parsed_lines = parsed_data.split("\n")
@@ -196,3 +205,7 @@ def schema_to_model(path: Path, schema_dir: Path, model_dir: Path):
 
     model_path.parent.mkdir(parents=True, exist_ok=True)
     model_path.write_text(model_data, "utf-8")
+
+
+def model_formatter(model_dir: Path):
+    subprocess.run(("ruff", "format", model_dir), check=True)

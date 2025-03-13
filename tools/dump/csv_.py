@@ -286,7 +286,7 @@ def to_model():
         )
     )
     with ThreadPoolExecutor() as executor:
-        executor.map(json_to_schema, json_dirs)
+        utils.consume(executor.map(json_to_schema, json_dirs))
 
     shutil.rmtree(get_model_dir(), True)
     schema_to_model = functools.partial(
@@ -294,4 +294,6 @@ def to_model():
     )
     schema_paths = filter(Path.is_file, get_schema_dir().rglob("*.schema.json"))
     with ProcessPoolExecutor() as executor:
-        executor.map(schema_to_model, schema_paths)
+        utils.consume(executor.map(schema_to_model, schema_paths))
+
+    utils.model_formatter(get_model_dir())
