@@ -90,38 +90,34 @@ class AddonDOAXVV:
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
 
-        else:
-            utils.write_flow(flow, self.session_key)
-
     def response(self, flow: HTTPFlow):
         if flow in self.loaded_flows:
             return
 
-        if (
-            flow.request.method == HTTPMethod.GET
-            and flow.request.pretty_host == consts.API_HOST
-            and flow.request.path_components[-3:] == ("v1", "session", "key")
-        ):
-            encrypt_key = flow.response.json()["encrypt_key"]
-            self.public_key = (
-                cryptography.hazmat.primitives.serialization.load_pem_public_key(
-                    encrypt_key.encode(),
+        if flow.request.pretty_host == consts.API_HOST:
+            if flow.request.method == HTTPMethod.GET and flow.request.path_components[
+                -3:
+            ] == ("v1", "session", "key"):
+                encrypt_key = flow.response.json()["encrypt_key"]
+                self.public_key = (
+                    cryptography.hazmat.primitives.serialization.load_pem_public_key(
+                        encrypt_key.encode(),
+                    )
                 )
-            )
-            proxy_public_key = self.proxy_private_key.public_key()
-            proxy_encrypt_key = proxy_public_key.public_bytes(
-                Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
-            ).decode()
+                proxy_public_key = self.proxy_private_key.public_key()
+                proxy_encrypt_key = proxy_public_key.public_bytes(
+                    Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
+                ).decode()
 
-            if encrypt_key == proxy_encrypt_key:
-                self.public_key = None
-                return
+                if encrypt_key == proxy_encrypt_key:
+                    self.public_key = None
+                    return
 
-            flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
-            logging.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
+                flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
+                logging.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
 
-        else:
-            utils.write_flow(flow, self.session_key)
+            else:
+                utils.write_flow(flow, self.session_key)
 
 
 addons = [AddonDOAXVV()]
