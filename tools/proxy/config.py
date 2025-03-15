@@ -7,3 +7,6 @@ DATA_DIR: Path = Path(os.getenv("DATA_DIR", Path.cwd() / "data"))
 
 WRITE_FILE: bool = os.getenv("WRITE_FILE", "false").lower() == "true"
 WRITE_CONSOLE: bool = os.getenv("WRITE_CONSOLE", "false").lower() == "true"
+
+REAPI: bool = not WRITE_FILE
+RENONCE: bool = False

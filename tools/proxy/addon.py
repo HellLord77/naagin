@@ -3,7 +3,10 @@ import json
 import logging
 import textwrap
 from http import HTTPMethod
+from typing import Awaitable
+from typing import Callable
 from typing import Optional
+from weakref import WeakSet
 
 import cryptography
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
@@ -11,6 +14,7 @@ from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
 from cryptography.hazmat.primitives.serialization import Encoding
 from cryptography.hazmat.primitives.serialization import PublicFormat
+from mitmproxy import ctx
 from mitmproxy.addonmanager import Loader
 from mitmproxy.http import HTTPFlow
 
@@ -25,22 +29,43 @@ class AddonDOAXVV:
 
     session_key: Optional[bytes] = None
 
+    master_load_flow: Callable[[HTTPFlow], Awaitable[None]]
+
+    loaded_flows: WeakSet[HTTPFlow] = WeakSet()
+
+    async def load_flow(self, flow: HTTPFlow):
+        self.loaded_flows.add(flow)
+        await self.master_load_flow(flow)
+
     def load(self, _: Loader):
         self.proxy_private_key = utils.load_private_key()
 
-    @staticmethod
-    def requestheaders(flow: HTTPFlow):
+        self.master_load_flow = ctx.master.load_flow
+        ctx.master.load_flow = self.load_flow
+
+    def done(self):
+        ctx.master.load_flow = self.master_load_flow
+        del self.master_load_flow
+
+    def requestheaders(self, flow: HTTPFlow):
+        if flow in self.loaded_flows:
+            return
+
         match flow.request.pretty_host:
             case consts.API_HOST:
-                if not config.WRITE_FILE:
+                if config.REAPI:
                     utils.redirect_request(flow.request, "api")
-                utils.renounce_request(flow.request)
+                if config.RENONCE:
+                    utils.renounce_request(flow.request)
             case consts.API01_HOST:
                 utils.redirect_request(flow.request, "api01")
             case consts.GAME_HOST:
                 utils.redirect_request(flow.request, "game")
 
     def request(self, flow: HTTPFlow):
+        if flow in self.loaded_flows:
+            return
+
         if (
             flow.request.method == HTTPMethod.PUT
             and flow.request.pretty_host == consts.API_HOST
@@ -60,9 +85,12 @@ class AddonDOAXVV:
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
         else:
-            utils.print_json(flow, self.session_key)
+            utils.write_flow(flow, self.session_key)
 
     def response(self, flow: HTTPFlow):
+        if flow in self.loaded_flows:
+            return
+
         if (
             flow.request.method == HTTPMethod.GET
             and flow.request.pretty_host == consts.API_HOST
@@ -81,7 +109,7 @@ class AddonDOAXVV:
             flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
         else:
-            utils.print_json(flow, self.session_key)
+            utils.write_flow(flow, self.session_key)
 
 
 addons = [AddonDOAXVV()]
