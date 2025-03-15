@@ -272,8 +272,7 @@ def to_model():
     base_path = get_csv_dir() / str(config.VERSION)
     for csv_file in get_header_names():
         csv_path = base_path / csv_file
-        if csv_path.is_file():
-            csv_to_json(csv_path)
+        csv_to_json(csv_path)
 
     shutil.rmtree(get_schema_dir(), True)
     json_to_schema = functools.partial(
@@ -282,7 +281,7 @@ def to_model():
     json_dirs = set(
         map(
             operator.attrgetter("parent"),
-            filter(Path.is_file, get_json_dir().rglob("*.json")),
+            get_json_dir().rglob("*.json"),
         )
     )
     with ThreadPoolExecutor() as executor:
@@ -292,7 +291,7 @@ def to_model():
     schema_to_model = functools.partial(
         utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir()
     )
-    schema_paths = filter(Path.is_file, get_schema_dir().rglob("*.schema.json"))
+    schema_paths = get_schema_dir().rglob("*.schema.json")
     with ProcessPoolExecutor() as executor:
         utils.consume(executor.map(schema_to_model, schema_paths))
 
