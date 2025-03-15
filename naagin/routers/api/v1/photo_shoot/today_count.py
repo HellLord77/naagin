@@ -20,7 +20,7 @@ async def get(database: DatabaseDependency, owner_id: OwnerIdDependency) -> Phot
         await database.flush()
     else:
         today = photo_shoot.today
-        photo_shoot.today = func.current_datetime()
+        photo_shoot.today = func.current_date()
 
         await database.flush()
         await database.refresh(photo_shoot)
