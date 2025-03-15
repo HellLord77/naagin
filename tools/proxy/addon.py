@@ -25,8 +25,8 @@ import utils
 
 class AddonDOAXVV:
     proxy_private_key: RSAPrivateKey
-    public_key: RSAPublicKey
 
+    public_key: Optional[RSAPublicKey] = None
     session_key: Optional[bytes] = None
 
     master_load_flow: Callable[[HTTPFlow], Awaitable[None]]
@@ -57,8 +57,10 @@ class AddonDOAXVV:
                     utils.redirect_request(flow.request, "api")
                 if config.RENONCE:
                     utils.renounce_request(flow.request)
+
             case consts.API01_HOST:
                 utils.redirect_request(flow.request, "api01")
+
             case consts.GAME_HOST:
                 utils.redirect_request(flow.request, "game")
 
@@ -72,18 +74,22 @@ class AddonDOAXVV:
             and flow.request.path_components[-3:] == ("v1", "session", "key")
         ):
             encrypt_key = flow.request.json()["encrypt_key"]
-            session_key = self.proxy_private_key.decrypt(
+            self.session_key = self.proxy_private_key.decrypt(
                 base64.b64decode(encrypt_key),
                 PKCS1v15(),
             )
-            self.session_key = session_key
+
+            if self.public_key is None:
+                return
+
             proxy_session_key = self.public_key.encrypt(
-                session_key,
+                self.session_key,
                 PKCS1v15(),
             )
             proxy_encrypt_key = f"{"\r\n".join( textwrap.wrap(base64.b64encode(proxy_session_key).decode(),64))}\r\n"
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
+
         else:
             utils.write_flow(flow, self.session_key)
 
@@ -106,8 +112,14 @@ class AddonDOAXVV:
             proxy_encrypt_key = proxy_public_key.public_bytes(
                 Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
             ).decode()
+
+            if encrypt_key == proxy_encrypt_key:
+                self.public_key = None
+                return
+
             flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
+
         else:
             utils.write_flow(flow, self.session_key)
 
