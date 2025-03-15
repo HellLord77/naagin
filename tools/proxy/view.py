@@ -32,7 +32,7 @@ class ViewDOAXVVV(View):
             http_message=http_message,
             **unknown_metadata,
         ):
-            decrypted_data = utils.decrypt_message(flow.id, http_message)
+            decrypted_data = utils.decrypt_message(flow.comment, http_message)
             try:
                 decoded_data = decrypted_data.decode()
             except UnicodeDecodeError:

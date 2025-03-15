@@ -1,6 +1,5 @@
 import base64
 import gzip
-import hashlib
 import logging
 import secrets
 import zlib
@@ -9,7 +8,6 @@ from typing import Optional
 
 import cryptography
 import rich
-from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
@@ -24,10 +22,6 @@ from mitmproxy.http import Request
 
 import config
 import consts
-
-
-def get_fernet(password: str) -> Fernet:
-    return Fernet(base64.urlsafe_b64encode(hashlib.sha256(password.encode()).digest()))
 
 
 def dump_private_key(private_key: RSAPrivateKey):
@@ -56,14 +50,6 @@ def load_private_key() -> RSAPrivateKey:
             None,
         )
     return private_key
-
-
-def encrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:
-    encryptor = Cipher(algorithm, CBC(initialization_vector)).encryptor()
-    padder = PKCS7(AES.block_size).padder()
-    padded_data = padder.update(data) + padder.finalize()
-    encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
-    return encrypted_data
 
 
 def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:
@@ -105,7 +91,7 @@ def is_valid_message(request: Request, message: Message) -> bool:
 
 def decrypt_message(key: str, message: Message) -> bytes:
     decrypted_data = decrypt_data(
-        AES(get_fernet(key).decrypt(message.headers["Proxy-X-DOAXVV-Encrypted"])),
+        AES(base64.b64decode(key)),
         message.content,
         base64.b64decode(message.headers["X-DOAXVV-Encrypted"]),
     )
@@ -124,20 +110,15 @@ def decrypt_file(key: str, path: Path) -> bytes:
 
 
 def write_flow(flow: HTTPFlow, session_key: Optional[bytes] = None):
-    message = flow.request if flow.response is None else flow.response
-    if is_valid_message(flow.request, message):
-        if (
-            session_key is not None
-            and "Proxy-X-DOAXVV-Encrypted" not in message.headers
-        ):
-            message.headers["Proxy-X-DOAXVV-Encrypted"] = (
-                get_fernet(flow.id).encrypt(session_key).decode()
-            )
+    if session_key is not None:
+        flow.comment = base64.b64encode(session_key).decode()
 
-        if config.WRITE_FILE and flow.response is not None:
+        if config.WRITE_FILE:
             consts.FLOW_WRITER.add(flow)
 
         if config.WRITE_CONSOLE:
-            body = decrypt_message(flow.id, message)
-            print(f"[{type(message).__name__.lower()}] {flow.request.path}")
-            rich.print_json(body.decode())
+            for message in (flow.request, flow.response):
+                if is_valid_message(flow.request, message):
+                    body = decrypt_message(flow.comment, message)
+                    print(f"[{type(message).__name__.lower()}] {flow.request.path}")
+                    rich.print_json(body.decode())
