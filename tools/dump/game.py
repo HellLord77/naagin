@@ -22,8 +22,7 @@ def to_tmp():
     temp_dir = config.DATA_DIR / "temp"
     client = Client(base_url=URL(scheme="https", host="game.doaxvv.com"))
 
-    for path in game_dir.rglob("*[!.temp]"):
-        path: Path
+    for path in game_dir.rglob("*"):
         if path.is_file():
             logging.warning("[GAME] %s", path)
 

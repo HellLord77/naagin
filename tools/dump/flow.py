@@ -130,8 +130,7 @@ def rmtree_empty(path: Path):
 def to_model():
     shutil.rmtree(get_json_dir(), True)
     for flows_path in (config.DATA_DIR / "flows").glob("*.flows"):
-        if flows_path.is_file():
-            flows_to_json(flows_path)
+        flows_to_json(flows_path)
 
     VARIABLE_PATHS.sort(reverse=True)
     for variable_path in VARIABLE_PATHS:
@@ -145,7 +144,7 @@ def to_model():
     json_dirs = set(
         map(
             operator.attrgetter("parent"),
-            filter(Path.is_file, get_json_dir().rglob("*.json")),
+            get_json_dir().rglob("*.json"),
         )
     )
     with ThreadPoolExecutor() as executor:
@@ -155,7 +154,7 @@ def to_model():
     schema_to_model = functools.partial(
         utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir()
     )
-    schema_paths = filter(Path.is_file, get_schema_dir().rglob("*.schema.json"))
+    schema_paths = get_schema_dir().rglob("*.schema.json")
     with ProcessPoolExecutor() as executor:
         utils.consume(executor.map(schema_to_model, schema_paths))
 
@@ -164,12 +163,10 @@ def to_model():
     base_path = get_model_dir()
     path_paths = set()
     for model_path in base_path.rglob("*.py"):
-        model_path: Path
-        if model_path.is_file():
-            path_path = model_path.relative_to(base_path).parent.parent
-            for part in path_path.parts:
-                if part.isdigit():
-                    path_paths.add(path_path)
-                    break
+        path_path = model_path.relative_to(base_path).parent.parent
+        for part in path_path.parts:
+            if part.isdigit():
+                path_paths.add(path_path)
+                break
     for path_path in sorted(path_paths):
         logging.error(path_path.as_posix())
