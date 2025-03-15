@@ -1,6 +1,5 @@
 import base64
 import gzip
-import hashlib
 import json
 import logging
 import subprocess
@@ -9,11 +8,11 @@ from collections import deque
 from datetime import datetime
 from itertools import islice
 from pathlib import Path
+from typing import Generator
 from typing import Iterable
 
 import datamodel_code_generator
 import frozendict
-from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.ciphers import Cipher
 from cryptography.hazmat.primitives.ciphers.algorithms import AES
 from cryptography.hazmat.primitives.ciphers.modes import CBC
@@ -24,6 +23,7 @@ from datamodel_code_generator.model.pydantic import BaseModel
 from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
 from genson import SchemaBuilder
 from genson import TypedSchemaStrategy
+from mitmproxy.http import HTTPFlow
 from mitmproxy.http import Message
 from mitmproxy.http import Request
 
@@ -35,10 +35,6 @@ def consume(iterable: Iterable, n: int | None = None):
         deque(iterable, maxlen=0)
     else:
         next(islice(iterable, n, n), None)
-
-
-def get_fernet(password: str) -> Fernet:
-    return Fernet(base64.urlsafe_b64encode(hashlib.sha256(password.encode()).digest()))
 
 
 def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:
@@ -57,9 +53,15 @@ def is_valid_message(request: Request, message: Message) -> bool:
     )
 
 
+def iter_messages(flow: HTTPFlow) -> Generator[Message]:
+    for message in (flow.request, flow.response):
+        if is_valid_message(flow.request, message):
+            yield message
+
+
 def decrypt_message(key: str, message: Message) -> bytes:
     decrypted_data = decrypt_data(
-        AES(get_fernet(key).decrypt(message.headers["Proxy-X-DOAXVV-Encrypted"])),
+        AES(base64.b64decode(key)),
         message.content,
         base64.b64decode(message.headers["X-DOAXVV-Encrypted"]),
     )
