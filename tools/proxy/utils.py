@@ -123,7 +123,7 @@ def decrypt_file(key: str, path: Path) -> bytes:
     return uncompressed_data
 
 
-def print_json(flow: HTTPFlow, session_key: Optional[bytes] = None):
+def write_flow(flow: HTTPFlow, session_key: Optional[bytes] = None):
     message = flow.request if flow.response is None else flow.response
     if is_valid_message(flow.request, message):
         if (
