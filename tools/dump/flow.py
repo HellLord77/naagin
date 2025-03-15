@@ -7,10 +7,8 @@ from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from string import Formatter
-from typing import Generator
 
 from mitmproxy.http import HTTPFlow
-from mitmproxy.http import Message
 from mitmproxy.io import FlowReader
 
 import config
@@ -65,12 +63,6 @@ def get_model_dir() -> Path:
     return config.DATA_DIR / "model" / "api"
 
 
-def iter_messages(flow: HTTPFlow) -> Generator[Message]:
-    for message in (flow.request, flow.response):
-        if utils.is_valid_message(flow.request, message):
-            yield message
-
-
 def flows_to_json(path: Path):
     logging.info(f"[FLOWS] {path}")
 
@@ -80,8 +72,8 @@ def flows_to_json(path: Path):
             flow: HTTPFlow
             logging.debug(f"[FLOW] {flow.id}")
 
-            for message in iter_messages(flow):
-                json_data = utils.decrypt_message(flow.id, message)
+            for message in utils.iter_messages(flow):
+                json_data = utils.decrypt_message(flow.comment, message)
 
                 relative_path = flow.request.path.removeprefix("/")
                 path_method = flow.request.method.lower()
