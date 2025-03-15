@@ -1,9 +1,8 @@
 import base64
-import gzip
 import logging
 import secrets
 import zlib
-from pathlib import Path
+from typing import Generator
 from typing import Optional
 
 import cryptography
@@ -89,6 +88,12 @@ def is_valid_message(request: Request, message: Message) -> bool:
     )
 
 
+def iter_messages(flow: HTTPFlow) -> Generator[Message]:
+    for message in (flow.request, flow.response):
+        if is_valid_message(flow.request, message):
+            yield message
+
+
 def decrypt_message(key: str, message: Message) -> bytes:
     decrypted_data = decrypt_data(
         AES(base64.b64decode(key)),
@@ -96,16 +101,6 @@ def decrypt_message(key: str, message: Message) -> bytes:
         base64.b64decode(message.headers["X-DOAXVV-Encrypted"]),
     )
     uncompressed_data = zlib.decompress(decrypted_data)
-    return uncompressed_data
-
-
-def decrypt_file(key: str, path: Path) -> bytes:
-    decrypted_data = decrypt_data(
-        AES(key.encode()),
-        path.read_bytes(),
-        bytes.fromhex(path.name),
-    )
-    uncompressed_data = gzip.decompress(decrypted_data)
     return uncompressed_data
 
 
@@ -117,8 +112,7 @@ def write_flow(flow: HTTPFlow, session_key: Optional[bytes] = None):
             consts.FLOW_WRITER.add(flow)
 
         if config.WRITE_CONSOLE:
-            for message in (flow.request, flow.response):
-                if is_valid_message(flow.request, message):
-                    body = decrypt_message(flow.comment, message)
-                    print(f"[{type(message).__name__.lower()}] {flow.request.path}")
-                    rich.print_json(body.decode())
+            for message in iter_messages(flow):
+                body = decrypt_message(flow.comment, message)
+                print(f"[{type(message).__name__.lower()}] {flow.request.path}")
+                rich.print_json(body.decode())
