@@ -10,7 +10,6 @@ from naagin.bases import SettingsBase
 class GameSettings(SettingsBase):
     list_dir: bool = False
     offline_mode: bool = False
-    no_proxy: bool = True
 
     base_url: AnyHttpUrl = "https://game.doaxvv.com"
 
@@ -18,4 +17,4 @@ class GameSettings(SettingsBase):
 
     @cached_property
     def client(self) -> AsyncClient:
-        return AsyncClient(base_url=str(self.base_url), trust_env=not self.no_proxy)
+        return AsyncClient(base_url=str(self.base_url))
