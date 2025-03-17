@@ -11,4 +11,6 @@ class LoggingSettings(SettingsBase):
     model: bool = False
     model_dup_len: PositiveInt = 3
 
+    route: bool = False
+
     model_config = SettingsConfigDict(env_prefix="log_")
