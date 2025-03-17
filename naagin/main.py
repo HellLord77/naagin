@@ -10,6 +10,7 @@ from inspect import getsourcelines
 from json import JSONDecodeError
 from logging import Formatter
 from logging import getLogger
+from sys import modules
 from time import perf_counter
 
 from aiopath import AsyncPath
@@ -108,6 +109,18 @@ def log_model() -> None:
             loggers.model.warning(message)
 
 
+def log_route() -> None:
+    router_names = tuple(name for name in modules if name.startswith(routers.__name__))
+
+    for router_name in router_names:
+        if any(router_name_.startswith(router_name) for router_name_ in router_names if router_name != router_name_):
+            continue
+
+        router = modules[router_name]
+        if AsyncPath(router.__file__).name == "__init__.py":
+            loggers.route.warning("Unnecessary module found: [bold]%s[/bold]", router_name)
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     setup_logging()
@@ -123,6 +136,9 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
     if settings.logging.model:
         log_model()
+
+    if settings.logging.route:
+        log_route()
 
     loggers.api.debug("Routes count: %d", len(routers.api.router.routes))
     loggers.api01.debug("Routes count: %d", len(routers.api01.router.routes))

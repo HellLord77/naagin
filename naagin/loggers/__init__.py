@@ -8,4 +8,5 @@ game = app.getChild("game")
 
 setting = app.getChild("setting")
 model = app.getChild("model")
+route = app.getChild("route")
 schema = app.getChild("schema")
