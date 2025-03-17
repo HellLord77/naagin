@@ -7,9 +7,12 @@ from http import HTTPStatus
 from importlib.util import find_spec
 from inspect import getfile
 from inspect import getsourcelines
+from itertools import islice
 from json import JSONDecodeError
+from logging import DEBUG
 from logging import Formatter
 from logging import getLogger
+from pathlib import Path  # noqa: TID251
 from sys import modules
 from time import perf_counter
 
@@ -110,15 +113,16 @@ def log_model() -> None:
 
 
 def log_route() -> None:
-    router_names = tuple(name for name in modules if name.startswith(routers.__name__))
+    router_names = [name for name in modules if name.startswith(routers.__name__)]
+    router_names.sort()
 
-    for router_name in router_names:
-        if any(router_name_.startswith(router_name) for router_name_ in router_names if router_name != router_name_):
+    for index, router_name in enumerate(router_names, 1):
+        if any(name.startswith(router_name) for name in islice(router_names, index, None)):
             continue
 
         router = modules[router_name]
         if AsyncPath(router.__file__).name == "__init__.py":
-            loggers.route.warning("Unnecessary module found: [bold]%s[/bold]", router_name)
+            loggers.route.warning("Unnecessary module [bold]%s[/bold] found", router_name)
 
 
 @asynccontextmanager
@@ -142,6 +146,10 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
     loggers.api.debug("Routes count: %d", len(routers.api.router.routes))
     loggers.api01.debug("Routes count: %d", len(routers.api01.router.routes))
+    if loggers.game.isEnabledFor(DEBUG):
+        loggers.game.debug(
+            "Routes count: %d", sum(1 for path in Path(settings.data.game_dir).rglob("*") if path.is_file())
+        )
 
     hooks.attach()
 
