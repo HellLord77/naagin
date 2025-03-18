@@ -36,14 +36,14 @@ async def not_found_handler(path: PathLike, scope: Scope) -> Response:
 
     async with AsyncFileLock(lock_path):
         if not await full_path.is_file():
-            loggers.game.info("GET: %s", url)
+            loggers.game.info("Download: %s", url)
             try:
                 response = await settings.game.client.get(url)
                 response.raise_for_status()
             except HTTPStatusError as exception:
                 if exception.response.status_code == HTTPStatus.NOT_FOUND:
                     loggers.game.warning("Not Found: %s", url)
-                    if full_path.name != "index.html" and scope["path"].endswith("/"):
+                    if full_path.name != "index.html":
                         return await not_found_handler(full_path / "index.html", scope)
                     return not_found_response()
 
