@@ -17,5 +17,6 @@ class CustomStaticFiles(StaticFiles):
         except HTTPException as exception:
             if exception.status_code == HTTPStatus.NOT_FOUND:
                 response = PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
-                await response(scope, receive, send)
+                return await response(scope, receive, send)
+
             raise
