@@ -1,22 +1,36 @@
+from collections.abc import Awaitable
+from collections.abc import Callable
 from http import HTTPStatus
 from typing import override
 
 from starlette.exceptions import HTTPException  # noqa: TID251
-from starlette.responses import PlainTextResponse
+from starlette.responses import Response  # noqa: TID251
+from starlette.staticfiles import PathLike
+from starlette.staticfiles import StaticFiles
 from starlette.types import Receive
 from starlette.types import Scope
 from starlette.types import Send
-from static_files_asgi import StaticFiles
 
 
 class CustomStaticFiles(StaticFiles):
+    @override
+    def __init__(
+        self,
+        *args,  # noqa: ANN002
+        not_found_handler: Callable[[PathLike, Scope], Awaitable[Response]],
+        **kwargs,  # noqa: ANN003
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.not_found_handler = not_found_handler
+
     @override
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         try:
             await super().__call__(scope, receive, send)
         except HTTPException as exception:
             if exception.status_code == HTTPStatus.NOT_FOUND:
-                response = PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
-                return await response(scope, receive, send)
-
-            raise
+                path = self.get_path(scope)
+                response = await self.not_found_handler(path, scope)
+                await response(scope, receive, send)
+            else:
+                raise

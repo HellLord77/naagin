@@ -30,8 +30,7 @@ def to_tmp():
 
             response = client.head(relative_path.as_posix())
             response.raise_for_status()
-            etag = response.headers["ETag"][1:-1]
-            hash_, _ = etag.split(":")
+            hash_ = response.headers["ETag"][1:33]
 
             if hash_ != get_md5(path):
                 logging.error(path)
