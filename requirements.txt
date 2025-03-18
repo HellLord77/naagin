@@ -28,7 +28,6 @@ starlette
 orjson
 fastapi[standard]
 # !httptools
-git+https://github.com/HellLord77/static-files-asgi.git@1.3.0
 
 # dump
 frozendict
