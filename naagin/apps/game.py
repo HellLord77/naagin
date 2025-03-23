@@ -1,6 +1,7 @@
 from base64 import b64encode
 from hashlib import md5
 from http import HTTPStatus
+from re import compile
 
 from aiopath import AsyncPath
 from filelock import AsyncFileLock
@@ -17,6 +18,8 @@ from naagin import loggers
 from naagin import settings
 from naagin.classes import StaticFiles
 from naagin.exceptions import InternalServerErrorException
+
+etag_pattern = compile(r'"(?P<md5>[\da-f]{32}):(?P<mtime>\d{10}\.\d{6})"')
 
 
 def not_found_response() -> PlainTextResponse:
@@ -53,12 +56,13 @@ async def not_found_handler(path: PathLike, scope: Scope) -> Response:
 
                 raise
             else:
-                etag = response.headers.get("ETag", "").strip('"')
-                if etag:
-                    hash_ = etag.split(":", 1)[0]
-                    md5_ = md5(response.content).hexdigest()  # noqa: S324
-                    if hash_ != md5_:
-                        raise InternalServerErrorException
+                etag = response.headers.get("ETag", "")
+                match = etag_pattern.fullmatch(etag)
+                if match is None:
+                    raise InternalServerErrorException
+                md5_ = md5(response.content).hexdigest()  # noqa: S324
+                if md5_ != match.group("md5"):
+                    raise InternalServerErrorException
 
                 await full_path.parent.mkdir(parents=True, exist_ok=True)
                 temp_path = (settings.data.temp_dir / name).with_suffix(".temp")
