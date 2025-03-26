@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Any
 
 from pydantic import field_validator
 
@@ -33,8 +32,5 @@ class OwnerOtherModel(ModelBase):
 
     @field_validator("birthday", mode="before")
     @classmethod
-    def birthday_validator(
-        cls,
-        _: Any,  # noqa: ANN401
-    ) -> None:
+    def birthday_validator[T](cls, _: T) -> None:
         pass

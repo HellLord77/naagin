@@ -19,7 +19,7 @@ from naagin import settings
 from naagin.classes import StaticFiles
 from naagin.exceptions import InternalServerErrorException
 
-etag_pattern = compile(r'"(?P<md5>[\da-f]{32}):(?P<mtime>\d+\.\d+)"')
+etag_pattern = compile(r'^"(?P<md5>[\da-f]{32}):(?P<mtime>\d+\.\d+)"$')
 
 
 def not_found_response() -> PlainTextResponse:
@@ -39,7 +39,7 @@ async def not_found_handler(path: PathLike, scope: Scope) -> Response:
 
     async with AsyncFileLock(lock_path):
         if not await full_path.is_file():
-            loggers.game.info("Download: %s", url)
+            loggers.game.info("GET: %s", url)
             try:
                 response = await settings.game.client.get(url)
                 response.raise_for_status()
@@ -57,7 +57,7 @@ async def not_found_handler(path: PathLike, scope: Scope) -> Response:
                 raise
             else:
                 etag = response.headers.get("ETag", "")
-                match = etag_pattern.fullmatch(etag)
+                match = etag_pattern.match(etag)
                 if match is None:
                     loggers.game.warning("Unknown [bold]ETag[/bold] string: %s", etag)
                     raise InternalServerErrorException
