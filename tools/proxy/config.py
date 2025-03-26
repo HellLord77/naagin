@@ -9,4 +9,5 @@ WRITE_FILE: bool = os.getenv("WRITE_FILE", "false").lower() == "true"
 WRITE_CONSOLE: bool = os.getenv("WRITE_CONSOLE", "false").lower() == "true"
 
 REAPI: bool = not WRITE_FILE
+REAPI01: bool = not WRITE_FILE
 RENONCE: bool = False
