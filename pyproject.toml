@@ -1,7 +1,55 @@
 [project]
 name = "naagin"
-dynamic = ["version"]
-requires-python = "~=3.13.0"
+version = "0.2.6"
+description = "A server implementation for a certain swimsuit gacha game."
+requires-python = ">=3.13"
+dependencies = [
+  "asyncstdlib",
+  "async-lru",
+  "aiopath",
+  "filelock",
+  "cryptography",
+  "rich",
+  "pydantic",
+  "pydantic-settings",
+  "sqlparse",
+  "asyncpg",
+  "sqlalchemy",
+  "httpx",
+  "starlette",
+  "orjson",
+  "fastapi[standard]",
+]
+
+[project.optional-dependencies]
+dump = [
+  "frozendict",
+  "genson",
+  "datamodel-code-generator",
+]
+proxy = [
+  "mitmproxy==11.1.0",
+]
+
+[dependency-groups]
+dev = [
+  "mypy",
+  "ruff",
+]
+stubs = [
+  "types-pyyaml",
+  "types-pygments",
+  "types-greenlet",
+  "types-pyasn1",
+  "types-pywin32",
+  "types-ujson",
+]
+
+[tool.uv]
+package = false
+override-dependencies = [
+  "httptools ; sys_platform == 'never'",
+]
 
 [tool.mypy]
 cache_dir = "$MYPY_CONFIG_FILE_DIR/.cache/mypy"
@@ -9,12 +57,15 @@ mypy_path = "$MYPY_CONFIG_FILE_DIR/naagin"
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["aiopath", "sqlparse"]
+module = [
+  "aiopath",
+  "sqlparse",
+]
 follow_untyped_imports = true
 
 [tool.ruff]
-cache-dir = ".cache/ruff"
 src = ["naagin"]
+cache-dir = ".cache/ruff"
 line-length = 120
 
 [tool.ruff.lint]
@@ -23,25 +74,25 @@ explicit-preview-rules = true
 select = ["ALL"]
 extend-select = ["PLC0415"]
 ignore = [
-    "A",       # flake8-builtins     *
-    "D1",      # pydocstyle          undocumented-*
-    "COM812",  # flake8-commas       missing-trailing-comma
-    "D203",    # pydocstyle          incorrect-blank-line-before-class
-    "D212",    # pydocstyle          multi-line-summary-first-line
-    "E501",    # pycodestyle         line-too-long
-    "ERA001",  # eradicate           commented-out-code
-    "PLC0414", # Convention          useless-import-alias
+  "A",       # flake8-builtins     *
+  "D1",      # pydocstyle          undocumented-*
+  "COM812",  # flake8-commas       missing-trailing-comma
+  "D203",    # pydocstyle          incorrect-blank-line-before-class
+  "D212",    # pydocstyle          multi-line-summary-first-line
+  "E501",    # pycodestyle         line-too-long
+  "ERA001",  # eradicate           commented-out-code
+  "PLC0414", # Convention          useless-import-alias
 ]
 extend-safe-fixes = [
-    "F401",    # Pyflakes            unused-import
+  "F401", # Pyflakes            unused-import
 ]
 extend-unsafe-fixes = [
-    "RET505",  # flake8-return       superfluous-else-return
+  "RET505", # flake8-return       superfluous-else-return
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "naagin/middlewares/**.py" = [
-    "TID251",  # flake8-tidy-imports banned-api
+  "TID251", # flake8-tidy-imports banned-api
 ]
 
 [tool.ruff.lint.isort]
