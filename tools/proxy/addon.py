@@ -59,7 +59,8 @@ class AddonDOAXVV:
                     utils.renounce_request(flow.request)
 
             case consts.API01_HOST:
-                utils.redirect_request(flow.request, "api01")
+                if config.REAPI01:
+                    utils.redirect_request(flow.request, "api01")
 
             case consts.GAME_HOST:
                 utils.redirect_request(flow.request, "game")
