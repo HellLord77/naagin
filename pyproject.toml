@@ -23,16 +23,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "mypy",
   "ruff",
-]
-stubs = [
-  "types-pyyaml",
-  "types-pygments",
-  "types-greenlet",
-  "types-pyasn1",
-  "types-pywin32",
-  "types-ujson",
 ]
 dump = [
   "frozendict",
@@ -47,24 +38,11 @@ proxy = [
 package = false
 default-groups = "all"
 override-dependencies = [
-  "httptools ; sys_platform == 'never'",
+  "httptools; sys_platform == 'never'",
 ]
-
-[tool.mypy]
-cache_dir = "$MYPY_CONFIG_FILE_DIR/.cache/mypy"
-mypy_path = "$MYPY_CONFIG_FILE_DIR/naagin"
-plugins = ["pydantic.mypy"]
-
-[[tool.mypy.overrides]]
-module = [
-  "aiopath",
-  "sqlparse",
-]
-follow_untyped_imports = true
 
 [tool.ruff]
 src = ["naagin"]
-cache-dir = ".cache/ruff"
 line-length = 120
 
 [tool.ruff.lint]
