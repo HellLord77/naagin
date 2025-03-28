@@ -111,14 +111,6 @@ def aggregate_json(path: str):
             json_path.rename(dst_path)
 
 
-def rmtree_empty(path: Path):
-    for child in path.iterdir():
-        if child.is_dir():
-            rmtree_empty(child)
-    if not any(path.iterdir()):
-        path.rmdir()
-
-
 def to_model():
     shutil.rmtree(get_json_dir(), True)
     for flows_path in (config.DATA_DIR / "flows").glob("*.flows"):
@@ -127,7 +119,7 @@ def to_model():
     VARIABLE_PATHS.sort(reverse=True)
     for variable_path in VARIABLE_PATHS:
         aggregate_json(variable_path)
-    rmtree_empty(get_json_dir())
+    utils.rmtree_empty(get_json_dir())
 
     shutil.rmtree(get_schema_dir(), True)
     json_to_schema = functools.partial(

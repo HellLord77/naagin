@@ -37,6 +37,14 @@ def consume(iterable: Iterable, n: int | None = None):
         next(islice(iterable, n, n), None)
 
 
+def rmtree_empty(path: Path):
+    for child in path.iterdir():
+        if child.is_dir():
+            rmtree_empty(child)
+    if not any(path.iterdir()):
+        path.rmdir()
+
+
 def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:
     decryptor = Cipher(algorithm, CBC(initialization_vector)).decryptor()
     unpadder = PKCS7(AES.block_size).unpadder()
