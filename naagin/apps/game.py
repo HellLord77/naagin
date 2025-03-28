@@ -19,7 +19,7 @@ from naagin import settings
 from naagin.classes import StaticFiles
 from naagin.exceptions import InternalServerErrorException
 
-etag_pattern = compile(r'^"(?P<md5>[\da-f]{32}):(?P<mtime>\d+\.\d+)"$')
+etag_pattern = compile(r'^"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+\.\d+)"$')
 
 
 def not_found_response() -> PlainTextResponse:
@@ -34,8 +34,8 @@ async def not_found_handler(path: PathLike, scope: Scope) -> Response:
         return not_found_response()
 
     url = relative_path.as_posix()
-    name = b64encode(url.encode()).decode()
-    lock_path = (settings.data.temp_dir / name).with_suffix(".lock")
+    encoded_path = settings.data.temp_dir / b64encode(url.encode()).decode()
+    lock_path = encoded_path.with_suffix(".lock")
 
     async with AsyncFileLock(lock_path):
         if not await full_path.is_file():
@@ -67,7 +67,7 @@ async def not_found_handler(path: PathLike, scope: Scope) -> Response:
                     raise InternalServerErrorException
 
                 await full_path.parent.mkdir(parents=True, exist_ok=True)
-                temp_path = (settings.data.temp_dir / name).with_suffix(".temp")
+                temp_path = encoded_path.with_suffix(".temp")
 
                 await temp_path.write_bytes(response.content)
                 await temp_path.rename(full_path)
