@@ -10,3 +10,6 @@ class RecommendedRankEnum(IntEnum):
     A = 7
     S = 8
     SS = 11
+    SS_PLUS = 12
+    SSS = 14
+    SSS_PLUS = 15
