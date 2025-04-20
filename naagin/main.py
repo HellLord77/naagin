@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 from http import HTTPStatus
 from importlib.util import find_spec
+from inspect import get_annotations
 from inspect import getfile
 from inspect import getsourcelines
 from itertools import islice
@@ -84,11 +85,12 @@ def format_model_log(model: type[ModelBase]) -> str:
 
 
 def log_model() -> None:
-    optional_datetime = datetime | None
+    annotation_map = {"created_at": datetime, "updated_at": datetime | None}
     for model in ModelBase.__subclasses__():
-        for name, type_ in model.__annotations__.items():
-            if name == "updated_at" and type_ != optional_datetime:
-                message = "Wrong model field [bold]updated_at[bold] annotation:"
+        annotations = get_annotations(model)
+        for field, annotation in annotation_map.items():
+            if annotations.get(field, annotation) != annotation:
+                message = f"Wrong model field [bold]{field}[/bold] annotation:"
                 message += format_model_log(model)
                 loggers.model.error(message)
 
@@ -100,7 +102,7 @@ def log_model() -> None:
             message += format_model_log(model)
             loggers.model.warning(message)
 
-        annotations = frozenset(model.__annotations__.items())
+        annotations = frozenset(get_annotations(model).items())
         if len(annotations) >= settings.logging.model_dup_len:
             model_map[annotations].append(model)
 
