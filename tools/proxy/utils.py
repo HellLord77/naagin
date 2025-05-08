@@ -60,7 +60,6 @@ def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
 
 
 def redirect_request(request: Request, path: str):
-    logging.debug("[%s] %s %s", request.method, path, request.path)
     pretty_host = request.pretty_host
 
     pretty_url = request.pretty_url
@@ -77,7 +76,7 @@ def renounce_request(request: Request):
     nonce = request.headers["X-DOAXVV-Nonce"]
     proxy_nonce = secrets.token_hex(4)
     request.headers["X-DOAXVV-Nonce"] = proxy_nonce
-    logging.debug("[nonce] %s -> %s", nonce, proxy_nonce)
+    logging.info("[nonce] %s -> %s", nonce, proxy_nonce)
 
 
 def is_valid_message(request: Request, message: Message) -> bool:

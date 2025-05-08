@@ -55,15 +55,22 @@ class AddonDOAXVV:
             case consts.API_HOST:
                 if config.REAPI:
                     utils.redirect_request(flow.request, "api")
+                else:
+                    logging.info("[%s] %s", flow.request.method, flow.request.pretty_url)
                 if config.RENONCE:
                     utils.renounce_request(flow.request)
 
             case consts.API01_HOST:
                 if config.REAPI01:
                     utils.redirect_request(flow.request, "api01")
+                else:
+                    logging.info("[%s] %s", flow.request.method, flow.request.pretty_url)
 
             case consts.GAME_HOST:
-                utils.redirect_request(flow.request, "game")
+                if config.REGAME:
+                    utils.redirect_request(flow.request, "game")
+                else:
+                    logging.info("[%s] %s", flow.request.method, flow.request.pretty_url)
 
     def request(self, flow: HTTPFlow):
         if flow in self.loaded_flows:
