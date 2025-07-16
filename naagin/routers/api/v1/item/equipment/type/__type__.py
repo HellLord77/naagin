@@ -4,8 +4,8 @@ from naagin.enums import ItemEquipmentTypeEnum
 from naagin.exceptions import InternalServerErrorException
 from naagin.models.api import ItemEquipmentTypeTypeGetResponseModel
 from naagin.schemas import ItemEquipmentSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/{type}")
 

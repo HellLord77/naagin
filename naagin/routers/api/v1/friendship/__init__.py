@@ -7,8 +7,8 @@ from naagin.models.api import FriendshipPostRequestModel
 from naagin.models.api import FriendshipPostResponseModel
 from naagin.schemas import FriendshipSchema
 from naagin.schemas import OwnerSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 from . import __owner_other_id__
 from . import accept

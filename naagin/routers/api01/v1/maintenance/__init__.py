@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from naagin.models.api01 import MaintenanceGetResponseModel
-from naagin.types.dependencies import MaintenanceDependency
+from naagin.types_.dependencies import MaintenanceDependency
 
 from . import privilege
 

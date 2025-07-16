@@ -9,10 +9,10 @@ from naagin.models.api.v1.owner.episode.__episode_mid__.post.response import Epi
 from naagin.models.api.v1.owner.episode.__episode_mid__.post.response import EpisodeResultOwnerModel
 from naagin.schemas import EpisodeSchema
 from naagin.schemas import OwnerSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
-from naagin.types.dependencies.csv import EpisodesCSVDependency
-from naagin.types.dependencies.csv import OwnerLevelsCSVDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
+from naagin.types_.dependencies.csv import EpisodesCSVDependency
+from naagin.types_.dependencies.csv import OwnerLevelsCSVDependency
 
 router = APIRouter(prefix="/{episode_mid}")
 

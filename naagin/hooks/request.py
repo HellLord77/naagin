@@ -3,7 +3,7 @@ from functools import wraps
 from fastapi import Request
 from orjson import loads
 
-from naagin.types import JSONDecodeType
+from naagin.types_ import JSONDecodeType
 
 
 @wraps(Request.json)

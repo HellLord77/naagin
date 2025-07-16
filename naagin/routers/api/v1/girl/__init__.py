@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 from naagin.models.api import GirlGetResponseModel
 from naagin.schemas import GirlSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 from . import __girl_mid__
 from . import equipment

@@ -5,8 +5,8 @@ from naagin.models.api import HonorGetResponseModel
 from naagin.models.api import HonorPostResponseModel
 from naagin.schemas import HonorSchema
 from naagin.schemas import OwnerCheckedAtSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/honor")
 

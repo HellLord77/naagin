@@ -10,8 +10,8 @@ from naagin.decorators import async_request_cache_unsafe as async_request_cache_
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import MaintenanceSchema
 from naagin.schemas import SessionSchema
-from naagin.types.securities import CookieSecurity
-from naagin.types.securities import HeaderSecurity
+from naagin.types_.securities import CookieSecurity
+from naagin.types_.securities import HeaderSecurity
 
 
 async def provide_database() -> AsyncGenerator[AsyncSession]:

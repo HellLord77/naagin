@@ -9,8 +9,8 @@ from starlette.types import ASGIApp
 
 from naagin.abstract import BaseEncodingMiddleware
 from naagin.enums import EncodingEnum
-from naagin.types import ZLibCompressor
-from naagin.types import ZLibDecompressor
+from naagin.types_ import ZLibCompressor
+from naagin.types_ import ZLibDecompressor
 from naagin.utils import CustomHeader
 
 

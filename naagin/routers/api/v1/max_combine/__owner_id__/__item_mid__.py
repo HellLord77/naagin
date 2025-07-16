@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from naagin.models.api import MaxCombineOwnerIdItemMidGetResponseModel
 from naagin.models.api.v1.max_combine.__owner_id__.__item_mid__.get.response import MaxCombineOtherModel
 from naagin.schemas import MaxCombineSwimsuitSchema
-from naagin.types.dependencies import DatabaseDependency
+from naagin.types_.dependencies import DatabaseDependency
 
 router = APIRouter(prefix="/{item_mid}")
 

@@ -5,7 +5,7 @@ from fastapi import Response
 
 from naagin import settings
 from naagin.exceptions import UnderMaintenanceNowException
-from naagin.types.dependencies import MaintenanceDependency
+from naagin.types_.dependencies import MaintenanceDependency
 from naagin.utils import CustomHeader
 
 

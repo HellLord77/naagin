@@ -3,8 +3,8 @@ from typing import Literal
 from pydantic import ConfigDict
 
 from naagin.bases import ModelBase
-from naagin.types.fields import CSVField
-from naagin.types.fields import MD5Field
+from naagin.types_.fields import CSVField
+from naagin.types_.fields import MD5Field
 
 
 class CSVFileModel(ModelBase):

@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from naagin.models.api import FurnitureMySetOwnerIdListGetResponseModel
 from naagin.schemas import FurnitureMySetSchema
-from naagin.types.dependencies import DatabaseDependency
+from naagin.types_.dependencies import DatabaseDependency
 
 router = APIRouter(prefix="/list")
 

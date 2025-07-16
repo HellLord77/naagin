@@ -4,7 +4,7 @@ from zlib import Z_BEST_SPEED
 from pydantic_settings import SettingsConfigDict
 
 from naagin.bases import SettingsBase
-from naagin.types.fields import ZLibCompressLevelField
+from naagin.types_.fields import ZLibCompressLevelField
 
 
 class APISettings(SettingsBase):

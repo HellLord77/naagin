@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 from naagin.models.api import DishevelmentGetResponseModel
 from naagin.schemas import DishevelmentSwimsuitSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 from . import __owner_id__
 

@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from naagin.bases import SettingsBase
 from naagin.classes import AsyncSession
 from naagin.enums import DatabaseDriverEnum
-from naagin.types.fields import PortField
+from naagin.types_.fields import PortField
 
 
 class DatabaseSettings(SettingsBase):

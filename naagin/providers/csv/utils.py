@@ -3,7 +3,7 @@ from csv import DictReader
 from csv import reader
 
 from naagin import settings
-from naagin.types import CSVReader
+from naagin.types_ import CSVReader
 
 
 async def get_lines(master_version: int, name: str) -> list[str]:

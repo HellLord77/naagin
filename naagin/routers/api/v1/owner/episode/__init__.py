@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 from naagin.models.api import OwnerEpisodeGetResponseModel
 from naagin.schemas import EpisodeSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 from . import __episode_mid__
 

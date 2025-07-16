@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from naagin.models.api import DishevelmentOwnerIdItemMidGetResponseModel
 from naagin.models.api.v1.dishevelment.__owner_id__.__item_mid__.get.response import DishevelmentOtherModel
 from naagin.schemas import DishevelmentSwimsuitSchema
-from naagin.types.dependencies import DatabaseDependency
+from naagin.types_.dependencies import DatabaseDependency
 
 router = APIRouter(prefix="/{item_mid}")
 
