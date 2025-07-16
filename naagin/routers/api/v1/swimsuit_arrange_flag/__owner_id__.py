@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from naagin.models.api import SwimsuitArrangeFlagOwnerIdGetResponseModel
 from naagin.schemas import SwimsuitArrangeFlagSchema
-from naagin.types.dependencies import DatabaseDependency
+from naagin.types_.dependencies import DatabaseDependency
 
 router = APIRouter(prefix="/{owner_id}")
 

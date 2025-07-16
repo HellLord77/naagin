@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 from naagin.models.api import LoginBonusGetResponseModel
 from naagin.schemas import LoginBonusSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/login_bonus")
 

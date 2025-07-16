@@ -4,7 +4,7 @@ from naagin.models.csv import EpisodeCSVModel
 from naagin.models.csv import FriendlyRewardCSVModel
 from naagin.models.csv import GirlCSVModel
 from naagin.models.csv import GirlStatusCSVModel
-from naagin.types.headers import MasterVersionHeader
+from naagin.types_.headers import MasterVersionHeader
 
 from .utils import get_dict_reader
 from .utils import get_reader

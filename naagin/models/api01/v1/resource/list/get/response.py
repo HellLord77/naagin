@@ -6,8 +6,8 @@ from pydantic import PositiveInt
 
 from naagin import settings
 from naagin.bases import ModelBase
-from naagin.types.fields import EXEField
-from naagin.types.fields import MD5Field
+from naagin.types_.fields import EXEField
+from naagin.types_.fields import MD5Field
 
 
 class ResourceModel(ModelBase):

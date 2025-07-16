@@ -4,8 +4,8 @@ from naagin.enums import SpecialOrderTypeEnum
 from naagin.exceptions import InternalServerErrorException
 from naagin.models.api import SpecialOrderTypeGetResponseModel
 from naagin.schemas import SpecialOrderSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/{type}")
 

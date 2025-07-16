@@ -3,8 +3,8 @@ from sqlalchemy import func
 
 from naagin.models.api import PhotoShootTodayCountGetResponseModel
 from naagin.schemas import PhotoShootSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/today_count")
 

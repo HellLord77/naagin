@@ -4,8 +4,8 @@ from naagin.enums import SceneEnum
 from naagin.models.api import RadioStationBgmSceneMidPostRequestModel
 from naagin.models.api import RadioStationBgmSceneMidPostResponseModel
 from naagin.schemas import BgmSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/{scene_mid}")
 

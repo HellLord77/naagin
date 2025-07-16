@@ -10,8 +10,8 @@ from naagin.models.api import InformationGlobalPostRequestModel
 from naagin.models.api import InformationGlobalPostResponseModel
 from naagin.schemas import InformationReadSchema
 from naagin.schemas import InformationSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/global")
 

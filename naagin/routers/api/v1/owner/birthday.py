@@ -3,8 +3,8 @@ from fastapi import APIRouter
 from naagin.models.api import OwnerBirthdayPostRequestModel
 from naagin.models.api import OwnerBirthdayPostResponseModel
 from naagin.schemas import OwnerSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/birthday")
 

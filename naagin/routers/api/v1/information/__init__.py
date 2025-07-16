@@ -3,8 +3,8 @@ from fastapi import APIRouter
 from naagin.models.api import InformationPutRequestModel
 from naagin.models.api import InformationPutResponseModel
 from naagin.schemas import InformationReadSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 from . import global_
 

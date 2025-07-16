@@ -4,8 +4,8 @@ from naagin.models.api import OwnerGetResponseModel
 from naagin.models.api import OwnerPutRequestModel
 from naagin.models.api import OwnerPutResponseModel
 from naagin.schemas import OwnerSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 from . import birthday
 from . import checkedat

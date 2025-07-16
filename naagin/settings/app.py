@@ -4,7 +4,7 @@ from pydantic import NonNegativeInt
 from pydantic_settings import SettingsConfigDict
 
 from naagin.bases import SettingsBase
-from naagin.types.fields import GZipCompressLevelField
+from naagin.types_.fields import GZipCompressLevelField
 
 
 class AppSettings(SettingsBase):

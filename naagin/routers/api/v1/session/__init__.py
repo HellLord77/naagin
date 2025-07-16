@@ -8,7 +8,7 @@ from naagin.models.api import SessionPostResponseModel
 from naagin.schemas import OwnerCountLoginSchema
 from naagin.schemas import OwnerSchema
 from naagin.schemas import SessionSchema
-from naagin.types.dependencies import DatabaseDependency
+from naagin.types_.dependencies import DatabaseDependency
 from naagin.utils import CustomHeader
 
 from . import key

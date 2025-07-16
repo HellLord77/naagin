@@ -3,8 +3,8 @@ from sqlalchemy import func
 
 from naagin.models.api import GiftBoxGetResponseModel
 from naagin.schemas import GiftBoxSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 from . import count
 from . import fetch

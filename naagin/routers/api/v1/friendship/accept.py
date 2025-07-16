@@ -5,8 +5,8 @@ from naagin.models.api import FriendshipAcceptPostRequestModel
 from naagin.models.api import FriendshipAcceptPostResponseModel
 from naagin.schemas import FriendshipSchema
 from naagin.schemas import OwnerSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/accept")
 

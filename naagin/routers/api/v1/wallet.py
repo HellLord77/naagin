@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 from naagin.models.api import WalletGetResponseModel
 from naagin.schemas import WalletSchema
-from naagin.types.dependencies import DatabaseDependency
-from naagin.types.dependencies import OwnerIdDependency
+from naagin.types_.dependencies import DatabaseDependency
+from naagin.types_.dependencies import OwnerIdDependency
 
 router = APIRouter(prefix="/wallet")
 
