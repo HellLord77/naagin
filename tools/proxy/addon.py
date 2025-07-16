@@ -43,9 +43,13 @@ class AddonDOAXVV:
         self.master_load_flow = ctx.master.load_flow
         ctx.master.load_flow = self.load_flow
 
+        logging.info("[addon] load")
+
     def done(self):
         ctx.master.load_flow = self.master_load_flow
         del self.master_load_flow
+
+        logging.info("[addon] done")
 
     def requestheaders(self, flow: HTTPFlow):
         if flow in self.loaded_flows:
@@ -53,24 +57,21 @@ class AddonDOAXVV:
 
         match flow.request.pretty_host:
             case consts.API_HOST:
+                logging.info("[api] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REAPI:
                     utils.redirect_request(flow.request, "api")
-                else:
-                    logging.info("[%s] %s", flow.request.method, flow.request.pretty_url)
                 if config.RENONCE:
                     utils.renounce_request(flow.request)
 
             case consts.API01_HOST:
+                logging.info("[api01] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REAPI01:
                     utils.redirect_request(flow.request, "api01")
-                else:
-                    logging.info("[%s] %s", flow.request.method, flow.request.pretty_url)
 
             case consts.GAME_HOST:
+                logging.info("[game] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REGAME:
                     utils.redirect_request(flow.request, "game")
-                else:
-                    logging.info("[%s] %s", flow.request.method, flow.request.pretty_url)
 
     def request(self, flow: HTTPFlow):
         if flow in self.loaded_flows:
@@ -82,19 +83,13 @@ class AddonDOAXVV:
             and flow.request.path_components[-3:] == ("v1", "session", "key")
         ):
             encrypt_key = flow.request.json()["encrypt_key"]
-            self.session_key = self.proxy_private_key.decrypt(
-                base64.b64decode(encrypt_key),
-                PKCS1v15(),
-            )
+            self.session_key = self.proxy_private_key.decrypt(base64.b64decode(encrypt_key), PKCS1v15())
 
             if self.public_key is None:
                 return
 
-            proxy_session_key = self.public_key.encrypt(
-                self.session_key,
-                PKCS1v15(),
-            )
-            proxy_encrypt_key = f"{"\r\n".join( textwrap.wrap(base64.b64encode(proxy_session_key).decode(),64))}\r\n"
+            proxy_session_key = self.public_key.encrypt(self.session_key, PKCS1v15())
+            proxy_encrypt_key = f"{'\r\n'.join(textwrap.wrap(base64.b64encode(proxy_session_key).decode(), 64))}\r\n"
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logging.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
 
@@ -103,15 +98,9 @@ class AddonDOAXVV:
             return
 
         if flow.request.pretty_host == consts.API_HOST:
-            if flow.request.method == HTTPMethod.GET and flow.request.path_components[
-                -3:
-            ] == ("v1", "session", "key"):
+            if flow.request.method == HTTPMethod.GET and flow.request.path_components[-3:] == ("v1", "session", "key"):
                 encrypt_key = flow.response.json()["encrypt_key"]
-                self.public_key = (
-                    cryptography.hazmat.primitives.serialization.load_pem_public_key(
-                        encrypt_key.encode(),
-                    )
-                )
+                self.public_key = cryptography.hazmat.primitives.serialization.load_pem_public_key(encrypt_key.encode())
                 proxy_public_key = self.proxy_private_key.public_key()
                 proxy_encrypt_key = proxy_public_key.public_bytes(
                     Encoding.PEM, PublicFormat.SubjectPublicKeyInfo

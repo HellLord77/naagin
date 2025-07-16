@@ -1,5 +1,4 @@
 [submodule "wrap_dll"]
 	path = wrap_dll
-	url = https://github.com/HellLord77/wrap_dll.git
-	branch = fix-ordinal
+	url = https://github.com/mavenlin/wrap_dll.git
 	ignore = dirty
