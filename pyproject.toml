@@ -22,9 +22,17 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["ruff"]
-dump = ["frozendict", "genson", "datamodel-code-generator"]
-proxy = ["mitmproxy==11.*"]
+dev = [
+  "ruff"
+]
+dump = [
+  "frozendict",
+  "genson",
+  "datamodel-code-generator"
+]
+proxy = [
+  "mitmproxy"
+]
 
 [tool.uv]
 package = false
