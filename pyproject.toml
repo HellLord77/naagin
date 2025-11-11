@@ -45,6 +45,9 @@ override-dependencies = [
 src = ["naagin"]
 line-length = 120
 
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
 [tool.ruff.lint]
 preview = true
 explicit-preview-rules = true
@@ -52,8 +55,8 @@ select = ["ALL"]
 extend-select = ["PLC0415"]
 ignore = [
   "A",       # flake8-builtins     *
-  "D1",      # pydocstyle          undocumented-*
   "COM812",  # flake8-commas       missing-trailing-comma
+  "D1",      # pydocstyle          undocumented-*
   "D203",    # pydocstyle          incorrect-blank-line-before-class
   "D212",    # pydocstyle          multi-line-summary-first-line
   "E501",    # pycodestyle         line-too-long
@@ -61,7 +64,7 @@ ignore = [
   "PLC0414", # Convention          useless-import-alias
 ]
 extend-safe-fixes = [
-  "F401", # Pyflakes            unused-import
+  "F401",    # Pyflakes            unused-import
 ]
 extend-unsafe-fixes = [
   "RET505", # flake8-return       superfluous-else-return
@@ -72,14 +75,11 @@ extend-unsafe-fixes = [
   "TID251", # flake8-tidy-imports banned-api
 ]
 
-[tool.ruff.lint.isort]
-force-single-line = true
+[tool.ruff.lint.flake8-boolean-trap]
+extend-allowed-calls = ["fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
-
-[tool.ruff.lint.flake8-boolean-trap]
-extend-allowed-calls = ["fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "pathlib.Path".msg = "Use aiopath.AsyncPath instead."
@@ -94,6 +94,7 @@ extend-allowed-calls = ["fastapi.datastructures.Default"]
 "pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
 "sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.bases.SchemaBase instead."
 "pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
+"async_lru.alru_cache".msg = "Use naagin.decorators.async_lru_cache instead."
 
-[tool.ruff.format]
-skip-magic-trailing-comma = true
+[tool.ruff.lint.isort]
+force-single-line = true

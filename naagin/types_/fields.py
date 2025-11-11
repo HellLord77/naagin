@@ -11,5 +11,5 @@ ZLibCompressLevelField = Annotated[int, Field(ge=Z_DEFAULT_COMPRESSION, le=Z_BES
 GZipCompressLevelField = Annotated[int, Field(ge=_COMPRESS_LEVEL_FAST - 1, le=_COMPRESS_LEVEL_BEST)]
 
 MD5Field = Annotated[str, Field(pattern=r"^[a-f\d]{32}$")]
-CSVField = Annotated[str, Field(pattern=r"^[a-zA-Z_]+\.csv$")]
+CSVField = Annotated[str, Field(pattern=r"^\w+\.csv$")]
 EXEField = Annotated[str, Field(pattern=r"^\w+\.exe$")]

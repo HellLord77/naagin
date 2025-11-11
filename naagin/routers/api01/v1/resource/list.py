@@ -1,14 +1,14 @@
-from async_lru import alru_cache
 from fastapi import APIRouter
 
 from naagin import settings
+from naagin.decorators import async_lru_cache
 from naagin.models.api01 import ResourceListGetResponseModel
 
 router = APIRouter(prefix="/list")
 
 
 @router.get("")
-@alru_cache
+@async_lru_cache
 async def get() -> ResourceListGetResponseModel:
     json_data = await (
         settings.data.api01_dir / "v1" / "resource" / "list" / f"{settings.version.application}.json"
