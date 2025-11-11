@@ -6,7 +6,7 @@ from sqlalchemy import func
 
 from naagin import settings
 from naagin.classes import AsyncSession
-from naagin.decorators import async_request_cache_unsafe as async_request_cache_unsafe
+from naagin.decorators import async_req_cache  # noqa: TID251
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import MaintenanceSchema
 from naagin.schemas import SessionSchema
@@ -36,7 +36,7 @@ async def provide_maintenance(database: AsyncSession = Depends(provide_database)
     return maintenance
 
 
-@async_request_cache_unsafe
+@async_req_cache
 async def provide_session(
     request: Request,
     access_token: HeaderSecurity = None,

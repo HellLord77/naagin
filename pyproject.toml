@@ -22,24 +22,14 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-  "ruff",
-]
-dump = [
-  "frozendict",
-  "genson",
-  "datamodel-code-generator",
-]
-proxy = [
-  "mitmproxy==11.1.0",
-]
+dev = ["ruff"]
+dump = ["frozendict", "genson", "datamodel-code-generator"]
+proxy = ["mitmproxy==11.*"]
 
 [tool.uv]
 package = false
 default-groups = "all"
-override-dependencies = [
-  "httptools; sys_platform == 'never'",
-]
+override-dependencies = ["httptools; sys_platform == 'never'"]
 
 [tool.ruff]
 src = ["naagin"]
@@ -52,22 +42,24 @@ skip-magic-trailing-comma = true
 preview = true
 explicit-preview-rules = true
 select = ["ALL"]
-extend-select = ["PLC0415"]
+extend-select = [
+  "PLC0415", # Pylint             import-outside-top-level
+]
 ignore = [
-  "A",       # flake8-builtins     *
-  "COM812",  # flake8-commas       missing-trailing-comma
-  "D1",      # pydocstyle          undocumented-*
-  "D203",    # pydocstyle          incorrect-blank-line-before-class
-  "D212",    # pydocstyle          multi-line-summary-first-line
-  "E501",    # pycodestyle         line-too-long
-  "ERA001",  # eradicate           commented-out-code
-  "PLC0414", # Convention          useless-import-alias
+  "A",       # flake8-builtins    *
+  "COM812",  # flake8-commas      missing-trailing-comma
+  "D1",      # pydocstyle         undocumented-*
+  "D203",    # pydocstyle         incorrect-blank-line-before-class
+  "D212",    # pydocstyle         multi-line-summary-first-line
+  "E501",    # pycodestyle        line-too-long
+  "ERA001",  # eradicate          commented-out-code
+  "PLC0414", # Convention         useless-import-alias
 ]
 extend-safe-fixes = [
-  "F401",    # Pyflakes            unused-import
+  "F401",    # Pyflakes           unused-import
 ]
 extend-unsafe-fixes = [
-  "RET505", # flake8-return       superfluous-else-return
+  "RET505",  # flake8-return      superfluous-else-return
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -84,17 +76,20 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "pathlib.Path".msg = "Use aiopath.AsyncPath instead."
 "typing.Optional".msg = "Use X | Y for type annotations."
+
 "aiopath.Path".msg = "Use aiopath.AsyncPath instead."
-"starlette.requests.Request".msg = "Use fastapi.Request instead."
-"starlette.responses.Response".msg = "Use fastapi.Response instead."
-"starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
+"async_lru.alru_cache".msg = "Use naagin.decorators.async_lru_cache instead."
+"pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
+"pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
+"sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."
+"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.bases.SchemaBase instead."
 "starlette.datastructures.Headers".msg = "Use fastapi.datastructures.Headers instead."
 "starlette.exceptions.HTTPException".msg = "Use fastapi.exceptions.StarletteHTTPException instead."
-"sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."
-"pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
-"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.bases.SchemaBase instead."
-"pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
-"async_lru.alru_cache".msg = "Use naagin.decorators.async_lru_cache instead."
+"starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
+"starlette.requests.Request".msg = "Use fastapi.Request instead."
+"starlette.responses.Response".msg = "Use fastapi.Response instead."
+
+"naagin.decorators.async_req_cache".msg = "Do not use naagin.decorators.async_req_cache."
 
 [tool.ruff.lint.isort]
 force-single-line = true

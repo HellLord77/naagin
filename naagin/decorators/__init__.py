@@ -12,7 +12,7 @@ def async_lru_cache[T: Awaitable, **P](awaitable: Callable[P, T], /) -> Callable
     return markcoroutinefunction(alru_cache(awaitable))
 
 
-def async_request_cache_unsafe[T: Awaitable, **P](awaitable: Callable[P, T], /) -> Callable[P, T]:
+def async_req_cache[T: Awaitable, **P](awaitable: Callable[P, T], /) -> Callable[P, T]:
     sig = signature(awaitable)
     key = awaitable.__name__
 
