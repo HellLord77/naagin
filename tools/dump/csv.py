@@ -13,8 +13,8 @@ from pathlib import Path
 
 import httpx
 
-import config
-import utils
+from . import config
+from . import utils
 
 # girl_mid, girl
 # free_start
@@ -140,6 +140,8 @@ import utils
 # 52134 "Eyes Closed" Expression Card (Momiji)
 # 58420 Long 2 (Momiji)
 
+logger = logging.getLogger(__name__)
+
 
 @functools.cache
 def get_csv_dir() -> Path:
@@ -168,18 +170,13 @@ def get_model_dir() -> Path:
 
 def get_header_names() -> frozenset[str]:
     header_dir = get_header_dir() / str(config.VERSION)
-    return frozenset(
-        "".join(header_path.name.rsplit(".header", 1))
-        for header_path in header_dir.rglob("*.header.csv")
-    )
+    return frozenset("".join(header_path.name.rsplit(".header", 1)) for header_path in header_dir.rglob("*.header.csv"))
 
 
-def game_to_csv():
-    shutil.rmtree(get_csv_dir(), True)
+def game_to_csv() -> None:
+    shutil.rmtree(get_csv_dir(), ignore_errors=True)
 
-    csv_list_path = (
-        config.DATA_DIR / "api" / "v1" / "csv" / "list" / f"{config.APP_VERSION}.json"
-    )
+    csv_list_path = config.DATA_DIR / "api" / "v1" / "csv" / "list" / f"{config.APP_VERSION}.json"
     with csv_list_path.open("rb") as file:
         csv_list = json.load(file)
 
@@ -187,7 +184,7 @@ def game_to_csv():
     csv_file_list = csv_list["csv_file_list"]
 
     file_encrypt_key = csv_file_list.pop("file_encrypt_key")
-    md5 = hashlib.md5(file_encrypt_key.encode())
+    md5 = hashlib.md5(file_encrypt_key.encode())  # noqa: S324
     md5.update(str(master_version).encode())
     key = md5.hexdigest()
 
@@ -199,10 +196,8 @@ def game_to_csv():
     for csv_file, initialization_vector in csv_file_list.items():
         encrypted_path = src_path / initialization_vector
         if not encrypted_path.is_file():
-            logging.warning(f"[DOWNLOAD] {encrypted_path}")
-            response = httpx.get(
-                f"https://game.doaxvv.com/production/csv/{master_version}/{initialization_vector}"
-            )
+            logger.warning("[DOWNLOAD] %s", encrypted_path)
+            response = httpx.get(f"https://game.doaxvv.com/production/csv/{master_version}/{initialization_vector}")
             response.raise_for_status()
 
             encrypted_path.parent.mkdir(parents=True, exist_ok=True)
@@ -210,7 +205,7 @@ def game_to_csv():
             temp_path.write_bytes(response.content)
             temp_path.rename(encrypted_path)
 
-        logging.info(f"[ENCRYPTED] {encrypted_path}")
+        logger.info("[ENCRYPTED] %s", encrypted_path)
 
         data = utils.decrypt_file(key, encrypted_path)
         if csv_file in header_names:
@@ -231,18 +226,18 @@ def game_to_csv():
             data = string_io.getvalue().encode("shift-jis")
 
         csv_path = dst_path / csv_file
-        logging.warning(f"[CSV] {csv_path}")
+        logger.warning("[CSV] %s", csv_path)
 
         csv_path.parent.mkdir(parents=True, exist_ok=True)
         csv_path.write_bytes(data)
 
 
-def isint(self: str) -> bool:
+def is_int(self: str) -> bool:
     return self[self[0] == "-" :].isdigit()
 
 
-def csv_to_json(path: Path):
-    logging.info(f"[CSV] {path}")
+def csv_to_json(path: Path) -> None:
+    logger.info("[CSV] %s", path)
 
     dst_path = get_json_dir() / path.parent.name / path.stem
     dst_path.mkdir(parents=True, exist_ok=True)
@@ -253,45 +248,40 @@ def csv_to_json(path: Path):
             for key, value in data.items():
                 if value == "":
                     data[key] = None
-                elif isint(value):
+                elif is_int(value):
                     data[key] = int(value)
 
             path_name = f"row_{index}.json"
             json_path = dst_path / path_name
 
-            logging.warning(f"[JSON] {json_path}")
+            logger.warning("[JSON] %s", json_path)
             json_path.write_text(json.dumps(data, separators=(",", ":")))
 
 
-def to_model():
+def to_model() -> None:
     game_to_csv()
 
-    shutil.rmtree(get_json_dir(), True)
+    shutil.rmtree(get_json_dir(), ignore_errors=True)
 
     base_path = get_csv_dir() / str(config.VERSION)
     for csv_file in get_header_names():
         csv_path = base_path / csv_file
         csv_to_json(csv_path)
 
-    shutil.rmtree(get_schema_dir(), True)
-    json_to_schema = functools.partial(
-        utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir()
-    )
-    json_dirs = set(
-        map(
-            operator.attrgetter("parent"),
-            get_json_dir().rglob("*.json"),
-        )
-    )
+    shutil.rmtree(get_schema_dir(), ignore_errors=True)
+    json_to_schema = functools.partial(utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir())
+    json_dirs = set(map(operator.attrgetter("parent"), get_json_dir().rglob("*.json")))
     with ThreadPoolExecutor() as executor:
         utils.consume(executor.map(json_to_schema, json_dirs))
 
-    shutil.rmtree(get_model_dir(), True)
-    schema_to_model = functools.partial(
-        utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir()
-    )
+    shutil.rmtree(get_model_dir(), ignore_errors=True)
+    schema_to_model = functools.partial(utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir())
     schema_paths = get_schema_dir().rglob("*.schema.json")
     with ProcessPoolExecutor() as executor:
         utils.consume(executor.map(schema_to_model, schema_paths))
 
     utils.model_formatter(get_model_dir())
+
+
+if __name__ == "__main__":
+    to_model()
