@@ -1,5 +1,4 @@
 import functools
-import glob
 import logging
 import operator
 import shutil
@@ -11,8 +10,8 @@ from string import Formatter
 from mitmproxy.http import HTTPFlow
 from mitmproxy.io import FlowReader
 
-import config
-import utils
+from . import config
+from . import utils
 
 VARIABLE_PATHS = [
     "v1/dishevelment/{owner_id}/{item_mid}",
@@ -47,6 +46,8 @@ VARIABLE_PATHS = [
     "v1/tutorial/{event_mid}",
 ]
 
+logger = logging.getLogger(__name__)
+
 
 @functools.cache
 def get_json_dir() -> Path:
@@ -63,14 +64,14 @@ def get_model_dir() -> Path:
     return config.DATA_DIR / "model" / "api"
 
 
-def flows_to_json(path: Path):
-    logging.info(f"[FLOWS] {path}")
+def flows_to_json(path: Path) -> None:
+    logger.info("[FLOWS] %s", path)
 
     with path.open("rb") as file:
         flow_reader = FlowReader(file)
         for flow in flow_reader.stream():
             flow: HTTPFlow
-            logging.debug(f"[FLOW] {flow.id}")
+            logger.debug("[FLOW] %s", flow.id)
 
             for message in utils.iter_messages(flow):
                 json_data = utils.decrypt_message(flow.comment, message)
@@ -79,40 +80,28 @@ def flows_to_json(path: Path):
                 path_method = flow.request.method.lower()
                 path_message = type(message).__name__.lower()
                 path_name = f"{path.stem}-{flow.id}.json"
-                json_path = (
-                    get_json_dir()
-                    / relative_path
-                    / path_method
-                    / path_message
-                    / path_name
-                )
-                logging.warning(f"[JSON] {json_path}")
+                json_path = get_json_dir() / relative_path / path_method / path_message / path_name
+                logger.warning("[JSON] %s", json_path)
 
                 json_path.parent.mkdir(parents=True, exist_ok=True)
                 json_path.write_bytes(json_data)
 
 
-def aggregate_json(path: str):
+def aggregate_json(path: str) -> None:
     formatter = Formatter()
     variables = {parse_result[1] for parse_result in formatter.parse(path)}
-    variable_path = str(get_json_dir() / path)
-    variable_path_dst = variable_path.format(
-        **{variable: f"__{variable}__" for variable in variables}
-    )
-    for variable_path_src in glob.iglob(
-        variable_path.format(**{variable: "[0-9]*" for variable in variables})
-    ):
+    variable_path_dst = get_json_dir() / path.format(**{variable: f"__{variable}__" for variable in variables})
+    for variable_path_src in get_json_dir().glob(path.format(**dict.fromkeys(variables, "[0-9]*"))):
         src_path = Path(variable_path_src)
         for json_path in src_path.rglob("*.json"):
-            json_path: Path
             relative_path = json_path.relative_to(src_path)
             dst_path = variable_path_dst / relative_path
             dst_path.parent.mkdir(parents=True, exist_ok=True)
             json_path.rename(dst_path)
 
 
-def to_model():
-    shutil.rmtree(get_json_dir(), True)
+def to_model() -> None:
+    shutil.rmtree(get_json_dir(), ignore_errors=True)
     for flows_path in (config.DATA_DIR / "flows").glob("*.flows"):
         flows_to_json(flows_path)
 
@@ -121,23 +110,14 @@ def to_model():
         aggregate_json(variable_path)
     utils.rmtree_empty(get_json_dir())
 
-    shutil.rmtree(get_schema_dir(), True)
-    json_to_schema = functools.partial(
-        utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir()
-    )
-    json_dirs = set(
-        map(
-            operator.attrgetter("parent"),
-            get_json_dir().rglob("*.json"),
-        )
-    )
+    shutil.rmtree(get_schema_dir(), ignore_errors=True)
+    json_to_schema = functools.partial(utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir())
+    json_dirs = set(map(operator.attrgetter("parent"), get_json_dir().rglob("*.json")))
     with ThreadPoolExecutor() as executor:
         utils.consume(executor.map(json_to_schema, json_dirs))
 
-    shutil.rmtree(get_model_dir(), True)
-    schema_to_model = functools.partial(
-        utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir()
-    )
+    shutil.rmtree(get_model_dir(), ignore_errors=True)
+    schema_to_model = functools.partial(utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir())
     schema_paths = get_schema_dir().rglob("*.schema.json")
     with ProcessPoolExecutor() as executor:
         utils.consume(executor.map(schema_to_model, schema_paths))
@@ -153,4 +133,8 @@ def to_model():
                 path_paths.add(path_path)
                 break
     for path_path in sorted(path_paths):
-        logging.error(path_path.as_posix())
+        logger.error(path_path.as_posix())
+
+
+if __name__ == "__main__":
+    to_model()
