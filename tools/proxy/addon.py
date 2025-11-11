@@ -1,13 +1,15 @@
 import base64
 import json
 import logging
+import secrets
 import textwrap
+from collections.abc import Awaitable
+from collections.abc import Callable
 from http import HTTPMethod
-from typing import Awaitable
-from typing import Callable
-from typing import Optional
 from weakref import WeakSet
 
+import config
+import consts
 import cryptography
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
@@ -17,17 +19,38 @@ from cryptography.hazmat.primitives.serialization import PublicFormat
 from mitmproxy import ctx
 from mitmproxy.addonmanager import Loader
 from mitmproxy.http import HTTPFlow
+from mitmproxy.http import Request
 
-import config
-import consts
 import utils
 
+logger = logging.getLogger(__name__)
 
-class AddonDOAXVV:
+
+def redirect_request(request: Request, path: str):
+    pretty_host = request.pretty_host
+
+    pretty_url = request.pretty_url
+    request.scheme = consts.SERVER_URL.scheme
+    request.host = consts.SERVER_URL.hostname
+    request.port = consts.SERVER_URL.port
+    request.path_components = path, *request.path_components
+
+    logger.info("[url] %s -> %s", pretty_url, request.url)
+    request.headers["Host"] = pretty_host
+
+
+def renounce_request(request: Request):
+    nonce = request.headers["X-DOAXVV-Nonce"]
+    proxy_nonce = secrets.token_hex(4)
+    request.headers["X-DOAXVV-Nonce"] = proxy_nonce
+    logger.info("[nonce] %s -> %s", nonce, proxy_nonce)
+
+
+class DOAXVVAddon:
     proxy_private_key: RSAPrivateKey
 
-    public_key: Optional[RSAPublicKey] = None
-    session_key: Optional[bytes] = None
+    public_key: RSAPublicKey | None = None
+    session_key: bytes | None = None
 
     master_load_flow: Callable[[HTTPFlow], Awaitable[None]]
 
@@ -43,13 +66,13 @@ class AddonDOAXVV:
         self.master_load_flow = ctx.master.load_flow
         ctx.master.load_flow = self.load_flow
 
-        logging.info("[addon] load")
+        logger.info("[addon] load")
 
     def done(self):
         ctx.master.load_flow = self.master_load_flow
         del self.master_load_flow
 
-        logging.info("[addon] done")
+        logger.info("[addon] done")
 
     def requestheaders(self, flow: HTTPFlow):
         if flow in self.loaded_flows:
@@ -57,21 +80,21 @@ class AddonDOAXVV:
 
         match flow.request.pretty_host:
             case consts.API_HOST:
-                logging.info("[api] %s: %s", flow.request.method, flow.request.pretty_url)
+                logger.info("[api] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REAPI:
-                    utils.redirect_request(flow.request, "api")
+                    redirect_request(flow.request, "api")
                 if config.RENONCE:
-                    utils.renounce_request(flow.request)
+                    renounce_request(flow.request)
 
             case consts.API01_HOST:
-                logging.info("[api01] %s: %s", flow.request.method, flow.request.pretty_url)
+                logger.info("[api01] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REAPI01:
-                    utils.redirect_request(flow.request, "api01")
+                    redirect_request(flow.request, "api01")
 
             case consts.GAME_HOST:
-                logging.info("[game] %s: %s", flow.request.method, flow.request.pretty_url)
+                logger.info("[game] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REGAME:
-                    utils.redirect_request(flow.request, "game")
+                    redirect_request(flow.request, "game")
 
     def request(self, flow: HTTPFlow):
         if flow in self.loaded_flows:
@@ -91,7 +114,7 @@ class AddonDOAXVV:
             proxy_session_key = self.public_key.encrypt(self.session_key, PKCS1v15())
             proxy_encrypt_key = f"{'\r\n'.join(textwrap.wrap(base64.b64encode(proxy_session_key).decode(), 64))}\r\n"
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
-            logging.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
+            logger.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
 
     def response(self, flow: HTTPFlow):
         if flow in self.loaded_flows:
@@ -111,10 +134,10 @@ class AddonDOAXVV:
                     return
 
                 flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
-                logging.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
+                logger.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
 
             else:
                 utils.write_flow(flow, self.session_key)
 
 
-addons = [AddonDOAXVV()]
+addons = [DOAXVVAddon()]
