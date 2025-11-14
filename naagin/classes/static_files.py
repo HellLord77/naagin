@@ -14,6 +14,15 @@ from starlette.types import Send
 
 class CustomStaticFiles(StaticFiles):
     @override
+    def __new__(
+        cls,
+        *args,  # noqa: ANN002
+        not_found_handler: Callable[[PathLike, Scope], Awaitable[Response]] | None = None,
+        **kwargs,  # noqa: ANN003
+    ) -> StaticFiles:
+        return StaticFiles(*args, **kwargs) if not_found_handler is None else super().__new__(cls)
+
+    @override
     def __init__(
         self,
         *args,  # noqa: ANN002

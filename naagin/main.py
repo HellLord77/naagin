@@ -179,6 +179,7 @@ app = FastAPI(
 )
 
 app.mount("/game", apps.game.app)
+app.mount("/cdn01", apps.cdn01.app)
 
 
 async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint) -> Response:

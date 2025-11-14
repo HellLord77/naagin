@@ -11,8 +11,6 @@ from csv import DictReader
 from io import StringIO
 from pathlib import Path
 
-import httpx
-
 from . import config
 from . import utils
 
@@ -143,68 +141,32 @@ from . import utils
 logger = logging.getLogger(__name__)
 
 
-@functools.cache
-def get_csv_dir() -> Path:
-    return config.DATA_DIR / "csv"
-
-
-@functools.cache
-def get_header_dir() -> Path:
-    return config.DATA_DIR / "header"
-
-
-@functools.cache
-def get_json_dir() -> Path:
-    return config.DATA_DIR / "json" / "csv"
-
-
-@functools.cache
-def get_schema_dir() -> Path:
-    return config.DATA_DIR / "schema" / "csv"
-
-
-@functools.cache
-def get_model_dir() -> Path:
-    return config.DATA_DIR / "model" / "csv"
-
-
-def get_header_names() -> frozenset[str]:
-    header_dir = get_header_dir() / str(config.VERSION)
+def get_header_names(master_version: str) -> frozenset[str]:
+    header_dir = config.DATA_DIR / "header" / master_version
     return frozenset("".join(header_path.name.rsplit(".header", 1)) for header_path in header_dir.rglob("*.header.csv"))
 
 
-def game_to_csv() -> None:
-    shutil.rmtree(get_csv_dir(), ignore_errors=True)
+def app_to_csv(app: str, master_version: str, application_version: int) -> None:
+    shutil.rmtree(config.DATA_DIR / "csv" / master_version, ignore_errors=True)
 
-    csv_list_path = config.DATA_DIR / "api" / "v1" / "csv" / "list" / f"{config.APP_VERSION}.json"
+    csv_list_path = config.DATA_DIR / "api" / "v1" / "csv" / "list" / master_version / f"{application_version}.json"
     with csv_list_path.open("rb") as file:
         csv_list = json.load(file)
 
-    master_version = config.VERSION
     csv_file_list = csv_list["csv_file_list"]
-
     file_encrypt_key = csv_file_list.pop("file_encrypt_key")
-    md5 = hashlib.md5(file_encrypt_key.encode())  # noqa: S324
-    md5.update(str(master_version).encode())
+
+    md5 = hashlib.md5(file_encrypt_key.encode(), usedforsecurity=False)
+    md5.update(master_version.encode())
     key = md5.hexdigest()
 
-    header_names = get_header_names()
-    header_dir = get_header_dir() / str(master_version)
+    header_names = get_header_names(master_version)
+    header_dir = config.DATA_DIR / "header" / master_version
 
-    src_path = config.DATA_DIR / "game" / "production" / "csv" / str(master_version)
-    dst_path = get_csv_dir() / str(master_version)
+    src_path = config.DATA_DIR / app / "production" / "csv" / master_version
+    dst_path = config.DATA_DIR / "csv" / master_version
     for csv_file, initialization_vector in csv_file_list.items():
         encrypted_path = src_path / initialization_vector
-        if not encrypted_path.is_file():
-            logger.warning("[DOWNLOAD] %s", encrypted_path)
-            response = httpx.get(f"https://game.doaxvv.com/production/csv/{master_version}/{initialization_vector}")
-            response.raise_for_status()
-
-            encrypted_path.parent.mkdir(parents=True, exist_ok=True)
-            temp_path = encrypted_path.with_suffix(".temp")
-            temp_path.write_bytes(response.content)
-            temp_path.rename(encrypted_path)
-
         logger.info("[ENCRYPTED] %s", encrypted_path)
 
         data = utils.decrypt_file(key, encrypted_path)
@@ -236,10 +198,10 @@ def is_int(self: str) -> bool:
     return self[self[0] == "-" :].isdigit()
 
 
-def csv_to_json(path: Path) -> None:
+def csv_to_json(path: Path, json_dir: Path) -> None:
     logger.info("[CSV] %s", path)
 
-    dst_path = get_json_dir() / path.parent.name / path.stem
+    dst_path = json_dir / path.stem
     dst_path.mkdir(parents=True, exist_ok=True)
     with path.open() as file:
         dict_reader = DictReader(file, quoting=csv.QUOTE_ALL)
@@ -258,30 +220,40 @@ def csv_to_json(path: Path) -> None:
             json_path.write_text(json.dumps(data, separators=(",", ":")))
 
 
-def to_model() -> None:
-    game_to_csv()
+def to_model(app: str, master_version: str, application_version: int) -> None:
+    app_to_csv(app, master_version, application_version)
 
-    shutil.rmtree(get_json_dir(), ignore_errors=True)
+    json_dir = config.DATA_DIR / "json" / "csv" / master_version
+    shutil.rmtree(json_dir, ignore_errors=True)
 
-    base_path = get_csv_dir() / str(config.VERSION)
-    for csv_file in get_header_names():
+    base_path = config.DATA_DIR / "csv" / master_version
+    for csv_file in get_header_names(master_version):
         csv_path = base_path / csv_file
-        csv_to_json(csv_path)
+        csv_to_json(csv_path, json_dir)
 
-    shutil.rmtree(get_schema_dir(), ignore_errors=True)
-    json_to_schema = functools.partial(utils.json_to_schema, json_dir=get_json_dir(), schema_dir=get_schema_dir())
-    json_dirs = set(map(operator.attrgetter("parent"), get_json_dir().rglob("*.json")))
+    schema_dir = config.DATA_DIR / "schema" / "csv" / master_version
+    shutil.rmtree(schema_dir, ignore_errors=True)
+
+    json_to_schema = functools.partial(utils.json_to_schema, json_dir=json_dir, schema_dir=schema_dir)
+    json_dirs = set(map(operator.attrgetter("parent"), json_dir.rglob("*.json")))
     with ThreadPoolExecutor() as executor:
         utils.consume(executor.map(json_to_schema, json_dirs))
 
-    shutil.rmtree(get_model_dir(), ignore_errors=True)
-    schema_to_model = functools.partial(utils.schema_to_model, schema_dir=get_schema_dir(), model_dir=get_model_dir())
-    schema_paths = get_schema_dir().rglob("*.schema.json")
+    model_dir = config.DATA_DIR / "model" / "csv" / master_version
+    shutil.rmtree(model_dir, ignore_errors=True)
+
+    schema_to_model = functools.partial(utils.schema_to_model, schema_dir=schema_dir, model_dir=model_dir)
+    schema_paths = schema_dir.rglob("*.schema.json")
     with ProcessPoolExecutor() as executor:
         utils.consume(executor.map(schema_to_model, schema_paths))
 
-    utils.model_formatter(get_model_dir())
+    utils.model_formatter(model_dir)
+
+
+def main() -> None:
+    to_model("game", str(config.MASTER_VERSION), config.APPLICATION_VERSION)
+    to_model("cdn01", str(config.MASTER_VERSION_JP), config.APPLICATION_VERSION_JP)
 
 
 if __name__ == "__main__":
-    to_model()
+    main()

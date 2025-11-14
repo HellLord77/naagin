@@ -1,5 +1,4 @@
 from typing import Annotated
-from typing import Literal
 
 from pydantic import Field
 from pydantic import PositiveInt
@@ -12,7 +11,7 @@ from naagin.types_.fields import MD5Field
 
 class ResourceModel(ModelBase):
     version: Annotated[int, Field(le=settings.version.application)]
-    directory: Literal[""]
+    directory: str
     file_name: EXEField
     file_size: PositiveInt
     hash: MD5Field

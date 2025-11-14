@@ -5,16 +5,22 @@ from os import startfile
 
 
 class Client(StrEnum):
-    STEAM = "steam"
+    DMM = "dmm"
     JOHREN = "johren"
+    STEAM = "steam"
+    STEAM_JP = "steam_jp"
 
     def get_uri(self) -> str:
         uri = ""
         match self:
-            case Client.STEAM:
-                uri = "steam://rungameid/958260"
+            case Client.DMM:
+                uri = "dmmgameplayer://play/GCL/doaxvv/cl/win"
             case Client.JOHREN:
                 uri = "johren-launcher://mygame?titleId=doaxvv"
+            case Client.STEAM:
+                uri = "steam://rungameid/958260"
+            case Client.STEAM_JP:
+                uri = "steam://rungameid/1361350"
         return uri
 
 

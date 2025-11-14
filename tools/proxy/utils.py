@@ -19,7 +19,7 @@ from mitmproxy.http import Message
 from mitmproxy.http import Request
 
 
-def dump_private_key(private_key: RSAPrivateKey):
+def dump_private_key(private_key: RSAPrivateKey) -> None:
     private_key_bytes = private_key.private_bytes(Encoding.PEM, PrivateFormat.PKCS8, NoEncryption())
     (consts.CERT_DIR / "naagin-api.pem").write_bytes(private_key_bytes)
 
@@ -40,11 +40,11 @@ def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
     unpadder = PKCS7(AES.block_size).unpadder()
     decrypted_data = decryptor.update(data) + decryptor.finalize()
     unpadded_data = unpadder.update(decrypted_data) + unpadder.finalize()
-    return unpadded_data
+    return unpadded_data  # noqa: RET504
 
 
 def is_valid_message(request: Request, message: Message) -> bool:
-    return bool(request.pretty_host == consts.API_HOST and "X-DOAXVV-Encrypted" in message.headers and message.content)
+    return bool(request.pretty_host in consts.API_HOSTS and "X-DOAXVV-Encrypted" in message.headers and message.content)
 
 
 def iter_messages(flow: HTTPFlow) -> Generator[Message]:
@@ -58,10 +58,10 @@ def decrypt_message(key: str, message: Message) -> bytes:
         AES(base64.b64decode(key)), message.content, base64.b64decode(message.headers["X-DOAXVV-Encrypted"])
     )
     uncompressed_data = zlib.decompress(decrypted_data)
-    return uncompressed_data
+    return uncompressed_data  # noqa: RET504
 
 
-def write_flow(flow: HTTPFlow, session_key: bytes | None = None):
+def write_flow(flow: HTTPFlow, session_key: bytes | None = None) -> None:
     if session_key is not None:
         flow.comment = base64.b64encode(session_key).decode()
 
@@ -71,5 +71,5 @@ def write_flow(flow: HTTPFlow, session_key: bytes | None = None):
         if config.WRITE_CONSOLE:
             for message in iter_messages(flow):
                 body = decrypt_message(flow.comment, message)
-                print(f"[{type(message).__name__.lower()}] {flow.request.path}")
+                print(f"[{type(message).__name__.lower()}] {flow.request.path}")  # noqa: T201
                 rich.print_json(body.decode())

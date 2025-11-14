@@ -197,14 +197,29 @@ BOOL CrackUrl_fake(CrackUrl_ptr crackUrl_real, LPCWSTR url, DWORD urlLength, DWO
             hostName = L"/api";
             hostNameLength = 4;
         }
+        if (urlComponents->dwHostNameLength == 25 && wmemcmp(urlComponents->lpszHostName, L"api.doax-venusvacation.jp", 25) == 0)
+        {
+            hostName = L"/api";
+            hostNameLength = 4;
+        }
+        else if (urlComponents->dwHostNameLength == 16 && wmemcmp(urlComponents->lpszHostName, L"api01.doaxvv.com", 16) == 0)
+        {
+            hostName = L"/api01";
+            hostNameLength = 6;
+        }
+        else if (urlComponents->dwHostNameLength == 27 && wmemcmp(urlComponents->lpszHostName, L"api01.doax-venusvacation.jp", 27) == 0)
+        {
+            hostName = L"/api01";
+            hostNameLength = 6;
+        }
         else if (urlComponents->dwHostNameLength == 15 && wmemcmp(urlComponents->lpszHostName, L"game.doaxvv.com", 15) == 0)
         {
             hostName = L"/game";
             hostNameLength = 5;
         }
-        else if (urlComponents->dwHostNameLength == 16 && wmemcmp(urlComponents->lpszHostName, L"api01.doaxvv.com", 16) == 0)
+        else if (urlComponents->dwHostNameLength == 27 && wmemcmp(urlComponents->lpszHostName, L"cdn01.doax-venusvacation.jp", 27) == 0)
         {
-            hostName = L"/api01";
+            hostName = L"/cdn01";
             hostNameLength = 6;
         }
         else

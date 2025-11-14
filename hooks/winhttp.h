@@ -1,6 +1,6 @@
 #include <winhttp.h>
 
-#include "common.h"
+#include "utils.h"
 
 #define WINHTTPCRACKURL
 
