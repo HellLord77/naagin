@@ -2,6 +2,7 @@ import base64
 import hashlib
 import json
 import logging
+from http import HTTPMethod
 from pathlib import Path
 from typing import Any
 
@@ -90,7 +91,7 @@ def resources_to_app(app: str, client: Client, resources: list[dict[str, Any]], 
             or resource["hash"] != utils.get_md5(path)
         ):
             logger.warning("[DOWNLOAD] %s", path)
-            with client.stream("GET", f"/production/patch_data/{patch_type}/{directory}/{name}") as response:
+            with client.stream(HTTPMethod.GET, f"/production/patch_data/{patch_type}/{directory}/{name}") as response:
                 response.raise_for_status()
                 path.parent.mkdir(parents=True, exist_ok=True)
 
