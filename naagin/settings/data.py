@@ -10,7 +10,7 @@ from naagin.bases import SettingsBase
 
 
 class DataSettings(SettingsBase):
-    temp: bool = False
+    temp: bool = True
 
     dir: DirectoryPath = Path.cwd() / "data"
 
