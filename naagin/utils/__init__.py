@@ -1,9 +1,15 @@
+from base64 import b64encode
 from collections.abc import AsyncIterable
 from collections.abc import Sequence
+from hashlib import md5
 from secrets import choice
 
 from asyncstdlib import list as alist
 from asyncstdlib.itertools import tee as atee
+from cryptography.hazmat.primitives.ciphers import Cipher
+from cryptography.hazmat.primitives.ciphers.algorithms import AES
+from cryptography.hazmat.primitives.ciphers.modes import CBC
+from cryptography.hazmat.primitives.padding import PKCS7
 from fastapi import Response
 from fastapi.datastructures import Headers
 from starlette.routing import Match
@@ -42,3 +48,19 @@ async def response_peek_body(self: Response) -> bytes:
         return b"".join(await alist(body_iterator))
 
     return self.body
+
+
+def encrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:
+    padder = PKCS7(algorithm.block_size).padder()
+    encryptor = Cipher(algorithm, CBC(initialization_vector)).encryptor()
+    padded_data = padder.update(data) + padder.finalize()
+    return encryptor.update(padded_data) + encryptor.finalize()
+
+
+def encrypt_resource_data(platform_id: int, key: bytes, data: bytes) -> str:  # TODO
+    md5_ = md5(key, usedforsecurity=False)
+    encoded_key = md5_.hexdigest().encode()
+    md5_.update(str(platform_id).encode())
+    initialization_vector = md5_.digest()
+    encrypted_data = encrypt_data(AES(encoded_key), data, initialization_vector)
+    return b64encode(encrypted_data).decode()

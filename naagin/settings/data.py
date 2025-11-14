@@ -37,5 +37,9 @@ class DataSettings(SettingsBase):
         return self.directory / "game"
 
     @cached_property
+    def cdn01_dir(self) -> AsyncPath:
+        return self.directory / "cdn01"
+
+    @cached_property
     def csv_dir(self) -> AsyncPath:
         return self.directory / "csv"

@@ -1,6 +1,6 @@
 [project]
 name = "naagin"
-version = "0.2.6"
+version = "0.3.0"
 description = "A server implementation for a certain swimsuit gacha game."
 requires-python = ">=3.13"
 dependencies = [
@@ -37,7 +37,9 @@ proxy = [
 [tool.uv]
 package = false
 default-groups = "all"
-override-dependencies = ["httptools; sys_platform == 'never'"]
+override-dependencies = [
+  "httptools; sys_platform == 'never'"
+]
 
 [tool.ruff]
 src = ["naagin"]
@@ -83,19 +85,21 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "pathlib.Path".msg = "Use aiopath.AsyncPath instead."
-"typing.Optional".msg = "Use X | Y for type annotations."
 
 "aiopath.Path".msg = "Use aiopath.AsyncPath instead."
-"async_lru.alru_cache".msg = "Use naagin.decorators.async_lru_cache instead."
-"pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
-"pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
-"sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."
-"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.bases.SchemaBase instead."
+"httpx.Client".msg = "Use httpx.AsyncClient instead."
+
 "starlette.datastructures.Headers".msg = "Use fastapi.datastructures.Headers instead."
 "starlette.exceptions.HTTPException".msg = "Use fastapi.exceptions.StarletteHTTPException instead."
 "starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
 "starlette.requests.Request".msg = "Use fastapi.Request instead."
 "starlette.responses.Response".msg = "Use fastapi.Response instead."
+
+"async_lru.alru_cache".msg = "Use naagin.decorators.async_lru_cache instead."
+"pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
+"pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
+"sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."
+"sqlalchemy.orm.DeclarativeBase".msg = "Use naagin.bases.SchemaBase instead."
 
 "naagin.decorators.async_req_cache".msg = "Do not use naagin.decorators.async_req_cache."
 

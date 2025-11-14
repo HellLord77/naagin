@@ -26,7 +26,7 @@ import utils
 logger = logging.getLogger(__name__)
 
 
-def redirect_request(request: Request, path: str):
+def redirect_request(request: Request, path: str) -> None:
     pretty_host = request.pretty_host
 
     pretty_url = request.pretty_url
@@ -39,7 +39,7 @@ def redirect_request(request: Request, path: str):
     request.headers["Host"] = pretty_host
 
 
-def renounce_request(request: Request):
+def renounce_request(request: Request) -> None:
     nonce = request.headers["X-DOAXVV-Nonce"]
     proxy_nonce = secrets.token_hex(4)
     request.headers["X-DOAXVV-Nonce"] = proxy_nonce
@@ -56,11 +56,11 @@ class DOAXVVAddon:
 
     loaded_flows: WeakSet[HTTPFlow] = WeakSet()
 
-    async def load_flow(self, flow: HTTPFlow):
+    async def load_flow(self, flow: HTTPFlow) -> None:
         self.loaded_flows.add(flow)
         await self.master_load_flow(flow)
 
-    def load(self, _: Loader):
+    def load(self, _: Loader) -> None:
         self.proxy_private_key = utils.load_private_key()
 
         self.master_load_flow = ctx.master.load_flow
@@ -68,25 +68,25 @@ class DOAXVVAddon:
 
         logger.info("[addon] load")
 
-    def done(self):
+    def done(self) -> None:
         ctx.master.load_flow = self.master_load_flow
         del self.master_load_flow
 
         logger.info("[addon] done")
 
-    def requestheaders(self, flow: HTTPFlow):
+    def requestheaders(self, flow: HTTPFlow) -> None:
         if flow in self.loaded_flows:
             return
 
         match flow.request.pretty_host:
-            case consts.API_HOST:
+            case consts.API_HOST | consts.API_JP_HOST:
                 logger.info("[api] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REAPI:
                     redirect_request(flow.request, "api")
                 if config.RENONCE:
                     renounce_request(flow.request)
 
-            case consts.API01_HOST:
+            case consts.API01_HOST | consts.API01_JP_HOST:
                 logger.info("[api01] %s: %s", flow.request.method, flow.request.pretty_url)
                 if config.REAPI01:
                     redirect_request(flow.request, "api01")
@@ -96,13 +96,18 @@ class DOAXVVAddon:
                 if config.REGAME:
                     redirect_request(flow.request, "game")
 
-    def request(self, flow: HTTPFlow):
+            case consts.CDN01_HOST:
+                logger.info("[cdn01] %s: %s", flow.request.method, flow.request.pretty_url)
+                if config.RECDN01:
+                    redirect_request(flow.request, "cdn01")
+
+    def request(self, flow: HTTPFlow) -> None:
         if flow in self.loaded_flows:
             return
 
         if (
             flow.request.method == HTTPMethod.PUT
-            and flow.request.pretty_host == consts.API_HOST
+            and (flow.request.pretty_host in consts.API_HOSTS)
             and flow.request.path_components[-3:] == ("v1", "session", "key")
         ):
             encrypt_key = flow.request.json()["encrypt_key"]
@@ -116,11 +121,11 @@ class DOAXVVAddon:
             flow.request.text = json.dumps({"encrypt_key": proxy_encrypt_key})
             logger.info("[session_key] %s -> %s", encrypt_key, proxy_encrypt_key)
 
-    def response(self, flow: HTTPFlow):
+    def response(self, flow: HTTPFlow) -> None:
         if flow in self.loaded_flows:
             return
 
-        if flow.request.pretty_host == consts.API_HOST:
+        if flow.request.pretty_host in consts.API_HOSTS:
             if flow.request.method == HTTPMethod.GET and flow.request.path_components[-3:] == ("v1", "session", "key"):
                 encrypt_key = flow.response.json()["encrypt_key"]
                 self.public_key = cryptography.hazmat.primitives.serialization.load_pem_public_key(encrypt_key.encode())

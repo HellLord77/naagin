@@ -4,7 +4,11 @@ from naagin import settings
 from naagin.decorators import async_lru_cache
 from naagin.models.api01 import ResourceListGetResponseModel
 
+from . import encrypt
+
 router = APIRouter(prefix="/list")
+
+router.include_router(encrypt.router)
 
 
 @router.get("")

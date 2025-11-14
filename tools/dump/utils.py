@@ -1,5 +1,6 @@
 import base64
 import gzip
+import hashlib
 import json
 import logging
 import subprocess
@@ -11,6 +12,7 @@ from collections.abc import Iterator
 from datetime import datetime
 from itertools import islice
 from pathlib import Path
+from shutil import COPY_BUFSIZE
 from typing import Any
 
 import datamodel_code_generator
@@ -55,6 +57,14 @@ def rmtree_empty(path: Path) -> None:
             rmtree_empty(child)
     if is_empty(path.iterdir()):
         path.rmdir()
+
+
+def get_md5(path: Path) -> str:
+    md5 = hashlib.md5(usedforsecurity=False)
+    with path.open("rb") as file:
+        while chunk := file.read(COPY_BUFSIZE):
+            md5.update(chunk)
+    return md5.hexdigest()
 
 
 def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:

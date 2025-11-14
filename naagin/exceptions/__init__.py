@@ -1,4 +1,5 @@
 from .authentication_failed import AuthenticationFailedException as AuthenticationFailedException
+from .forbidden import ForbiddenException as ForbiddenException
 from .friendship_cant_request import FriendshipCantRequestException as FriendshipCantRequestException
 from .friendship_not_found import FriendshipNotFoundException as FriendshipNotFoundException
 from .internal_server_error import InternalServerErrorException as InternalServerErrorException

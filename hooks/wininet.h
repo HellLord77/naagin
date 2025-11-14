@@ -1,6 +1,6 @@
 #include <wininet.h>
 
-#include "common.h"
+#include "utils.h"
 
 #define INTERNETCRACKURLW
 
