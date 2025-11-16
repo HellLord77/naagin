@@ -3,6 +3,7 @@ from hashlib import md5
 from http import HTTPMethod
 from http import HTTPStatus
 from logging import Logger
+from mimetypes import guess_type
 from re import compile
 from typing import override
 
@@ -10,7 +11,6 @@ from aiopath import AsyncPath
 from filelock import AsyncFileLock
 from httpx import AsyncClient
 from httpx import HTTPStatusError
-from starlette.datastructures import URL
 from starlette.exceptions import HTTPException  # noqa: TID251
 from starlette.responses import FileResponse
 from starlette.responses import PlainTextResponse
@@ -79,38 +79,43 @@ class CachedStaticFiles(StaticFiles):
                         response.raise_for_status()
                     except HTTPStatusError:
                         if response.status_code == HTTPStatus.NOT_FOUND:
-                            self.logger.warning("[bold]Resource[/bold] not found: %s", url)
                             if full_path.name != "index.html":
-                                return await self.not_found_handler(full_path / "index.html", scope)
+                                mimetype = guess_type(full_path.name, strict=False)[0]
+                                if mimetype is None:
+                                    return await self.not_found_handler(full_path / "index.html", scope)
+                                self.logger.info("Guessed [bold]mimetype[/bold]: %s", mimetype)
+
+                            self.logger.warning("[bold]Resource[/bold] not found: %s", url)
                             return not_found_response()
 
                         if HTTPStatus(response.status_code).is_redirection:
-                            url = URL(response.headers["Location"])
-                            return RedirectResponse(f"{scope.get('root_path', '').removeprefix('/')}{url.path}")
+                            location = response.headers["Location"]
+                            self.logger.info("[bold]Resource[/bold] redirected: %s", location)
+                            return RedirectResponse(location)
 
                         raise
+                    else:
+                        etag = response.headers.get("ETag", "")
+                        match = etag_pattern.match(etag)
+                        if match is None:
+                            self.logger.warning("Invalid [bold]ETag[/bold]: %s", etag)
+                            raise InternalServerErrorException
 
-                    etag = response.headers.get("ETag", "")
-                    match = etag_pattern.match(etag)
-                    if match is None:
-                        self.logger.warning("Unknown [bold]ETag[/bold] string: %s", etag)
-                        raise InternalServerErrorException
+                        md5_ = md5(usedforsecurity=False)
+                        temp_path = encoded_path.with_suffix(".temp")
+                        await temp_path.parent.mkdir(parents=True, exist_ok=True)
 
-                    md5_ = md5(usedforsecurity=False)
-                    temp_path = encoded_path.with_suffix(".temp")
-                    await temp_path.parent.mkdir(parents=True, exist_ok=True)
+                        async with temp_path.open("wb") as file:
+                            async for chunk in response.aiter_bytes():
+                                md5_.update(chunk)
+                                await file.write(chunk)
 
-                    async with temp_path.open("wb") as file:
-                        async for chunk in response.aiter_bytes():
-                            md5_.update(chunk)
-                            await file.write(chunk)
+                        if md5_.hexdigest() != match.group("md5"):
+                            self.logger.warning("[bold]MD5[/bold] mismatch: %s", md5_)
+                            await temp_path.unlink()
+                            raise InternalServerErrorException
 
-                    if md5_.hexdigest() != match.group("md5"):
-                        self.logger.warning("[bold]MD5[/bold] mismatch: %s", md5_)
-                        await temp_path.unlink()
-                        raise InternalServerErrorException
-
-                    await full_path.parent.mkdir(parents=True, exist_ok=True)
-                    await temp_path.rename(full_path)
+                        await full_path.parent.mkdir(parents=True, exist_ok=True)
+                        await temp_path.rename(full_path)
 
         return FileResponse(full_path)

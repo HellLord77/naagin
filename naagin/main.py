@@ -152,6 +152,10 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
         loggers.game.debug(
             "Routes count: %d", sum(1 for path in Path(settings.data.game_dir).rglob("*") if path.is_file())
         )
+    if loggers.cdn01.isEnabledFor(DEBUG):
+        loggers.cdn01.debug(
+            "Routes count: %d", sum(1 for path in Path(settings.data.cdn01_dir).rglob("*") if path.is_file())
+        )
 
     hooks.attach()
 
