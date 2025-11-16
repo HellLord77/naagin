@@ -58,7 +58,7 @@ def encrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
     return encryptor.update(padded_data) + encryptor.finalize()
 
 
-def encrypt_resource_data(platform_id: int, key: bytes, data: bytes) -> str:  # TODO
+def encrypt_resource_data(platform_id: int, key: bytes, data: bytes) -> str:
     md5_ = md5(key, usedforsecurity=False)
     encoded_key = md5_.hexdigest().encode()
     md5_.update(str(platform_id).encode())

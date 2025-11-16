@@ -2,9 +2,9 @@ from fastapi import APIRouter
 from fastapi import Response
 from sqlalchemy import func
 
-from models.api import SteamJaSessionPostRequestModel
-from models.api import SteamJaSessionPostResponseModel
 from naagin import factories
+from naagin.models.api import SteamJaSessionPostRequestModel
+from naagin.models.api import SteamJaSessionPostResponseModel
 from naagin.schemas import OwnerCountLoginSchema
 from naagin.schemas import OwnerSchema
 from naagin.schemas import SessionSchema
