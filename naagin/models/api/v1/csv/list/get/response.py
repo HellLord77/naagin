@@ -7,7 +7,7 @@ from naagin.types_.fields import CSVField
 from naagin.types_.fields import MD5Field
 
 
-class CSVFileModel(ModelBase):
+class CSVFileListModel(ModelBase):
     __pydantic_extra__: dict[CSVField, MD5Field]
 
     file_encrypt_key: Literal["9AraWdtpsar4fln2r1TtX0AxiCJcLSqp"]
@@ -16,4 +16,4 @@ class CSVFileModel(ModelBase):
 
 
 class CSVListGetResponseModel(ModelBase):
-    csv_file_list: CSVFileModel
+    csv_file_list: CSVFileListModel

@@ -1,16 +1,12 @@
-from typing import Annotated
-
-from pydantic import Field
 from pydantic import PositiveInt
 
-from naagin import settings
 from naagin.bases import ModelBase
 from naagin.types_.fields import EXEField
 from naagin.types_.fields import MD5Field
 
 
 class ResourceModel(ModelBase):
-    version: Annotated[int, Field(le=settings.version.application)]
+    version: int
     directory: str
     file_name: EXEField
     file_size: PositiveInt

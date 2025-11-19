@@ -16,7 +16,7 @@ from starlette.routing import Match
 from starlette.routing import Router
 from starlette.types import Scope
 
-from .cached_static_files import CachedStaticFiles as CachedStaticFiles
+from .cached_resource import CachedResource as CachedResource
 from .custom_header import CustomHeader as CustomHeader
 from .sqlalchemy_handler import SQLAlchemyHandler as SQLAlchemyHandler
 

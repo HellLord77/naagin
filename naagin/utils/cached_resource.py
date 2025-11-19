@@ -31,7 +31,7 @@ def not_found_response() -> PlainTextResponse:
     return PlainTextResponse("Not Found\n", HTTPStatus.NOT_FOUND)
 
 
-class CachedStaticFiles(StaticFiles):
+class CachedResource(StaticFiles):
     directory: AsyncPath
 
     @override
@@ -83,8 +83,7 @@ class CachedStaticFiles(StaticFiles):
                                 mimetype = guess_type(full_path.name, strict=False)[0]
                                 if mimetype is None:
                                     return await self.not_found_handler(full_path / "index.html", scope)
-                                self.logger.info("Guessed [bold]mimetype[/bold]: %s", mimetype)
-
+                                self.logger.debug("Guessed [bold]mimetype[/bold]: %s", mimetype)
                             self.logger.warning("[bold]Resource[/bold] not found: %s", url)
                             return not_found_response()
 
@@ -95,11 +94,16 @@ class CachedStaticFiles(StaticFiles):
 
                         raise
                     else:
-                        etag = response.headers.get("ETag", "")
-                        match = etag_pattern.match(etag)
-                        if match is None:
-                            self.logger.warning("Invalid [bold]ETag[/bold]: %s", etag)
-                            raise InternalServerErrorException
+                        etag = response.headers.get("ETag")
+                        if etag is None:
+                            self.logger.debug("[bold]ETag[/bold] missing")
+                            expected_md5 = None
+                        else:
+                            etag_match = etag_pattern.match(etag)
+                            if etag_match is None:
+                                self.logger.warning("Invalid [bold]ETag[/bold]: %s", etag)
+                                raise InternalServerErrorException
+                            expected_md5 = etag_match.group("md5")
 
                         md5_ = md5(usedforsecurity=False)
                         temp_path = encoded_path.with_suffix(".temp")
@@ -110,8 +114,11 @@ class CachedStaticFiles(StaticFiles):
                                 md5_.update(chunk)
                                 await file.write(chunk)
 
-                        if md5_.hexdigest() != match.group("md5"):
-                            self.logger.warning("[bold]MD5[/bold] mismatch: %s", md5_)
+                        md5_digest = md5_.hexdigest()
+                        if expected_md5 is not None and expected_md5 != md5_digest:
+                            self.logger.warning(
+                                "[bold]MD5[/bold] mismatch: expected %s, got %s", expected_md5, md5_digest
+                            )
                             await temp_path.unlink()
                             raise InternalServerErrorException
 

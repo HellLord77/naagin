@@ -41,5 +41,9 @@ class DataSettings(SettingsBase):
         return self.directory / "cdn01"
 
     @cached_property
+    def www_dir(self) -> AsyncPath:
+        return self.directory / "www"
+
+    @cached_property
     def csv_dir(self) -> AsyncPath:
         return self.directory / "csv"

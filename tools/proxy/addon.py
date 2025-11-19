@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 def redirect_request(request: Request, path: str) -> None:
-    pretty_host = request.pretty_host
+    pretty_host = request.host_header
 
     pretty_url = request.pretty_url
     request.scheme = consts.SERVER_URL.scheme
@@ -36,13 +36,14 @@ def redirect_request(request: Request, path: str) -> None:
     request.path_components = path, *request.path_components
 
     logger.info("[url] %s -> %s", pretty_url, request.url)
-    request.headers["Host"] = pretty_host
+    request.host_header = pretty_host
 
 
 def renounce_request(request: Request) -> None:
     nonce = request.headers["X-DOAXVV-Nonce"]
     proxy_nonce = secrets.token_hex(4)
     request.headers["X-DOAXVV-Nonce"] = proxy_nonce
+
     logger.info("[nonce] %s -> %s", nonce, proxy_nonce)
 
 
@@ -78,28 +79,24 @@ class DOAXVVAddon:
         if flow in self.loaded_flows:
             return
 
-        match flow.request.pretty_host:
-            case consts.API_HOST | consts.API_JP_HOST:
-                logger.info("[api] %s: %s", flow.request.method, flow.request.pretty_url)
-                if config.REAPI:
-                    redirect_request(flow.request, "api")
-                if config.RENONCE:
-                    renounce_request(flow.request)
+        host = flow.request.pretty_host
+        if host in consts.API_HOSTS:
+            logger.info("[api] %s: %s", flow.request.method, flow.request.pretty_url)
+            if config.REAPI:
+                redirect_request(flow.request, "api")
+            if config.RENONCE:
+                renounce_request(flow.request)
 
-            case consts.API01_HOST | consts.API01_JP_HOST:
-                logger.info("[api01] %s: %s", flow.request.method, flow.request.pretty_url)
-                if config.REAPI01:
-                    redirect_request(flow.request, "api01")
+        elif host in consts.API_01_HOSTS:
+            logger.info("[api01] %s: %s", flow.request.method, flow.request.pretty_url)
+            if config.REAPI01:
+                redirect_request(flow.request, "api01")
 
-            case consts.GAME_HOST:
-                logger.info("[game] %s: %s", flow.request.method, flow.request.pretty_url)
-                if config.REGAME:
-                    redirect_request(flow.request, "game")
-
-            case consts.CDN01_HOST:
-                logger.info("[cdn01] %s: %s", flow.request.method, flow.request.pretty_url)
-                if config.RECDN01:
-                    redirect_request(flow.request, "cdn01")
+        elif host in consts.RES_HOSTS:
+            path = consts.RESP_PATHS[host]
+            logger.info("[%s] %s: %s", path, flow.request.method, flow.request.pretty_url)
+            if config.RERES:
+                redirect_request(flow.request, path)
 
     def request(self, flow: HTTPFlow) -> None:
         if flow in self.loaded_flows:
@@ -125,7 +122,8 @@ class DOAXVVAddon:
         if flow in self.loaded_flows:
             return
 
-        if flow.request.pretty_host in consts.API_HOSTS:
+        host = flow.request.pretty_host
+        if host in consts.API_HOSTS:
             if flow.request.method == HTTPMethod.GET and flow.request.path_components[-3:] == ("v1", "session", "key"):
                 encrypt_key = flow.response.json()["encrypt_key"]
                 self.public_key = cryptography.hazmat.primitives.serialization.load_pem_public_key(encrypt_key.encode())
@@ -143,6 +141,14 @@ class DOAXVVAddon:
 
             else:
                 utils.write_flow(flow, self.session_key)
+
+        elif host in consts.RES_HOSTS:
+            live = flow.live
+            flow.live = False
+
+            ctx.master.commands.call("view.flows.remove", (flow,))
+
+            flow.live = live
 
 
 addons = [DOAXVVAddon()]

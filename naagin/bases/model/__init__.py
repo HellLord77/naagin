@@ -6,5 +6,7 @@ from pydantic import ConfigDict
 
 class ModelBase(BaseModel):
     model_config = ConfigDict(
-        from_attributes=True, json_encoders={datetime: lambda value: value.strftime("%Y-%m-%d %H:%M:%S")}
+        extra="forbid",
+        from_attributes=True,
+        json_encoders={datetime: lambda value: value.strftime("%Y-%m-%d %H:%M:%S")},
     )
