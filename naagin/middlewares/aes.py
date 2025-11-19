@@ -16,9 +16,10 @@ from starlette.types import ASGIApp
 
 from naagin.abstract import BaseEncodingMiddleware
 from naagin.classes import AsyncSession
+from naagin.enums import DOAXVVHeaderEnum
 from naagin.exceptions import AuthenticationFailedException
 from naagin.providers import provide_session
-from naagin.utils import CustomHeader
+from naagin.utils import DOAXVVHeader
 
 
 class AESMiddleware(BaseEncodingMiddleware):
@@ -27,8 +28,7 @@ class AESMiddleware(BaseEncodingMiddleware):
     padder: PaddingContext
     encryptor: CipherContext
 
-    send_header = CustomHeader("Encrypted")
-    receive_header = str(send_header)
+    header = DOAXVVHeaderEnum.ENCRYPTED
 
     @override
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True, database: AsyncSession) -> None:
@@ -36,14 +36,14 @@ class AESMiddleware(BaseEncodingMiddleware):
         self.database = database
 
     def should_receive_with_decoder(self, headers: Headers) -> bool:
-        return self.receive_header in headers
+        return self.header in headers
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
         request = Request(self.connection_scope)
         session = await provide_session(request, database=self.database)
-        initialization_vector = b64decode(request.headers[self.receive_header])
+        initialization_vector = b64decode(request.headers[self.header])
 
-        del headers[self.receive_header]
+        del headers[self.header]
         self.decryptor = Cipher(AES(session.key), CBC(initialization_vector)).decryptor()
         self.unpadder = PKCS7(AES.block_size).unpadder()
 
@@ -54,7 +54,7 @@ class AESMiddleware(BaseEncodingMiddleware):
         return self.unpadder.update(self.decryptor.finalize()) + self.unpadder.finalize()
 
     def should_send_with_encoder(self, headers: Headers) -> bool:
-        return self.send_header not in headers
+        return self.header not in headers
 
     async def init_encoder(self, headers: MutableHeaders) -> bool:
         request = Request(self.connection_scope)
@@ -64,7 +64,7 @@ class AESMiddleware(BaseEncodingMiddleware):
             return False
         initialization_vector = token_bytes(16)
 
-        headers[self.send_header] = b64encode(initialization_vector).decode()
+        headers[DOAXVVHeader(self.header)] = b64encode(initialization_vector).decode()
         self.padder = PKCS7(AES.block_size).padder()
         self.encryptor = Cipher(AES(session.key), CBC(initialization_vector)).encryptor()
         return True

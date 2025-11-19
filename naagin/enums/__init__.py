@@ -6,6 +6,9 @@ from .database_driver import DatabaseDriverEnum as DatabaseDriverEnum
 from .encoding import EncodingEnum as EncodingEnum
 from .friendship_state import FriendshipStateEnum as FriendshipStateEnum
 from .giftbox_message_type import GiftBoxMessageTypeTypeEnum as GiftBoxMessageTypeTypeEnum
+from .header import HeaderEnum as HeaderEnum
+from .header.doaxvv import DOAXVVHeaderEnum as DOAXVVHeaderEnum
+from .header.naagin import NaaginHeaderEnum as NaaginHeaderEnum
 from .information_category import InformationCategoryEnum as InformationCategoryEnum
 from .item_consume_type import ItemConsumeTypeEnum as ItemConsumeTypeEnum
 from .item_equipment_type import ItemEquipmentTypeEnum as ItemEquipmentTypeEnum
