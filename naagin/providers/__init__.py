@@ -7,6 +7,7 @@ from sqlalchemy import func
 from naagin import settings
 from naagin.classes import AsyncSession
 from naagin.decorators import async_req_cache  # noqa: TID251
+from naagin.enums import DOAXVVHeaderEnum
 from naagin.exceptions import AuthenticationFailedException
 from naagin.schemas import MaintenanceSchema
 from naagin.schemas import SessionSchema
@@ -44,7 +45,7 @@ async def provide_session(
     database: AsyncSession = Depends(provide_database),
 ) -> SessionSchema:
     if access_token is None:
-        access_token = request.headers.get("X-DOAXVV-Access-Token")
+        access_token = request.headers.get(DOAXVVHeaderEnum.ACCESS_TOKEN)
     if pinksid is None:
         pinksid = request.cookies.get("PINKSID")
 

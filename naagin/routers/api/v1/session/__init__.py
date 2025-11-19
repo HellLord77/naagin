@@ -3,13 +3,14 @@ from fastapi import Response
 from sqlalchemy import func
 
 from naagin import factories
+from naagin.enums import DOAXVVHeaderEnum
 from naagin.models.api import SessionPostRequestModel
 from naagin.models.api import SessionPostResponseModel
 from naagin.schemas import OwnerCountLoginSchema
 from naagin.schemas import OwnerSchema
 from naagin.schemas import SessionSchema
 from naagin.types_.dependencies import DatabaseDependency
-from naagin.utils import CustomHeader
+from naagin.utils import DOAXVVHeader
 
 from . import key
 
@@ -60,6 +61,6 @@ async def post(
 
     await database.flush()
 
-    CustomHeader.set(response, "Access-Token", session.access_token)
+    response.headers[DOAXVVHeader(DOAXVVHeaderEnum.ACCESS_TOKEN)] = session.access_token
     response.set_cookie("PINKSID", session.pinksid, samesite=None)
     return SessionPostResponseModel(auth=True, owner_id=owner.owner_id, owner_status=owner.status)

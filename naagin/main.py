@@ -38,6 +38,7 @@ from . import settings
 from .bases import ExceptionBase
 from .bases import ModelBase
 from .bases import SchemaBase
+from .enums import NaaginHeaderEnum
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
@@ -184,7 +185,7 @@ async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint
     except ExceptionBase:
         pass
     else:
-        headers["X-Session-Key"] = b64encode(session.key).decode()
+        headers[NaaginHeaderEnum.SESSION_KEY] = b64encode(session.key).decode()
 
         request_body = await request.body()
         if request_body:
@@ -193,7 +194,7 @@ async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint
             except JSONDecodeError:
                 pass
             else:
-                headers["X-Request"] = request_body.decode()
+                headers[NaaginHeaderEnum.REQUEST_BODY] = request_body.decode()
 
     response = await call_next(request)
     response_body = await response_peek_body(response)
@@ -203,7 +204,7 @@ async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint
         except JSONDecodeError:
             pass
         else:
-            headers["X-Response"] = response_body.decode()
+            headers[NaaginHeaderEnum.RESPONSE_BODY] = response_body.decode()
     response.headers.update(headers)
 
     return response
@@ -258,5 +259,5 @@ if settings.app.debug_headers:
         start_time = perf_counter()
         response = await call_next(request)
         process_time = perf_counter() - start_time
-        response.headers["X-Process-Time"] = str(process_time)
+        response.headers[NaaginHeaderEnum.PROCESS_TIME] = str(process_time)
         return response

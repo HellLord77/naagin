@@ -17,7 +17,7 @@ from starlette.routing import Router
 from starlette.types import Scope
 
 from .cached_resource import CachedResource as CachedResource
-from .custom_header import CustomHeader as CustomHeader
+from .doaxvv_header import DOAXVVHeader as DOAXVVHeader
 from .sqlalchemy_handler import SQLAlchemyHandler as SQLAlchemyHandler
 
 

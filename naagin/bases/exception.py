@@ -5,7 +5,11 @@ from typing import ClassVar
 from fastapi import Request
 from fastapi.responses import ORJSONResponse
 
-from naagin.utils import CustomHeader
+from naagin import loggers
+from naagin import settings
+from naagin.enums import DOAXVVHeaderEnum
+from naagin.enums import NaaginHeaderEnum
+from naagin.utils import DOAXVVHeader
 
 
 class ExceptionBase(Exception):  # noqa: N818
@@ -34,5 +38,12 @@ class ExceptionBase(Exception):  # noqa: N818
             return exception.handler()
 
         response = ORJSONResponse(*cls.get_args())
-        CustomHeader.set(response, "Status", cls.code)
+        if exception is not None:
+            exception_type = type(exception).__name__
+            exception_message = str(exception)
+            loggers.app.debug("%s: %s", exception_type, exception_message)
+            if settings.app.debug_headers:
+                response.headers[NaaginHeaderEnum.EXCEPTION_TYPE] = exception_type
+                response.headers[NaaginHeaderEnum.EXCEPTION_MESSAGE] = exception_message
+        response.headers[DOAXVVHeader(DOAXVVHeaderEnum.STATUS)] = str(cls.code)
         return response

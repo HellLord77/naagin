@@ -8,18 +8,18 @@ from starlette.datastructures import MutableHeaders
 from starlette.types import ASGIApp
 
 from naagin.abstract import BaseEncodingMiddleware
+from naagin.enums import DOAXVVHeaderEnum
 from naagin.enums import EncodingEnum
 from naagin.types_ import ZLibCompressor
 from naagin.types_ import ZLibDecompressor
-from naagin.utils import CustomHeader
+from naagin.utils import DOAXVVHeader
 
 
 class DeflateMiddleware(BaseEncodingMiddleware):
     decompressor: ZLibDecompressor
     compressor: ZLibCompressor
 
-    send_header = CustomHeader("Encoding")
-    receive_header = str(send_header)
+    header = DOAXVVHeaderEnum.ENCODING
 
     @override
     def __init__(self, app: ASGIApp, *, send_encoded: bool = True, compress_level: int = Z_DEFAULT_COMPRESSION) -> None:
@@ -27,10 +27,10 @@ class DeflateMiddleware(BaseEncodingMiddleware):
         self.compress_level = compress_level
 
     def should_receive_with_decoder(self, headers: Headers) -> bool:
-        return headers.get(self.receive_header) == EncodingEnum.DEFLATE
+        return headers.get(self.header) == EncodingEnum.DEFLATE
 
     async def init_decoder(self, headers: MutableHeaders) -> None:
-        del headers[self.receive_header]
+        del headers[self.header]
         self.decompressor = decompressobj()
 
     def update_decoder(self, data: bytes) -> bytes:
@@ -40,10 +40,10 @@ class DeflateMiddleware(BaseEncodingMiddleware):
         return self.decompressor.flush()
 
     def should_send_with_encoder(self, headers: Headers) -> bool:
-        return self.send_header not in headers
+        return self.header not in headers
 
     async def init_encoder(self, headers: MutableHeaders) -> bool:
-        headers[self.send_header] = EncodingEnum.DEFLATE
+        headers[DOAXVVHeader(self.header)] = EncodingEnum.DEFLATE
         self.compressor = compressobj(self.compress_level)
         return True
 
