@@ -9,6 +9,5 @@ WRITE_CONSOLE: bool = os.getenv("WRITE_CONSOLE", "false").lower() == "true"
 
 REAPI: bool = not WRITE_FILE
 REAPI01: bool = not WRITE_FILE
-REGAME: bool = True
-RECDN01: bool = True
+RERES: bool = True
 RENONCE: bool = False

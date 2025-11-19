@@ -222,6 +222,11 @@ BOOL CrackUrl_fake(CrackUrl_ptr crackUrl_real, LPCWSTR url, DWORD urlLength, DWO
             hostName = L"/cdn01";
             hostNameLength = 6;
         }
+        else if (urlComponents->dwHostNameLength == 21 && wmemcmp(urlComponents->lpszHostName, L"doax-venusvacation.jp", 21) == 0)
+        {
+            hostName = L"/www";
+            hostNameLength = 4;
+        }
         else
         {
             return FALSE;

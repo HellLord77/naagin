@@ -3,4 +3,8 @@ from pydantic_settings import SettingsConfigDict
 
 
 class SettingsBase(BaseSettings):
-    model_config = SettingsConfigDict(frozen=True, extra="ignore", env_parse_none_str="null")
+    model_config = SettingsConfigDict(
+        extra="ignore",  # deprecated
+        frozen=True,
+        env_parse_none_str="null",
+    )

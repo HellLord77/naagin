@@ -78,16 +78,16 @@ class BaseEncodingMiddleware(ABC):
                 self.receive_started = True
 
                 if body or more_body:
-                    header = MutableHeaders(raw=self.connection_scope["headers"])
-                    await self.init_decoder(header)
-                    del header["Content-Type"]
+                    headers = MutableHeaders(raw=self.connection_scope["headers"])
+                    await self.init_decoder(headers)
+                    del headers["Content-Type"]
 
                     body = self.update_decoder(body)
                     if more_body:
-                        del header["Content-Length"]
+                        del headers["Content-Length"]
                     else:
                         body += self.flush_decoder()
-                        header["Content-Length"] = str(len(body))
+                        headers["Content-Length"] = str(len(body))
 
             message["body"] = body
         return message

@@ -112,7 +112,7 @@ def json_to_resources(app: str, client: Client, json_path: Path) -> None:
         resources_to_app(app, client, resources, "resource")
 
 
-def download_patch_data(app: str, host: str, directory: str) -> None:
+def download_resource(app: str, host: str, directory: str) -> None:
     client = Client(base_url=URL(scheme="https", host=host))
     src_path = config.DATA_DIR / "api01" / "v1" / "resource" / "list" / directory
 
@@ -120,39 +120,46 @@ def download_patch_data(app: str, host: str, directory: str) -> None:
         json_to_resources(app, client, json_path)
 
 
-def download_csv(app: str, host: str, master_version: int, application_version: int) -> None:
-    csv_list_path = (
-        config.DATA_DIR / "api" / "v1" / "csv" / "list" / str(master_version) / f"{application_version}.json"
-    )
-    with csv_list_path.open("rb") as file:
+def json_to_csv(data_dir: Path, client: Client, json_path: Path) -> None:
+    logger.info("[JSON] %s", json_path)
+
+    with json_path.open("rb") as file:
         csv_list = json.load(file)
 
     csv_file_list = csv_list["csv_file_list"]
     del csv_file_list["file_encrypt_key"]
 
-    client = Client(base_url=URL(scheme="https", host=host))
-    src_path = config.DATA_DIR / app / "production" / "csv" / str(master_version)
+    master_version = json_path.parent.name
+    dst_dir = data_dir / "production" / "csv" / master_version
 
     for initialization_vector in csv_file_list.values():
-        encrypted_path = src_path / initialization_vector
-        if not encrypted_path.is_file():
-            logger.warning("[DOWNLOAD] %s", encrypted_path)
+        dst_path = dst_dir / initialization_vector
+        if not dst_path.is_file():
+            logger.warning("[DOWNLOAD] %s", dst_path)
             response = client.get(f"/production/csv/{master_version}/{initialization_vector}")
             response.raise_for_status()
 
-            encrypted_path.parent.mkdir(parents=True, exist_ok=True)
-            encrypted_path.write_bytes(response.content)
+            dst_path.parent.mkdir(parents=True, exist_ok=True)
+            dst_path.write_bytes(response.content)
+
+
+def download_csv(app: str, host: str, master_version: int) -> None:
+    data_dir = config.DATA_DIR / app
+    client = Client(base_url=URL(scheme="https", host=host))
+
+    for json_path in (config.DATA_DIR / "api" / "v1" / "csv" / "list" / str(master_version)).glob("*.json"):
+        json_to_csv(data_dir, client, json_path)
 
 
 def main() -> None:
     download_resource_list()
     download_resource_list_jp()
 
-    download_patch_data("game", "game.doaxvv.com", "")
-    download_patch_data("cdn01", "cdn01.doax-venusvacation.jp", "encrypt")
+    # download_resource("game", "game.doaxvv.com", "")
+    # download_resource("cdn01", "cdn01.doax-venusvacation.jp", "encrypt")
 
-    download_csv("game", "game.doaxvv.com", config.MASTER_VERSION, config.APPLICATION_VERSION)
-    download_csv("cdn01", "cdn01.doax-venusvacation.jp", config.MASTER_VERSION_JP, config.APPLICATION_VERSION_JP)
+    download_csv("game", "game.doaxvv.com", 10)
+    download_csv("cdn01", "cdn01.doax-venusvacation.jp", 19)
 
 
 if __name__ == "__main__":

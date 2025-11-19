@@ -12,6 +12,7 @@ from .item_equipment_type import ItemEquipmentTypeEnum as ItemEquipmentTypeEnum
 from .language import LanguageEnum as LanguageEnum
 from .license_level import LicenseLevelEnum as LicenseLevelEnum
 from .logging_level import LoggingLevelEnum as LoggingLevelEnum
+from .master_version import MasterVersionEnum as MasterVersionEnum
 from .owner_status import OwnerStatusEnum as OwnerStatusEnum
 from .private_item import PrivateItemTypeEnum as PrivateItemTypeEnum
 from .recommended_rank import RecommendedRankEnum as RecommendedRankEnum

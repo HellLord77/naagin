@@ -251,8 +251,8 @@ def to_model(app: str, master_version: str, application_version: int) -> None:
 
 
 def main() -> None:
-    to_model("game", str(config.MASTER_VERSION), config.APPLICATION_VERSION)
-    to_model("cdn01", str(config.MASTER_VERSION_JP), config.APPLICATION_VERSION_JP)
+    to_model("game", "10", config.APPLICATION_VERSION)
+    to_model("cdn01", "19", config.APPLICATION_VERSION_JP)
 
 
 if __name__ == "__main__":

@@ -10,10 +10,8 @@ from inspect import getfile
 from inspect import getsourcelines
 from itertools import islice
 from json import JSONDecodeError
-from logging import DEBUG
 from logging import Formatter
 from logging import getLogger
-from pathlib import Path  # noqa: TID251
 from sys import modules
 from time import perf_counter
 
@@ -148,14 +146,6 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
     loggers.api.debug("Routes count: %d", len(routers.api.router.routes))
     loggers.api01.debug("Routes count: %d", len(routers.api01.router.routes))
-    if loggers.game.isEnabledFor(DEBUG):
-        loggers.game.debug(
-            "Routes count: %d", sum(1 for path in Path(settings.data.game_dir).rglob("*") if path.is_file())
-        )
-    if loggers.cdn01.isEnabledFor(DEBUG):
-        loggers.cdn01.debug(
-            "Routes count: %d", sum(1 for path in Path(settings.data.cdn01_dir).rglob("*") if path.is_file())
-        )
 
     hooks.attach()
 
@@ -184,6 +174,7 @@ app = FastAPI(
 
 app.mount("/game", apps.game.app)
 app.mount("/cdn01", apps.cdn01.app)
+app.mount("/www", apps.www.app)
 
 
 async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint) -> Response:
@@ -258,6 +249,7 @@ app.add_exception_handler(ExceptionBase, ExceptionBase.handler)
 
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(routers.api01.router, tags=["api01"])
+
 
 if settings.app.debug_headers:
 

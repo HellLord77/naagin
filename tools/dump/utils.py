@@ -75,7 +75,11 @@ def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> b
 
 
 def is_valid_message(request: Request, message: Message) -> bool:
-    return bool(request.pretty_host == "api.doaxvv.com" and "X-DOAXVV-Encrypted" in message.headers and message.content)
+    return bool(
+        request.pretty_host in {"api.doaxvv.com", "api.doax-venusvacation.jp"}
+        and "X-DOAXVV-Encrypted" in message.headers
+        and message.content
+    )
 
 
 def iter_messages(flow: HTTPFlow) -> Generator[Message]:
@@ -224,4 +228,4 @@ def schema_to_model(path: Path, schema_dir: Path, model_dir: Path) -> None:
 
 
 def model_formatter(model_dir: Path) -> None:
-    subprocess.run(("ruff", "format", model_dir), check=True)
+    subprocess.run(("ruff", "format", model_dir), check=True)  # noqa: S603
