@@ -17,9 +17,12 @@ ContentLengthHeader = Annotated[
 ]
 ContentTypeHeader = Annotated[str, Header(alias=HeaderEnum.CONTENT_TYPE)]
 
-AccessTokenHeader = Annotated[str, Header(alias=DOAXVVHeaderEnum.ACCESS_TOKEN)]
-ClientTypeHeader = Annotated[ClientTypeEnum, Header(alias=DOAXVVHeaderEnum.CLIENT_TYPE)]
 NonceHeader = Annotated[str, Header(alias=DOAXVVHeaderEnum.NONCE)]
+ClientTypeHeader = Annotated[ClientTypeEnum, Header(alias=DOAXVVHeaderEnum.CLIENT_TYPE)]
+
+ServerTimeHeader = Annotated[int, Header(alias=DOAXVVHeaderEnum.SERVER_TIME)]
+AccessTokenHeader = Annotated[str, Header(alias=DOAXVVHeaderEnum.ACCESS_TOKEN)]
+StatusHeader = Annotated[int, Header(alias=DOAXVVHeaderEnum.STATUS)]
 
 ApplicationVersionHeader = Annotated[
     int,

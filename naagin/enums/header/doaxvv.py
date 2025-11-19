@@ -2,11 +2,11 @@ from enum import StrEnum
 
 
 class DOAXVVHeaderEnum(StrEnum):
-    ACCESS_TOKEN = "X-DOAXVV-Access-Token"  # noqa: S105
-    CLIENT_TYPE = "X-DOAXVV-ClientType"
     NONCE = "X-DOAXVV-Nonce"
+    CLIENT_TYPE = "X-DOAXVV-ClientType"
 
     SERVER_TIME = "X-DOAXVV-ServerTime"
+    ACCESS_TOKEN = "X-DOAXVV-Access-Token"  # noqa: S105
     STATUS = "X-DOAXVV-Status"
 
     APPLICATION_VERSION = "X-DOAXVV-ApplicationVersion"
