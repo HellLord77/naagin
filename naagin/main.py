@@ -1,4 +1,3 @@
-from base64 import b64encode
 from collections import defaultdict
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -9,25 +8,19 @@ from inspect import get_annotations
 from inspect import getfile
 from inspect import getsourcelines
 from itertools import islice
-from json import JSONDecodeError
 from logging import Formatter
 from logging import getLogger
 from sys import modules
-from time import perf_counter
 
 from aiopath import AsyncPath
 from fastapi import FastAPI
-from fastapi import Request
-from fastapi import Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.exceptions import StarletteHTTPException
 from fastapi.middleware import Middleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import ORJSONResponse
-from orjson import loads
 from rich.logging import RichHandler
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.middleware.base import RequestResponseEndpoint
 
 from . import __version__
 from . import apps
@@ -38,7 +31,6 @@ from . import settings
 from .bases import ExceptionBase
 from .bases import ModelBase
 from .bases import SchemaBase
-from .enums import NaaginHeaderEnum
 from .exceptions import InternalServerErrorException
 from .exceptions import InvalidParameterException
 from .exceptions import MethodNotAllowedException
@@ -52,9 +44,10 @@ from .middlewares import FilteredMiddleware
 from .middlewares import LimitingBodyRequestMiddleware
 from .middlewares import RenewedMiddleware
 from .middlewares import StackedMiddleware
-from .providers import provide_session
+from .middlewares import add_debug_headers
+from .middlewares import add_process_time_header
+from .middlewares import remove_version_headers
 from .utils import SQLAlchemyHandler
-from .utils import response_peek_body
 
 
 def setup_sqlalchemy_logger() -> None:
@@ -177,39 +170,6 @@ app.mount("/game", apps.game.app)
 app.mount("/cdn01", apps.cdn01.app)
 app.mount("/www", apps.www.app)
 
-
-async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint) -> Response:
-    headers = {}
-    try:
-        session = await provide_session(request, database=settings.database.session)
-    except ExceptionBase:
-        pass
-    else:
-        headers[NaaginHeaderEnum.SESSION_KEY] = b64encode(session.key).decode()
-
-        request_body = await request.body()
-        if request_body:
-            try:
-                await request.json()
-            except JSONDecodeError:
-                pass
-            else:
-                headers[NaaginHeaderEnum.REQUEST_BODY] = request_body.decode()
-
-    response = await call_next(request)
-    response_body = await response_peek_body(response)
-    if response_body:
-        try:
-            loads(response_body)
-        except JSONDecodeError:
-            pass
-        else:
-            headers[NaaginHeaderEnum.RESPONSE_BODY] = response_body.decode()
-    response.headers.update(headers)
-
-    return response
-
-
 middlewares = [
     Middleware(
         RenewedMiddleware,
@@ -224,7 +184,6 @@ middlewares = [
 ]
 if settings.app.debug_headers:
     middlewares.insert(0, Middleware(BaseHTTPMiddleware, dispatch=add_debug_headers))
-
 app.add_middleware(FilteredMiddleware, middleware=Middleware(StackedMiddleware, *middlewares), filter=encoding_filter)
 
 if settings.app.limit:
@@ -240,6 +199,11 @@ if settings.app.gzip:
         filter=gzip_filter,
     )
 
+if settings.version.strict:
+    app.add_middleware(BaseHTTPMiddleware, dispatch=remove_version_headers)
+
+app.add_middleware(BaseHTTPMiddleware, dispatch=add_process_time_header)
+
 app.add_exception_handler(HTTPStatus.NOT_FOUND, NotFoundException.handler)
 app.add_exception_handler(HTTPStatus.METHOD_NOT_ALLOWED, MethodNotAllowedException.handler)
 app.add_exception_handler(HTTPStatus.INTERNAL_SERVER_ERROR, InternalServerErrorException.handler)
@@ -250,14 +214,3 @@ app.add_exception_handler(ExceptionBase, ExceptionBase.handler)
 
 app.include_router(routers.api.router, tags=["api"])
 app.include_router(routers.api01.router, tags=["api01"])
-
-
-if settings.app.debug_headers:
-
-    @app.middleware("http")
-    async def add_process_time_header(request: Request, call_next: RequestResponseEndpoint) -> Response:
-        start_time = perf_counter()
-        response = await call_next(request)
-        process_time = perf_counter() - start_time
-        response.headers[NaaginHeaderEnum.PROCESS_TIME] = str(process_time)
-        return response

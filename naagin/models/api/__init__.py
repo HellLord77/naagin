@@ -5,6 +5,7 @@ from .v1.casino.game.get.response import CasinoGameGetResponseModel as CasinoGam
 from .v1.casino.roulette.get.response import CasinoRouletteGetResponseModel as CasinoRouletteGetResponseModel
 from .v1.casino.roulette.log.get.response import CasinoRouletteLogGetResponseModel as CasinoRouletteLogGetResponseModel
 from .v1.cheat_log.check.get.response import CheatLogCheckGetResponseModel as CheatLogCheckGetResponseModel
+from .v1.cheat_log.write.post.request import CheatLogWritePostRequestModel as CheatLogWritePostRequestModel
 from .v1.csv.list.get.response import CSVListGetResponseModel as CSVListGetResponseModel
 from .v1.dishevelment.__owner_id__.__item_mid__.get.response import (
     DishevelmentOwnerIdItemMidGetResponseModel as DishevelmentOwnerIdItemMidGetResponseModel,
