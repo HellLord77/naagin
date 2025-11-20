@@ -24,3 +24,4 @@ from .request_clear_rank import RequestClearRankEnum as RequestClearRankEnum
 from .scene import SceneEnum as SceneEnum
 from .seal_rarity import SealRarityEnum as SealRarityEnum
 from .special_order_type import SpecialOrderTypeEnum as SpecialOrderTypeEnum
+from .uri_scheme import URISchemeEnum as URISchemeEnum

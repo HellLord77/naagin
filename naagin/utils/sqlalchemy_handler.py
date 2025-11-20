@@ -9,20 +9,19 @@ from rich.syntax import Syntax
 from sqlparse import format
 
 from naagin import settings
-from naagin.enums import DatabaseDriverEnum
 
 
 @cache
 def get_syntax() -> Syntax:
-    return Syntax(
-        "",
-        {
-            DatabaseDriverEnum.POSTGRESQL: "postgresql",
-            DatabaseDriverEnum.MYSQL: "mysql",
-            DatabaseDriverEnum.MARIADB: "mysql",
-        }.get(settings.database.driver, "sql"),
-        background_color="default",
-    )
+    scheme = settings.database.url.scheme
+    if scheme == "postgres" or scheme.startswith("postgresql"):
+        lexer = "postgresql"
+    elif scheme.startswith(("mysql", "mariadb")):
+        lexer = "mysql"
+    else:
+        lexer = "sql"
+
+    return Syntax("", lexer, background_color="default")
 
 
 class SQLAlchemyHandler(RichHandler):

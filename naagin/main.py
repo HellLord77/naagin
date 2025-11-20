@@ -95,7 +95,7 @@ def log_model() -> None:
             loggers.model.warning(message)
 
         annotations = frozenset(get_annotations(model).items())
-        if len(annotations) >= settings.logging.model_dup_len:
+        if len(annotations) >= settings.logging.model_duplicate_length:
             model_map[annotations].append(model)
 
     for models in model_map.values():
@@ -129,8 +129,19 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     if settings.environment.file is not None:
         loggers.setting.debug("Unused cli arg [bold]--env-file[/bold]")
 
-    if settings.app.limit:
+    if settings.app.limit_request:
         loggers.setting.debug("Unused cli arg [bold]--limit-request-line[/bold]")
+
+    loggers.setting.info("version: %s", settings.version)
+    loggers.setting.info("data: %s", settings.data)
+    loggers.setting.info("database: %s", settings.database)
+
+    loggers.setting.info("api: %s", settings.api)
+    loggers.setting.info("api01: %s", settings.api01)
+
+    loggers.setting.info("game: %s", settings.game)
+    loggers.setting.info("cdn01: %s", settings.cdn01)
+    loggers.setting.info("www: %s", settings.www)
 
     if settings.logging.model:
         log_model()
@@ -174,28 +185,30 @@ middlewares = [
     Middleware(
         RenewedMiddleware,
         middleware=Middleware(
-            DeflateMiddleware, send_encoded=settings.api.compress, compress_level=settings.api.compress_level
+            DeflateMiddleware, send_encoded=settings.api.compress_enabled, compress_level=settings.api.compress_level
         ),
     ),
     Middleware(
         RenewedMiddleware,
-        middleware=Middleware(AESMiddleware, send_encoded=settings.api.encrypt, database=settings.database.session),
+        middleware=Middleware(
+            AESMiddleware, send_encoded=settings.api.encrypt_enabled, database=settings.database.session
+        ),
     ),
 ]
 if settings.app.debug_headers:
     middlewares.insert(0, Middleware(BaseHTTPMiddleware, dispatch=add_debug_headers))
 app.add_middleware(FilteredMiddleware, middleware=Middleware(StackedMiddleware, *middlewares), filter=encoding_filter)
 
-if settings.app.limit:
+if settings.app.limit_request:
     app.add_middleware(
         RenewedMiddleware,
-        middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.app.limit_max_size),
+        middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.app.limit_maximum_size),
     )
 
-if settings.app.gzip:
+if settings.app.gzip_response:
     app.add_middleware(
         FilteredMiddleware,
-        middleware=Middleware(GZipMiddleware, settings.app.gzip_min_size, settings.app.gzip_compress_level),
+        middleware=Middleware(GZipMiddleware, settings.app.gzip_minimum_size, settings.app.gzip_compress_level),
         filter=gzip_filter,
     )
 

@@ -2,10 +2,11 @@ from functools import cached_property
 from typing import Annotated
 from typing import Literal
 
+from pydantic import AliasChoices
 from pydantic import Field
+from pydantic import PostgresDsn
 from pydantic import SecretStr
-from pydantic_settings import SettingsConfigDict
-from sqlalchemy import URL
+from pydantic import computed_field
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -17,12 +18,18 @@ from naagin.types_.fields import PortField
 
 
 class DatabaseSettings(SettingsBase):
-    driver: Literal[DatabaseDriverEnum.POSTGRESQL] = DatabaseDriverEnum.POSTGRESQL
-    user: str | None = None
-    pass_: Annotated[SecretStr | None, Field(alias="db_pass")] = None
-    host: str | None = None
-    port: PortField | None = None
-    name: str | None = None
+    drivername: Annotated[
+        Literal[DatabaseDriverEnum.POSTGRESQL],
+        Field(validation_alias=AliasChoices("drivername", "driver"), exclude=True),
+    ] = DatabaseDriverEnum.POSTGRESQL
+    username: Annotated[str | None, Field(validation_alias=AliasChoices("username", "user"), exclude=True)] = None
+    password: Annotated[SecretStr | None, Field(validation_alias=AliasChoices("password", "pass"), exclude=True)] = None
+    host: Annotated[str, Field(validation_alias=AliasChoices("host", "hostname"), exclude=True)] = "localhost"
+    port: Annotated[PortField | None, Field(exclude=True)] = None
+    database: Annotated[str | None, Field(validation_alias=AliasChoices("database", "name"), exclude=True)] = None
+    full_url: Annotated[PostgresDsn | None, Field(validation_alias=AliasChoices("full_url", "url"), exclude=True)] = (
+        None
+    )
 
     echo_sql: bool = False
     echo_pool: bool = False
@@ -30,26 +37,34 @@ class DatabaseSettings(SettingsBase):
     echo_lint: bool = True
     echo_color: bool = True
 
-    model_config = SettingsConfigDict(env_prefix="db_")
-
+    @computed_field
     @cached_property
-    def url(self) -> URL:
-        drivername = {
-            DatabaseDriverEnum.SQLITE: "sqlite+aiosqlite",
-            DatabaseDriverEnum.POSTGRESQL: "postgresql+asyncpg",
-            DatabaseDriverEnum.MYSQL: "mysql+aiomysql",
-            DatabaseDriverEnum.MARIADB: "mysql+aiomysql",
-        }.get(self.driver, self.driver)
-        password = None
-        if self.pass_ is not None:
-            password = self.pass_.get_secret_value()
+    def url(self) -> PostgresDsn:
+        if self.full_url is None:
+            scheme = {
+                DatabaseDriverEnum.SQLITE: "sqlite+aiosqlite",
+                DatabaseDriverEnum.POSTGRESQL: "postgresql+asyncpg",
+                DatabaseDriverEnum.MYSQL: "mysql+aiomysql",
+                DatabaseDriverEnum.MARIADB: "mysql+aiomysql",
+            }.get(self.drivername, self.drivername)
+            password = None
+            if self.password is not None:
+                password = self.password.get_secret_value()
+            return PostgresDsn.build(
+                scheme=scheme,
+                username=self.username,
+                password=password,
+                host=self.host,
+                port=self.port,
+                path=self.database,
+            )
 
-        return URL.create(drivername, self.user, password, self.host, self.port, self.name)
+        return self.full_url
 
     @cached_property
     def engine(self) -> AsyncEngine:
         return create_async_engine(
-            self.url, echo=self.echo_sql, echo_pool=self.echo_pool, hide_parameters=not self.echo_args
+            str(self.url), echo=self.echo_sql, echo_pool=self.echo_pool, hide_parameters=not self.echo_args
         )
 
     @cached_property
