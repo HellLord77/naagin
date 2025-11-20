@@ -4,7 +4,6 @@ from tempfile import gettempdir
 
 from aiopath import AsyncPath
 from pydantic import DirectoryPath
-from pydantic_settings import SettingsConfigDict
 
 from naagin.bases import SettingsBase
 
@@ -13,8 +12,6 @@ class DataSettings(SettingsBase):
     temp: bool = True
 
     dir: DirectoryPath = Path.cwd() / "data"
-
-    model_config = SettingsConfigDict(env_prefix="data_")
 
     @cached_property
     def directory(self) -> AsyncPath:
