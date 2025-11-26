@@ -11,4 +11,4 @@ def master_version_factory() -> MasterVersionEnum:
 
 
 def resource_version_factory() -> str:
-    return ",".join(map(str, settings.version.resource))
+    return settings.version.resource
