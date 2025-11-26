@@ -24,7 +24,7 @@ from starlette.types import Send
 
 from naagin import settings
 
-etag_pattern = compile(r'^\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"$')
+etag_pattern = compile(r"^\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"$")
 
 
 def not_found_response() -> PlainTextResponse:
