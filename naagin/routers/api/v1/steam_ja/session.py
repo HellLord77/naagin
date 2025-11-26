@@ -17,9 +17,9 @@ router = APIRouter(prefix="/session")
 
 @router.post("")
 async def post(
-    _: SteamJaSessionPostRequestModel, database: DatabaseDependency, response: Response
+    request: SteamJaSessionPostRequestModel, database: DatabaseDependency, response: Response
 ) -> SteamJaSessionPostResponseModel:
-    owner_id = 6957694
+    owner_id = int(request.platform_id) & 0xFFFFFFFF
     owner = await database.get(OwnerSchema, owner_id)
     if owner is None:
         owner = OwnerSchema(owner_id=owner_id)
