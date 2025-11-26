@@ -12,15 +12,16 @@ from logging import Formatter
 from logging import getLogger
 from sys import modules
 
-from aiopath import AsyncPath
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.exceptions import StarletteHTTPException
 from fastapi.middleware import Middleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import ORJSONResponse
 from rich.logging import RichHandler
 from starlette.middleware.base import BaseHTTPMiddleware
+
+from naagin.imports import AsyncPath
+from naagin.imports import JSONResponse
 
 from . import __version__
 from . import apps
@@ -132,6 +133,10 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     if settings.app.limit_request:
         loggers.setting.debug("Unused cli arg [bold]--limit-request-line[/bold]")
 
+    loggers.setting.info("environment: %s", settings.environment)
+    loggers.setting.info("logging: %s", settings.logging)
+    loggers.setting.info("app: %s", settings.app)
+
     loggers.setting.info("version: %s", settings.version)
     loggers.setting.info("data: %s", settings.data)
     loggers.setting.info("database: %s", settings.database)
@@ -173,7 +178,7 @@ app = FastAPI(
     version=__version__,
     redoc_url=None,
     lifespan=lifespan,
-    default_response_class=ORJSONResponse,
+    default_response_class=JSONResponse,
     **kwargs,
 )
 

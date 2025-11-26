@@ -4,9 +4,9 @@ version = "0.3.0"
 description = "A server implementation for a certain swimsuit gacha game."
 requires-python = ">=3.13"
 dependencies = [
+  "anyio",
   "asyncstdlib",
   "async-lru",
-  "aiopath",
   "filelock",
   "cryptography",
   "rich",
@@ -73,8 +73,11 @@ extend-unsafe-fixes = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"naagin/imports.py" = [
+  "TID251",  # flake8-tidy-imports banned-api
+]
 "naagin/middlewares/**.py" = [
-  "TID251", # flake8-tidy-imports banned-api
+  "TID251",  # flake8-tidy-imports banned-api
 ]
 
 [tool.ruff.lint.flake8-boolean-trap]
@@ -84,9 +87,6 @@ extend-allowed-calls = ["fastapi.datastructures.Default"]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
-"pathlib.Path".msg = "Use aiopath.AsyncPath instead."
-
-"aiopath.Path".msg = "Use aiopath.AsyncPath instead."
 "httpx.Client".msg = "Use httpx.AsyncClient instead."
 
 "starlette.datastructures.Headers".msg = "Use fastapi.datastructures.Headers instead."
@@ -94,6 +94,19 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 "starlette.middleware.Middleware".msg = "Use fastapi.middleware.Middleware instead."
 "starlette.requests.Request".msg = "Use fastapi.Request instead."
 "starlette.responses.Response".msg = "Use fastapi.Response instead."
+
+"json".msg = "Use naagin.imports.json instead."
+"ujson".msg = "Use naagin.imports.json instead."
+"orjson".msg = "Use naagin.imports.json instead."
+
+"pathlib.Path".msg = "Use naagin.imports.AsyncPath instead."
+"anyio.Path".msg = "Use naagin.imports.AsyncPath instead."
+"aiopath.AsyncPath".msg = "Use naagin.imports.AsyncPath instead."
+"aiopathlib.AsyncPath".msg = "Use naagin.imports.AsyncPath instead."
+
+"fastapi.responses.ORJSONResponse".msg = "Use naagin.imports.JSONResponse instead."
+"fastapi.responses.UJSONResponse".msg = "Use naagin.imports.JSONResponse instead."
+"fastapi.responses.JSONResponse".msg = "Use naagin.imports.JSONResponse instead."
 
 "async_lru.alru_cache".msg = "Use naagin.decorators.async_lru_cache instead."
 "pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."

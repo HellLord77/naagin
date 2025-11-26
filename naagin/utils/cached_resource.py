@@ -7,7 +7,6 @@ from mimetypes import guess_type
 from re import compile
 from typing import override
 
-from aiopath import AsyncPath
 from filelock import AsyncFileLock
 from httpx import AsyncClient
 from httpx import HTTPStatusError
@@ -23,6 +22,7 @@ from starlette.types import Scope
 from starlette.types import Send
 
 from naagin import settings
+from naagin.imports import AsyncPath
 
 etag_pattern = compile(r"^\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"$")
 
@@ -109,7 +109,7 @@ class CachedResource(StaticFiles):
                         temp_path = encoded_path.with_suffix(".temp")
                         await temp_path.parent.mkdir(parents=True, exist_ok=True)
 
-                        async with temp_path.open("wb") as file:
+                        async with await temp_path.open("wb") as file:
                             async for chunk in response.aiter_bytes():
                                 md5_.update(chunk)
                                 await file.write(chunk)

@@ -3,12 +3,12 @@ from http import HTTPStatus
 from typing import ClassVar
 
 from fastapi import Request
-from fastapi.responses import ORJSONResponse
 
 from naagin import loggers
 from naagin import settings
 from naagin.enums import DOAXVVHeaderEnum
 from naagin.enums import NaaginHeaderEnum
+from naagin.imports import JSONResponse
 from naagin.utils import DOAXVVHeader
 
 
@@ -33,11 +33,11 @@ class ExceptionBase(Exception):  # noqa: N818
         return content, status_code
 
     @classmethod
-    def handler(cls, _: Request | None = None, exception: Exception | None = None) -> ORJSONResponse:
+    def handler(cls, _: Request | None = None, exception: Exception | None = None) -> JSONResponse:
         if isinstance(exception, ExceptionBase):
             return exception.handler()
 
-        response = ORJSONResponse(*cls.get_args())
+        response = JSONResponse(*cls.get_args())
         if exception is not None:
             exception_type = type(exception).__name__
             exception_message = str(exception)
