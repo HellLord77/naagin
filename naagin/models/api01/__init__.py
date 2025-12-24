@@ -15,4 +15,3 @@ from .v1.resource.list.encrypt.post.request import (
 from .v1.resource.list.encrypt.post.response import (
     ResourceListEncryptPostResponseModel as ResourceListEncryptPostResponseModel,
 )
-from .v1.resource.list.get.response import ResourceListGetResponseModel as ResourceListGetResponseModel

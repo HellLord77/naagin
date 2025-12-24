@@ -15,5 +15,5 @@ class CSVFileListModel(ModelBase):
     model_config = ConfigDict(extra="allow")
 
 
-class CSVListGetResponseModel(ModelBase):
+class CSVListModel(ModelBase):
     csv_file_list: CSVFileListModel

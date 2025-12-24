@@ -24,6 +24,13 @@ def write_resource(path: Path, json_data: dict[str, Any]) -> None:
     path.write_text(data)
 
 
+def update_symlink(path: Path) -> None:
+    link = path.parent.with_suffix(".json")
+    target = path.relative_to(link.parent)
+    link.unlink(missing_ok=True)
+    link.symlink_to(target)
+
+
 def decrypt_resource_data(platform_id: int, key: bytes, encrypted_data: str) -> bytes:
     md5 = hashlib.md5(key, usedforsecurity=False)
     encoded_key = md5.hexdigest().encode()
@@ -47,6 +54,7 @@ def download_resource_list() -> None:
         / f"{resource_list['resource_list']['exe'][0]['version']}.json"
     )
     write_resource(path, resource_list)
+    update_symlink(path)
 
 
 def download_resource_list_jp() -> None:
@@ -77,6 +85,7 @@ def download_resource_list_jp() -> None:
         / f"{resource_list['resource_list']['exe'][0]['version']}.json"
     )
     write_resource(path, resource_list)
+    update_symlink(path)
 
 
 def resources_to_app(app: str, client: Client, resources: list[dict[str, Any]], patch_type: str) -> None:
@@ -154,6 +163,9 @@ def download_csv(app: str, host: str, master_version: int) -> None:
 def main() -> None:
     download_resource_list()
     download_resource_list_jp()
+
+    # download_csv_list
+    # download_csv_list_jp
 
     # download_resource("game", "game.doaxvv.com", "")
     # download_resource("cdn01", "cdn01.doax-venusvacation.jp", "encrypt")

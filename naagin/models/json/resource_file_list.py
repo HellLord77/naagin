@@ -1,3 +1,6 @@
+from typing import Annotated
+
+from pydantic import Field
 from pydantic import PositiveInt
 
 from naagin.bases import ModelBase
@@ -14,11 +17,11 @@ class ResourceModel(ModelBase):
 
 
 class ResourceListModel(ModelBase):
-    low: list[ResourceModel]
-    common: list[ResourceModel]
-    high: list[ResourceModel]
-    exe: list[ResourceModel]
+    common: Annotated[list[ResourceModel], Field(min_length=1)]
+    high: Annotated[list[ResourceModel], Field(min_length=1)]
+    low: Annotated[list[ResourceModel], Field(min_length=1)]
+    exe: Annotated[list[ResourceModel], Field(min_length=1, max_length=1)]
 
 
-class ResourceListGetResponseModel(ModelBase):
+class ResourceFileListModel(ModelBase):
     resource_list: ResourceListModel
