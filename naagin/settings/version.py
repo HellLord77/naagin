@@ -15,22 +15,22 @@ class VersionSettings(SettingsBase):
         Literal[MasterVersionEnum.GLOBAL], Field(validation_alias=AliasChoices("master_global", "master"), exclude=True)
     ] = MasterVersionEnum.GLOBAL
     application_global: Annotated[
-        int, Field(validation_alias=AliasChoices("application_global", "application"), exclude=True)
-    ] = 73400
+        int | None, Field(validation_alias=AliasChoices("application_global", "application"), exclude=True)
+    ] = None
     resource_global: Annotated[
-        tuple[int, int, int], Field(validation_alias=AliasChoices("resource_global", "resource"), exclude=True)
-    ] = 73400, 73400, 73400
+        tuple[int, int, int] | None, Field(validation_alias=AliasChoices("resource_global", "resource"), exclude=True)
+    ] = None
 
     master_japan: Annotated[
         Literal[MasterVersionEnum.JAPAN],
         Field(validation_alias=AliasChoices("master_japan", "master_jp"), exclude=True),
     ] = MasterVersionEnum.JAPAN
     application_japan: Annotated[
-        int, Field(validation_alias=AliasChoices("application_japan", "application_jp"), exclude=True)
-    ] = 90100
+        int | None, Field(validation_alias=AliasChoices("application_japan", "application_jp"), exclude=True)
+    ] = None
     resource_japan: Annotated[
-        tuple[int, int, int], Field(validation_alias=AliasChoices("resource_japan", "resource_jp"), exclude=True)
-    ] = 90100, 84600, 90100
+        tuple[int, int, int] | None, Field(validation_alias=AliasChoices("resource_japan", "resource_jp"), exclude=True)
+    ] = None
 
     strict: bool = True
     japan: bool = False
@@ -42,10 +42,10 @@ class VersionSettings(SettingsBase):
 
     @computed_field
     @cached_property
-    def application(self) -> int:
+    def application(self) -> int | None:
         return self.application_japan if self.japan else self.application_global
 
     @computed_field
     @cached_property
-    def resource(self) -> str:
-        return ",".join(map(str, self.resource_japan if self.japan else self.resource_global))
+    def resource(self) -> tuple[int, int, int] | None:
+        return self.resource_japan if self.japan else self.resource_global
