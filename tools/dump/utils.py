@@ -3,6 +3,7 @@ import gzip
 import hashlib
 import json
 import logging
+import re
 import subprocess
 import zlib
 from collections import deque
@@ -34,6 +35,8 @@ from . import config
 
 logger = logging.getLogger(__name__)
 
+etag_pattern = re.compile(r"^\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"$")
+
 
 def is_empty(iterable: Iterator) -> bool:
     try:
@@ -60,11 +63,29 @@ def rmtree_empty(path: Path) -> None:
 
 
 def get_md5(path: Path) -> str:
+    logger.debug("[MD5] %s", path)
     md5 = hashlib.md5(usedforsecurity=False)
     with path.open("rb") as file:
         while chunk := file.read(COPY_BUFSIZE):
             md5.update(chunk)
     return md5.hexdigest()
+
+
+def check_md5(path: Path, expected_md5: str) -> bool:
+    hash_path = (config.DATA_DIR / "hash" / path.relative_to(config.DATA_DIR)).with_suffix(".md5")
+
+    if not hash_path.is_file():
+        md5 = get_md5(path)
+        hash_path.parent.mkdir(parents=True, exist_ok=True)
+        hash_path.write_text(md5)
+        return md5 == expected_md5
+
+    if expected_md5 != hash_path.read_text():
+        logger.warning("[MD5] %s", path)
+        hash_path.unlink()
+        return False
+
+    return True
 
 
 def decrypt_data(algorithm: AES, data: bytes, initialization_vector: bytes) -> bytes:

@@ -1,4 +1,3 @@
-import hashlib
 import logging
 from pathlib import Path
 from shutil import COPY_BUFSIZE
@@ -17,15 +16,15 @@ def remove_paths(data_dir: Path, client: Client) -> None:
         if not path.is_file():
             continue
 
-        logger.warning("[PATH] %s", path)
+        logger.debug("[PATH] %s", path)
         relative_path = path.relative_to(data_dir)
 
         response = client.head(relative_path.as_posix())
         response.raise_for_status()
-        md5 = response.headers["ETag"][1:33]
+        md5 = utils.etag_pattern.match(response.headers["ETag"]).group("md5")
 
-        if md5 != utils.get_md5(path):
-            logger.error(path)
+        if not utils.check_md5(path, md5):
+            logger.error("[PATH] %s", path)
             path.unlink()
 
     utils.rmtree_empty(data_dir)

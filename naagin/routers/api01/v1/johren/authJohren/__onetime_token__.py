@@ -9,7 +9,7 @@ router = APIRouter(prefix="/{onetime_token}")
 
 @router.get("")
 async def get(onetime_token: str) -> JohrenAuthJohrenOnetimeTokenGetResponseModel:
-    url = f"/v1/johren/authJohren/{onetime_token}"
+    url = f"v1/johren/authJohren/{onetime_token}"
     loggers.api01.info("GET: %s", url)
     response = await settings.api01.client.get(url)
     response.raise_for_status()
