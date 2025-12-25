@@ -6,7 +6,6 @@ requires-python = ">=3.13"
 dependencies = [
   "anyio",
   "asyncstdlib",
-  "async-lru",
   "filelock",
   "cryptography",
   "rich",
@@ -87,6 +86,7 @@ extend-allowed-calls = ["fastapi.datastructures.Default"]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
+"pathlib.Path".msg = "Use anyio.Path instead."
 "httpx.Client".msg = "Use httpx.AsyncClient instead."
 
 "starlette.datastructures.Headers".msg = "Use fastapi.datastructures.Headers instead."
@@ -99,16 +99,10 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 "ujson".msg = "Use naagin.imports.json instead."
 "orjson".msg = "Use naagin.imports.json instead."
 
-"pathlib.Path".msg = "Use naagin.imports.AsyncPath instead."
-"anyio.Path".msg = "Use naagin.imports.AsyncPath instead."
-"aiopath.AsyncPath".msg = "Use naagin.imports.AsyncPath instead."
-"aiopathlib.AsyncPath".msg = "Use naagin.imports.AsyncPath instead."
-
 "fastapi.responses.ORJSONResponse".msg = "Use naagin.imports.JSONResponse instead."
 "fastapi.responses.UJSONResponse".msg = "Use naagin.imports.JSONResponse instead."
 "fastapi.responses.JSONResponse".msg = "Use naagin.imports.JSONResponse instead."
 
-"async_lru.alru_cache".msg = "Use naagin.decorators.async_lru_cache instead."
 "pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
 "pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
 "sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."

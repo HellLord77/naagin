@@ -1,6 +1,7 @@
 from itertools import islice
 
-from naagin.decorators import async_lru_cache
+from anyio.functools import lru_cache
+
 from naagin.models.csv import EpisodeCSVModel
 from naagin.models.csv import FriendlyRewardCSVModel
 from naagin.models.csv import GirlCSVModel
@@ -11,14 +12,14 @@ from .utils import get_dict_reader
 from .utils import get_reader
 
 
-@async_lru_cache
+@lru_cache
 async def provide_friendly_rewards(master_version: MasterVersionHeader) -> list[FriendlyRewardCSVModel]:
     reader = await get_dict_reader(master_version, "CR_FriendlyReward")
     friendly_rewards = map(FriendlyRewardCSVModel.model_validate, reader)
     return list(friendly_rewards)
 
 
-# @async_lru_cache
+# @lru_cache
 # async def provide_friendly_levels(friendly_rewards: Depends(provide_friendly_rewards)) -> list[int]:
 #     friendly_levels = [friendly_reward.value for friendly_reward in friendly_rewards]
 #     friendly_levels.append(0)
@@ -26,7 +27,7 @@ async def provide_friendly_rewards(master_version: MasterVersionHeader) -> list[
 #     return friendly_levels
 
 
-@async_lru_cache
+@lru_cache
 async def provide_girl_affection_levels(master_version: MasterVersionHeader) -> list[int]:
     reader = await get_reader(master_version, "Girl_Affection_Level")
     girl_affection_levels = next(islice(reader, 2, None))
@@ -35,7 +36,7 @@ async def provide_girl_affection_levels(master_version: MasterVersionHeader) -> 
     return list(map(int, islice(girl_affection_levels, count)))
 
 
-@async_lru_cache
+@lru_cache
 async def provide_girl_levels(master_version: MasterVersionHeader) -> list[int]:
     reader = await get_reader(master_version, "girl_level_table")
     girl_levels = next(islice(reader, 2, None))
@@ -44,14 +45,14 @@ async def provide_girl_levels(master_version: MasterVersionHeader) -> list[int]:
     return list(map(int, islice(girl_levels, count)))
 
 
-@async_lru_cache
+@lru_cache
 async def provide_girls(master_version: MasterVersionHeader) -> dict[int, GirlCSVModel]:
     reader = await get_dict_reader(master_version, "girl_master")
     girls = map(GirlCSVModel.model_validate, reader)
     return {girl.girl_mid: girl for girl in girls}
 
 
-@async_lru_cache
+@lru_cache
 async def provide_girl_statuses(master_version: MasterVersionHeader) -> list[GirlStatusCSVModel]:
     reader = await get_reader(master_version, "girl_status_table")
     girl_statuses = islice(reader, 3, None)
@@ -68,7 +69,7 @@ async def provide_girl_statuses(master_version: MasterVersionHeader) -> list[Gir
     ]
 
 
-@async_lru_cache
+@lru_cache
 async def provide_owner_levels(master_version: MasterVersionHeader) -> list[int]:
     reader = await get_reader(master_version, "owner_level_table")
     owner_levels = next(reader)
@@ -76,7 +77,7 @@ async def provide_owner_levels(master_version: MasterVersionHeader) -> list[int]
     return list(map(int, islice(owner_levels, count)))
 
 
-@async_lru_cache
+@lru_cache
 async def provide_episodes(master_version: MasterVersionHeader) -> dict[int, EpisodeCSVModel]:
     reader = await get_dict_reader(master_version, "EpisodeList")
     episodes = map(EpisodeCSVModel.model_validate, reader)

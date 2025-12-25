@@ -1,5 +1,6 @@
 from base64 import b64decode
 
+from anyio.functools import lru_cache
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from cryptography.hazmat.primitives.serialization import Encoding
@@ -8,7 +9,6 @@ from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from fastapi import APIRouter
 
 from naagin import settings
-from naagin.decorators import async_lru_cache
 from naagin.models.api import SessionKeyGetResponseModel
 from naagin.models.api import SessionKeyPutRequestModel
 from naagin.models.api import SessionKeyPutResponseModel
@@ -19,14 +19,15 @@ from naagin.types_.dependencies import OwnerIdDependency
 router = APIRouter(prefix="/key")
 
 
-@async_lru_cache
+@lru_cache
 async def get_private_key() -> RSAPrivateKey:
-    pem_data = await (settings.data.api_dir / "v1" / "session" / "key.pem").read_bytes()
-    return load_pem_private_key(pem_data, None)
+    path = settings.data.api_dir / "v1" / "session" / "key.pem"
+    data = await path.read_bytes()
+    return load_pem_private_key(data, None)
 
 
 @router.get("")
-@async_lru_cache
+@lru_cache
 async def get() -> SessionKeyGetResponseModel:
     private_key = await get_private_key()
 
