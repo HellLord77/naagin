@@ -10,6 +10,7 @@ from inspect import getsourcelines
 from itertools import islice
 from logging import Formatter
 from logging import getLogger
+from pathlib import Path  # noqa: TID251
 from sys import modules
 
 from fastapi import FastAPI
@@ -20,7 +21,6 @@ from fastapi.middleware.gzip import GZipMiddleware
 from rich.logging import RichHandler
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from naagin.imports import AsyncPath
 from naagin.imports import JSONResponse
 
 from . import __version__
@@ -69,7 +69,7 @@ def setup_logging() -> None:
 
 def format_model_log(model: type[ModelBase]) -> str:
     path = getfile(model)
-    link = AsyncPath(path).as_uri()
+    link = Path(path).as_uri()
     lines, lineno = getsourcelines(model)
 
     message = f"\n[link={link}]{path}[/link]:[link={link}#{lineno}]{lineno}[/link]"
@@ -116,7 +116,7 @@ def log_route() -> None:
             continue
 
         router = modules[router_name]
-        if AsyncPath(router.__file__).name == "__init__.py":
+        if Path(router.__file__).name == "__init__.py":
             loggers.route.warning("Unnecessary module [bold]%s[/bold] found", router_name)
 
 

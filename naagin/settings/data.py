@@ -2,10 +2,10 @@ from functools import cached_property
 from pathlib import Path  # noqa: TID251
 from tempfile import gettempdir
 
+from anyio import Path as AsyncPath
 from pydantic import DirectoryPath
 
 from naagin.bases import SettingsBase
-from naagin.imports import AsyncPath
 
 
 class DataSettings(SettingsBase):

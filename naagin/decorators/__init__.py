@@ -1,15 +1,9 @@
 from collections.abc import Awaitable
 from collections.abc import Callable
 from functools import wraps
-from inspect import markcoroutinefunction
 from inspect import signature
 
-from async_lru import alru_cache  # noqa: TID251
 from fastapi import Request
-
-
-def async_lru_cache[T: Awaitable, **P](awaitable: Callable[P, T], /) -> Callable[P, T]:
-    return markcoroutinefunction(alru_cache(awaitable))
 
 
 def async_req_cache[T: Awaitable, **P](awaitable: Callable[P, T], /) -> Callable[P, T]:

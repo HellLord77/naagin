@@ -7,6 +7,7 @@ from mimetypes import guess_type
 from re import compile
 from typing import override
 
+from anyio import Path as AsyncPath
 from filelock import AsyncFileLock
 from httpx import AsyncClient
 from httpx import HTTPStatusError
@@ -22,7 +23,6 @@ from starlette.types import Scope
 from starlette.types import Send
 
 from naagin import settings
-from naagin.imports import AsyncPath
 
 etag_pattern = compile(r"^\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"$")
 
