@@ -3,6 +3,7 @@ import hashlib
 import json
 import logging
 from http import HTTPMethod
+from http import HTTPStatus
 from pathlib import Path
 from typing import Any
 
@@ -89,18 +90,23 @@ def download_resource_list_jp() -> None:
 
 
 def resources_to_app(app: str, client: Client, resources: list[dict[str, Any]], patch_type: str) -> None:
+    app_dir = config.DATA_DIR / app
     for resource in resources:
-        directory = resource["directory"]
-        name = resource["file_name"]
-        path = config.DATA_DIR / app / "production" / "patch_data" / patch_type / directory / name
+        path = app_dir / "production" / "patch_data" / patch_type / resource["directory"] / resource["file_name"]
 
         if (
             not path.is_file()
             or resource["file_size"] != path.stat().st_size
-            or resource["hash"] != utils.get_md5(path)
+            or not utils.check_md5(path, resource["hash"])
         ):
-            logger.warning("[DOWNLOAD] %s", path)
-            with client.stream(HTTPMethod.GET, f"/production/patch_data/{patch_type}/{directory}/{name}") as response:
+            logger.warning("[RESOURCE] %s", path)
+            path.unlink(missing_ok=True)
+            url = path.relative_to(app_dir).as_posix()
+
+            with client.stream(HTTPMethod.GET, url) as response:
+                if response.status_code == HTTPStatus.NOT_FOUND:
+                    logger.error("[404] %s", path)
+                    continue
                 response.raise_for_status()
                 path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -121,11 +127,15 @@ def json_to_resources(app: str, client: Client, json_path: Path) -> None:
         resources_to_app(app, client, resources, "resource")
 
 
-def download_resource(app: str, host: str, directory: str) -> None:
+def download_resource(app: str, host: str, *, encrypt: bool) -> None:
     client = Client(base_url=URL(scheme="https", host=host))
-    src_path = config.DATA_DIR / "api01" / "v1" / "resource" / "list" / directory
+    src_path = config.DATA_DIR / "api01" / "v1" / "resource" / "list"
+    if encrypt:
+        src_path /= "encrypt"
 
     for json_path in src_path.glob("*.json"):
+        if json_path.is_symlink():
+            continue
         json_to_resources(app, client, json_path)
 
 
@@ -144,8 +154,8 @@ def json_to_csv(data_dir: Path, client: Client, json_path: Path) -> None:
     for initialization_vector in csv_file_list.values():
         dst_path = dst_dir / initialization_vector
         if not dst_path.is_file():
-            logger.warning("[DOWNLOAD] %s", dst_path)
-            response = client.get(f"/production/csv/{master_version}/{initialization_vector}")
+            logger.warning("[CSV] %s", dst_path)
+            response = client.get(f"production/csv/{master_version}/{initialization_vector}")
             response.raise_for_status()
 
             dst_path.parent.mkdir(parents=True, exist_ok=True)
@@ -164,11 +174,8 @@ def main() -> None:
     download_resource_list()
     download_resource_list_jp()
 
-    # download_csv_list
-    # download_csv_list_jp
-
-    # download_resource("game", "game.doaxvv.com", "")
-    # download_resource("cdn01", "cdn01.doax-venusvacation.jp", "encrypt")
+    download_resource("game", "game.doaxvv.com", encrypt=False)
+    download_resource("cdn01", "cdn01.doax-venusvacation.jp", encrypt=True)
 
     download_csv("game", "game.doaxvv.com", 10)
     download_csv("cdn01", "cdn01.doax-venusvacation.jp", 19)
