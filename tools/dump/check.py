@@ -21,7 +21,7 @@ def remove_paths(data_dir: Path, client: Client) -> None:
 
         response = client.head(relative_path.as_posix())
         response.raise_for_status()
-        md5 = utils.etag_pattern.match(response.headers["ETag"]).group("md5")
+        md5 = utils.etag_pattern.fullmatch(response.headers["ETag"]).group("md5")
 
         if not utils.check_md5(path, md5):
             logger.error("[PATH] %s", path)

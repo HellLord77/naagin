@@ -24,7 +24,7 @@ from starlette.types import Send
 
 from naagin import settings
 
-etag_pattern = compile(r"^\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"$")
+etag_pattern = compile(r"\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"")
 
 
 def not_found_response() -> PlainTextResponse:
@@ -99,7 +99,7 @@ class CachedResource(StaticFiles):
                             self.logger.debug("[bold]ETag[/bold] missing")
                             expected_md5 = None
                         else:
-                            etag_match = etag_pattern.match(etag)
+                            etag_match = etag_pattern.fullmatch(etag)
                             if etag_match is None:
                                 self.logger.warning("Invalid [bold]ETag[/bold]: %s", etag)
                                 raise InternalServerErrorException

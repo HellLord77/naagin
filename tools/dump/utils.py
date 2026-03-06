@@ -35,7 +35,7 @@ from . import config
 
 logger = logging.getLogger(__name__)
 
-etag_pattern = re.compile(r"^\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"$")
+etag_pattern = re.compile(r"\"(?P<md5>[a-f\d]{32}):(?P<mtime>\d+(?:\.\d+)?)\"")
 
 
 def is_empty(iterable: Iterator) -> bool:
