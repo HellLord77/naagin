@@ -95,14 +95,6 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.datastructures.Default"]
 "starlette.requests.Request".msg = "Use fastapi.Request instead."
 "starlette.responses.Response".msg = "Use fastapi.Response instead."
 
-"json".msg = "Use naagin.imports.json instead."
-"ujson".msg = "Use naagin.imports.json instead."
-"orjson".msg = "Use naagin.imports.json instead."
-
-"fastapi.responses.ORJSONResponse".msg = "Use naagin.imports.JSONResponse instead."
-"fastapi.responses.UJSONResponse".msg = "Use naagin.imports.JSONResponse instead."
-"fastapi.responses.JSONResponse".msg = "Use naagin.imports.JSONResponse instead."
-
 "pydantic.BaseModel".msg = "Use naagin.bases.ModelBase instead."
 "pydantic_settings.BaseSettings".msg = "Use naagin.bases.SettingsBase instead."
 "sqlalchemy.ext.asyncio.AsyncSession".msg = "Use naagin.classes.AsyncSession instead."

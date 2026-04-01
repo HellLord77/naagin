@@ -21,11 +21,8 @@ from fastapi.middleware.gzip import GZipMiddleware
 from rich.logging import RichHandler
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from naagin.imports import JSONResponse
-
 from . import __version__
 from . import apps
-from . import hooks
 from . import loggers
 from . import routers
 from . import settings
@@ -130,12 +127,12 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     if settings.environment.file is not None:
         loggers.setting.debug("Unused cli arg [bold]--env-file[/bold]")
 
-    if settings.app.limit_request:
+    if settings.application.limit_request:
         loggers.setting.debug("Unused cli arg [bold]--limit-request-line[/bold]")
 
     loggers.setting.info("environment: %s", settings.environment)
     loggers.setting.info("logging: %s", settings.logging)
-    loggers.setting.info("app: %s", settings.app)
+    loggers.setting.info("app: %s", settings.application)
 
     loggers.setting.info("version: %s", settings.version)
     loggers.setting.info("data: %s", settings.data)
@@ -157,8 +154,6 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     loggers.api.debug("Routes count: %d", len(routers.api.router.routes))
     loggers.api01.debug("Routes count: %d", len(routers.api01.router.routes))
 
-    hooks.attach()
-
     async with settings.database.engine.begin() as connection:
         # await connection.run_sync(SchemaBase.metadata.drop_all)
         await connection.run_sync(SchemaBase.metadata.create_all)
@@ -169,17 +164,12 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
 
 
 kwargs = {}
-if not settings.app.swagger_ui:
+if not settings.application.swagger_ui:
     kwargs["openapi_url"] = None
     kwargs["docs_url"] = None
 
 app = FastAPI(
-    title="naagin",
-    version=__version__,
-    redoc_url=None,
-    lifespan=lifespan,
-    default_response_class=JSONResponse,
-    **kwargs,
+    title="naagin", version=__version__, redoc_url=None, lifespan=lifespan, strict_content_type=False, **kwargs
 )
 
 app.mount("/game", apps.game.app)
@@ -200,20 +190,22 @@ middlewares = [
         ),
     ),
 ]
-if settings.app.debug_headers:
+if settings.application.debug_headers:
     middlewares.insert(0, Middleware(BaseHTTPMiddleware, dispatch=add_debug_headers))
 app.add_middleware(FilteredMiddleware, middleware=Middleware(StackedMiddleware, *middlewares), filter=encoding_filter)
 
-if settings.app.limit_request:
+if settings.application.limit_request:
     app.add_middleware(
         RenewedMiddleware,
-        middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.app.limit_maximum_size),
+        middleware=Middleware(LimitingBodyRequestMiddleware, maximum_size=settings.application.limit_maximum_size),
     )
 
-if settings.app.gzip_response:
+if settings.application.gzip_response:
     app.add_middleware(
         FilteredMiddleware,
-        middleware=Middleware(GZipMiddleware, settings.app.gzip_minimum_size, settings.app.gzip_compress_level),
+        middleware=Middleware(
+            GZipMiddleware, settings.application.gzip_minimum_size, settings.application.gzip_compress_level
+        ),
         filter=gzip_filter,
     )
 

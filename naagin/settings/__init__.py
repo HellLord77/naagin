@@ -1,6 +1,6 @@
 from .api import APISettings
 from .api01 import API01Settings
-from .app import AppSettings
+from .application import ApplicationSettings
 from .data import DataSettings
 from .database import DatabaseSettings
 from .environment import EnvironmentSettings
@@ -8,9 +8,9 @@ from .logging import LoggingSettings
 from .resource import ResourceSettings
 from .version import VersionSettings
 
-environment = EnvironmentSettings()
+environment = EnvironmentSettings(_env_prefix="env_")
 logging = LoggingSettings(_env_prefix="log_", _env_file=environment.file)
-app = AppSettings(_env_prefix="app_", _env_file=environment.file)
+application = ApplicationSettings(_env_prefix="app_", _env_file=environment.file)
 
 version = VersionSettings(_env_prefix="ver_", _env_file=environment.file)
 data = DataSettings(_env_prefix="data_", _env_file=environment.file)

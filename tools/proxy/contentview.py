@@ -14,9 +14,7 @@ class DOAXVVContentview(Contentview):
     syntax_highlight = "yaml"
 
     def prettify(self, _: bytes, metadata: Metadata) -> str:
-        decrypted_data = utils.decrypt_message(
-            metadata.flow.comment, metadata.http_message
-        )
+        decrypted_data = utils.decrypt_message(metadata.flow.comment, metadata.http_message)
         try:
             decoded_data = decrypted_data.decode()
         except UnicodeDecodeError:

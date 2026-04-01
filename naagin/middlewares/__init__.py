@@ -35,7 +35,7 @@ async def add_debug_headers(request: Request, call_next: RequestResponseEndpoint
         request_body = await request.body()
         if request_body:
             try:
-                await request.json()
+                loads(request_body)
             except JSONDecodeError:
                 pass
             else:

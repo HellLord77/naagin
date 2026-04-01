@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from shutil import COPY_BUFSIZE
 
 from httpx import URL
 from httpx import Client

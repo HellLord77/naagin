@@ -9,7 +9,7 @@ from naagin.bases import SettingsBase
 from naagin.types_.fields import GZipCompressLevelField
 
 
-class AppSettings(SettingsBase):
+class ApplicationSettings(SettingsBase):
     swagger_ui: Annotated[bool, Field(validation_alias=AliasChoices("swagger_ui", "swagger"))] = False
     debug_headers: Annotated[bool, Field(validation_alias=AliasChoices("debug_headers", "debug"))] = False
 

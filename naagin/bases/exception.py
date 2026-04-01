@@ -3,12 +3,12 @@ from http import HTTPStatus
 from typing import ClassVar
 
 from fastapi import Request
+from fastapi.responses import JSONResponse
 
 from naagin import loggers
 from naagin import settings
 from naagin.enums import DOAXVVHeaderEnum
 from naagin.enums import NaaginHeaderEnum
-from naagin.imports import JSONResponse
 from naagin.utils import DOAXVVHeader
 
 
@@ -42,7 +42,7 @@ class ExceptionBase(Exception):  # noqa: N818
             exception_type = type(exception).__name__
             exception_message = str(exception)
             loggers.app.debug("%s: %s", exception_type, exception_message)
-            if settings.app.debug_headers:
+            if settings.application.debug_headers:
                 response.headers[NaaginHeaderEnum.EXCEPTION_TYPE] = exception_type
                 response.headers[NaaginHeaderEnum.EXCEPTION_MESSAGE] = exception_message
         response.headers[DOAXVVHeader(DOAXVVHeaderEnum.STATUS)] = str(cls.code)
