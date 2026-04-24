@@ -174,6 +174,9 @@ def main() -> None:
     download_resource_list()
     download_resource_list_jp()
 
+    # download_csv_list()
+    # download_csv_list_jp()
+
     download_resource("game", "game.doaxvv.com", encrypt=False)
     download_resource("cdn01", "cdn01.doax-venusvacation.jp", encrypt=True)
 
