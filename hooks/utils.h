@@ -195,14 +195,16 @@ BOOL WriteConfig()
 
 HMODULE LoadSystemLibrary(LPCTSTR lpLibFileName)
 {
-  TCHAR lpBuffer[MAX_PATH];
-  if (!GetSystemDirectory(lpBuffer, MAX_PATH))
+  TCHAR lpLibFilePath[MAX_PATH];
+  if (!GetSystemDirectory(lpLibFilePath, MAX_PATH))
   {
     return NULL;
   }
 
-  TCHAR lpLibFilePath[MAX_PATH];
-  _stprintf_s(lpLibFilePath, MAX_PATH, TEXT("%s\\%s"), lpBuffer, lpLibFileName + 5);
+  if (!PathAppend(lpLibFilePath, lpLibFileName + 5))
+  {
+    return NULL;
+  }
   return LoadLibrary(lpLibFilePath);
 }
 
@@ -283,7 +285,7 @@ BOOL CrackUrl_fake(CrackUrl_ptr crackUrl_real, LPCWSTR url, DWORD urlLength, DWO
       hostName = L"/api";
       hostNameLength = 4;
     }
-    if (urlComponents->dwHostNameLength == 25 && wmemcmp(urlComponents->lpszHostName, L"api.doax-venusvacation.jp", 25) == 0)
+    else if (urlComponents->dwHostNameLength == 25 && wmemcmp(urlComponents->lpszHostName, L"api.doax-venusvacation.jp", 25) == 0)
     {
       hostName = L"/api";
       hostNameLength = 4;
