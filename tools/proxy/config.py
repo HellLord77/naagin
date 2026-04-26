@@ -11,3 +11,5 @@ REAPI: bool = not WRITE_FILE
 REAPI01: bool = not WRITE_FILE
 RERES: bool = True
 RENONCE: bool = False
+
+WRITE_CSV_LIST: bool = not REAPI

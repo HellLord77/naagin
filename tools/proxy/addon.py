@@ -124,23 +124,34 @@ class DOAXVVAddon:
 
         host = flow.request.pretty_host
         if host in consts.API_HOSTS:
-            if flow.request.method == HTTPMethod.GET and flow.request.path_components[-3:] == ("v1", "session", "key"):
-                encrypt_key = flow.response.json()["encrypt_key"]
-                self.public_key = cryptography.hazmat.primitives.serialization.load_pem_public_key(encrypt_key.encode())
-                proxy_public_key = self.proxy_private_key.public_key()
-                proxy_encrypt_key = proxy_public_key.public_bytes(
-                    Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
-                ).decode()
+            utils.write_flow(flow, self.session_key)
+            if flow.request.method == HTTPMethod.GET:
+                if flow.request.path_components[-3:] == ("v1", "csv", "list"):
+                    if config.WRITE_CSV_LIST:
 
-                if encrypt_key == proxy_encrypt_key:
-                    self.public_key = None
-                    return
+                        master_version = int(flow.response.headers["X-DOAXVV-MasterVersion"])
+                        application_version = int(flow.response.headers["X-DOAXVV-ApplicationVersion"])
+                        body = utils.decrypt_message(flow.comment, flow.response)
 
-                flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
-                logger.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
+                        csv_list_path = config.DATA_DIR / "api" / "v1" / "csv" / "list" / str(master_version) / f"{application_version}.json"
+                        csv_list_data = json.dumps(json.loads(body), indent=2)
+                        csv_list_path.write_text(csv_list_data)
+                        logger.info("[csv_list] %s -> %s", application_version, csv_list_path)
 
-            else:
-                utils.write_flow(flow, self.session_key)
+                elif flow.request.path_components[-3:] == ("v1", "session", "key"):
+                    encrypt_key = flow.response.json()["encrypt_key"]
+                    self.public_key = cryptography.hazmat.primitives.serialization.load_pem_public_key(encrypt_key.encode())
+                    proxy_public_key = self.proxy_private_key.public_key()
+                    proxy_encrypt_key = proxy_public_key.public_bytes(
+                        Encoding.PEM, PublicFormat.SubjectPublicKeyInfo
+                    ).decode()
+
+                    if encrypt_key == proxy_encrypt_key:
+                        self.public_key = None
+                        return
+
+                    flow.response.text = json.dumps({"encrypt_key": proxy_encrypt_key})
+                    logger.info("[public_key] %s -> %s", encrypt_key, proxy_encrypt_key)
 
         elif host in consts.RES_HOSTS:
             live = flow.live
